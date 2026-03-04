@@ -3,7 +3,7 @@
 <head>
     <link rel="icon" href="logo.jpg" type="image/jpeg">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>محاكي الخطة الدراسية - Info Matrix</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -21,6 +21,7 @@
             --card-bg: #ffffff;
             --whatsapp: #25D366;
             --telegram: #0088cc;
+            --pdf-red: #dc2626; /* لون زر الطباعة */
         }
 
         body {
@@ -76,6 +77,7 @@
         .btn-tg { background-color: var(--telegram); }
         .btn-bot { background: linear-gradient(135deg, var(--orange), #e65c00); }
         .btn-about { background-color: var(--navy); border: 2px solid var(--gold); }
+        .btn-print { background-color: var(--pdf-red); border: 2px solid #b91c1c; } /* تنسيق زر الطباعة */
 
         /* Dashboard */
         .student-dashboard {
@@ -94,7 +96,7 @@
         .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--orange)); width: 0%; transition: 0.5s; }
         .progress-text { font-size: 0.85rem; font-weight: bold; color: #64748b; margin-top: 5px; }
 
-        /* حاوية الخريطة الأساسية */
+        /* حاوية الخريطة الأساسية (تحسين التوافقية) */
         .map-container {
             display: flex; gap: 20px; padding: 15px 25px; overflow-x: auto;
             align-items: flex-start; scroll-behavior: smooth;
@@ -213,19 +215,71 @@
             75% { transform: translateX(-5px); }
         }
 
-        /* الموبايل */
+        /* ========================================= */
+        /* --- تعديلات الشاشات الذكية (Responsive) --- */
+        /* ========================================= */
+        
         @media (max-width: 768px) {
+            body { padding: 80px 0 190px 0; } /* ضبط المسافات للموبايل */
             .header h1 { font-size: 1.5rem; }
-            .social-btn { padding: 6px 12px; font-size: 0.85rem; }
+            .social-btn { padding: 8px 15px; font-size: 0.85rem; }
             .bar-title { font-size: 1.1rem; }
-            .student-dashboard { margin: 10px; flex-direction: column; gap: 10px; padding: 15px; }
-            .progress-wrapper { width: 100%; margin: 10px 0; }
-            .map-container, .english-container { flex-direction: column; padding: 15px; align-items: stretch; }
-            .level-column { min-width: 100%; }
-            .hud-bar { padding: 15px; flex-direction: column; gap: 15px; justify-content: center;}
-            .hours-counter { width: 100%; justify-content: center; font-size: 1rem; flex-wrap: wrap;}
+            
+            .student-dashboard { margin: 10px; flex-direction: column; gap: 12px; padding: 15px; }
+            .progress-wrapper { width: 100%; margin: 5px 0; }
+            
+            /* تحويل الخريطة للعرض الطولي المريح على الموبايل */
+            .map-container, .english-container { 
+                flex-direction: column; /* ترتيب طولي */
+                padding: 15px; 
+                align-items: stretch; /* تمدد الكروت لتملأ الشاشة */
+            }
+            .level-column { 
+                min-width: 100%; 
+                width: 100%; /* أخذ عرض الشاشة بالكامل */
+                box-sizing: border-box;
+            }
+            .english-container .course-node { min-width: 100%; }
+            
+            /* شريط التحكم السفلي للموبايل */
+            .hud-bar { 
+                padding: 15px; 
+                flex-direction: column; 
+                gap: 15px; 
+                justify-content: center;
+            }
+            .hours-counter { width: 100%; justify-content: center; font-size: 1.1rem; flex-wrap: wrap;}
             .finish-btn { width: 100%; max-width: 100%; }
-            body { padding: 75px 0 190px 0; } 
+        }
+
+        /* ========================================= */
+        /* --- إعدادات الطباعة كـ PDF (Print Style) --- */
+        /* ========================================= */
+        @media print {
+            /* إخفاء العناصر غير الضرورية في الورقة */
+            .top-bar, .social-hub, .hud-bar, .info-btn, .important-note, .modal-overlay { 
+                display: none !important; 
+            }
+            body { 
+                padding: 0; margin: 0; background: #fff; color: #000;
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            }
+            /* جعل الخريطة تتوافق مع مقاس الورقة A4 */
+            .map-container { 
+                flex-direction: row; flex-wrap: wrap; justify-content: center; padding: 0; gap: 10px;
+            }
+            .level-column { 
+                min-width: 45%; max-width: 48%; border: 2px solid #333; page-break-inside: avoid; margin-bottom: 10px;
+            }
+            .english-container {
+                flex-direction: row; flex-wrap: wrap; padding: 0; border: none; margin: 0;
+            }
+            .course-node { 
+                border: 1px solid #999 !important; page-break-inside: avoid;
+            }
+            /* الحفاظ على الألوان عند الطباعة */
+            .course-node.completed { background-color: #f0fdf4 !important; border-right: 5px solid var(--success) !important; }
+            .course-node.selected { background-color: #fffaf0 !important; border-right: 5px solid var(--orange) !important; }
         }
     </style>
 </head>
@@ -268,6 +322,9 @@
         <a href="https://t.me/Infomatrixteam_bot" target="_blank" class="social-btn btn-bot">
             <i class="fas fa-robot"></i> بوت شركاء المشاريع
         </a>
+        <button class="social-btn btn-print" onclick="window.print()" title="حفظ خطتك كملف PDF">
+            <i class="fas fa-file-pdf"></i> طباعة الخطة PDF
+        </button>
     </div>
 </div>
 
