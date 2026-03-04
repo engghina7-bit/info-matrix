@@ -7,7 +7,7 @@
     <title>محاكي الخطة الدراسية - Info Matrix</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         :root {
             --navy: #0a192f;
@@ -76,7 +76,9 @@
         .btn-tg { background-color: var(--telegram); }
         .btn-bot { background: linear-gradient(135deg, var(--orange), #e65c00); }
         .btn-about { background-color: var(--navy); border: 2px solid var(--gold); }
-
+<button class="social-btn btn-print" onclick="window.print()" style="background-color: #4b5563;">
+    <i class="fas fa-file-pdf"></i> طباعة PDF
+</button>
         /* Dashboard */
         .student-dashboard {
             background: white; max-width: 900px; margin: 20px auto;
@@ -227,6 +229,72 @@
             .finish-btn { width: 100%; max-width: 100%; }
             body { padding: 75px 0 190px 0; } 
         }
+        /* --- تعديلات التجاوب الشاملة --- */
+
+/* الحاوية الأساسية للمخطط */
+.map-container {
+    display: flex;
+    flex-wrap: wrap; /* يسمح بالعناصر بالنزول لسطر جديد في الشاشات الصغيرة */
+    gap: 20px;
+    padding: 20px;
+    justify-content: center; /* توسيط المحتوى */
+    align-items: flex-start;
+}
+
+/* تنسيق العامود (السنة الدراسية) */
+.level-column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%; /* تأخذ العرض الكامل افتراضياً (للموبايل) */
+    max-width: 350px; /* لكي لا تصبح عريضة جداً */
+    background: rgba(255, 255, 255, 0.7);
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid #e2e8f0;
+}
+
+/* --- التحكم في العرض بناءً على نوع الجهاز --- */
+
+/* الشاشات الكبيرة (لابتوب / كمبيوتر) */
+@media (min-width: 1024px) {
+    .map-container {
+        flex-wrap: nowrap; /* بقاء السنوات بجانب بعضها أفقياً */
+        overflow-x: auto; /* إضافة سكرول أفقي إذا زاد عدد السنوات */
+        justify-content: flex-start;
+    }
+    .level-column {
+        min-width: 300px; /* عرض ثابت لكل سنة في الكمبيوتر */
+    }
+}
+
+/* الشاشات المتوسطة (تابلت) */
+@media (max-width: 1023px) and (min-width: 768px) {
+    .level-column {
+        width: calc(50% - 20px); /* عرض عامودين بجانب بعضهما */
+    }
+}
+
+/* الشاشات الصغيرة (موبايل) */
+@media (max-width: 767px) {
+    body {
+        padding-top: 80px; /* زيادة الهامش العلوي للموبايل لكي لا يغطي البار المحتوى */
+    }
+    .level-column {
+        width: 100%; /* عامود واحد فقط يأخذ كامل عرض الشاشة */
+    }
+    .bar-title {
+        font-size: 1rem; /* تصغير العنوان قليلاً للموبايل */
+    }
+    .hud-bar {
+        flex-direction: column; /* جعل أزرار التحكم تحت بعضها في الموبايل */
+        height: auto;
+        padding: 10px;
+    }
+    .finish-btn {
+        width: 100%; /* زر التثبيت يأخذ العرض الكامل لسهولة اللمس */
+    }
+}
     </style>
 </head>
 <body>
@@ -671,3 +739,4 @@
 
 </body>
 </html>
+
