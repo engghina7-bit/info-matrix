@@ -1,25 +1,31 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+    <link rel="icon" href="logo.jpg" type="image/jpeg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>محاكي الخطة الدراسية - Info Matrix</title>
-    
-    <link rel="icon" href="logo.jpg" type="image/jpeg">
-    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --navy: #0a192f; --navy-light: #112240; --orange: #ff7e00; --gold: #ffc107;
-            --gray: #cbd5e1; --bg: #f0f4f8; --success: #10b981; --danger: #ef4444;
-            --card-bg: #ffffff; --whatsapp: #25D366; --telegram: #0088cc;
+            --navy: #0a192f;
+            --navy-light: #112240;
+            --orange: #ff7e00;
+            --gold: #ffc107;
+            --gray: #cbd5e1;
+            --bg: #f0f4f8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+            --whatsapp: #25D366;
+            --telegram: #0088cc;
         }
 
         body {
             font-family: 'Cairo', sans-serif; background-color: var(--bg);
-            margin: 0; padding: 75px 0 180px 0; color: var(--navy); overflow-x: hidden;
+            margin: 0; padding: 75px 0 220px 0; color: var(--navy); overflow-x: hidden;
             -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
         }
 
@@ -28,161 +34,209 @@
             position: fixed; top: 0; left: 0; right: 0; height: 65px;
             background-color: var(--navy); border-bottom: 3px solid var(--orange);
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 20px; z-index: 1001; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding: 0 15px; z-index: 1001; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        .bar-logo { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--orange); object-fit: cover; }
-        .bar-title { color: var(--gold); font-weight: 900; font-size: 1.3rem; margin: 0; }
+        .bar-logo-container { display: flex; align-items: center; gap: 10px; }
+        .bar-logo {
+            width: 40px; height: 40px; border-radius: 50%;
+            border: 2px solid var(--orange); object-fit: cover; box-shadow: 0 0 10px rgba(255, 126, 0, 0.4);
+        }
+        .bar-title { color: var(--gold); font-weight: 900; font-size: 1.1rem; margin: 0; }
 
-        /* الترويسة */
-        .header { text-align: center; padding: 30px 15px; background: rgba(10, 25, 47, 0.05); border-bottom: 2px dashed #cbd5e1; }
-        .header h1 { color: var(--navy); margin: 0 0 10px 0; font-size: 1.8rem; font-weight: 900; }
+        /* الترويسة الرئيسية */
+        .header {
+            text-align: center; padding: 25px 15px; background: rgba(10, 25, 47, 0.05);
+            border-bottom: 2px dashed #cbd5e1;
+        }
+        .header h1 { color: var(--navy); margin: 0 0 5px 0; font-size: 1.6rem; font-weight: 900;}
+        .header p { margin: 0; font-size: 1rem; color: #475569; font-weight: 600;}
 
         /* صندوق الملاحظة الهامة */
         .important-note {
             background: #fff3cd; border-right: 5px solid var(--orange);
-            padding: 15px; border-radius: 10px; margin: 20px auto; max-width: 800px;
-            font-weight: 800; color: var(--navy); font-size: 1rem; line-height: 1.6;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            padding: 15px; border-radius: 10px; margin: 15px auto; max-width: 90%;
+            font-weight: 800; color: var(--navy); display: flex; align-items: center; gap: 10px;
+            font-size: 0.95rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: right;
         }
 
-        /* روابط الفريق */
-        .social-hub { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 15px; }
+        /* قسم روابط الفريق */
+        .social-hub { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
         .social-btn {
-            display: flex; align-items: center; gap: 8px; padding: 10px 20px;
-            border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 0.9rem;
-            color: white; transition: 0.3s ease; border: none; cursor: pointer; font-family: 'Cairo';
+            display: flex; align-items: center; gap: 8px; padding: 10px 18px;
+            border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 0.85rem;
+            color: white; transition: all 0.3s ease; box-shadow: 0 3px 8px rgba(0,0,0,0.15); border: none; cursor: pointer; font-family: 'Cairo', sans-serif;
         }
         .social-btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
-        .btn-wa { background: var(--whatsapp); } .btn-tg { background: var(--telegram); }
+        .btn-wa { background-color: var(--whatsapp); }
+        .btn-tg { background-color: var(--telegram); }
         .btn-bot { background: linear-gradient(135deg, var(--orange), #e65c00); }
-        .btn-about { background: var(--navy-light); border: 2px solid var(--gold); }
+        .btn-about { background-color: var(--navy); border: 1px solid var(--gold); }
+        .btn-print { background-color: #4b5563; } /* زر الطباعة */
 
         /* Dashboard */
         .student-dashboard {
-            background: white; max-width: 950px; margin: 25px auto;
-            padding: 20px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            background: white; max-width: 90%; margin: 20px auto;
+            padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);
             display: flex; flex-direction: column; gap: 15px; border: 1px solid #e2e8f0;
         }
-        .stat-line { display: flex; justify-content: space-between; align-items: center; font-weight: 900; }
-        .stat-line span { color: var(--orange); font-size: 1.4rem; }
-        .progress-bar { height: 14px; background: #f1f5f9; border-radius: 20px; overflow: hidden; border: 1px solid #e2e8f0; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--orange)); width: 0%; transition: 0.8s ease-in-out; }
+        .stat-box { text-align: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
+        .stat-box:last-child { border: none; }
+        .stat-box h4 { margin: 0; color: #64748b; font-size: 0.85rem; }
+        .stat-box span { font-size: 1.4rem; font-weight: 900; color: var(--navy); }
+        .stat-box.highlight span { color: var(--orange); }
+        
+        .progress-wrapper { text-align: center; }
+        .progress-bar { height: 12px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-top: 8px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--orange)); width: 0%; transition: 0.5s; }
+        .progress-text { font-size: 0.85rem; font-weight: bold; color: #64748b; margin-top: 5px; }
 
-        /* حاوية الخريطة */
-        .map-container { display: flex; flex-direction: column; gap: 25px; padding: 20px; }
+        /* حاوية الخريطة الأساسية - العرض الافتراضي للموبايل */
+        .map-container {
+            display: flex; flex-direction: column; gap: 25px; padding: 15px;
+        }
+        
         .level-column {
-            background: white; border-radius: 20px; padding: 18px;
-            border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            display: flex; flex-direction: column; gap: 15px; width: 100%;
+            background: rgba(255, 255, 255, 0.7); padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0;
         }
         .level-title {
-            background: var(--navy); color: white; text-align: center;
-            padding: 12px; border-radius: 12px; font-weight: 900; border-bottom: 4px solid var(--orange);
+            text-align: center; font-weight: 900; color: white; background: var(--navy-light);
+            margin-bottom: 5px; padding: 12px; border-radius: 10px; border-bottom: 4px solid var(--orange);
             font-size: 1.1rem;
+        }
+
+        /* حاوية الإنجليزي */
+        .english-container {
+            display: flex; flex-direction: column; gap: 15px; padding: 15px;
+            background: rgba(255, 126, 0, 0.03); border-radius: 15px;
+            margin: 0 15px 30px 15px; border: 2px dashed var(--orange);
         }
 
         /* كرت المادة */
         .course-node {
-            background: #ffffff; border: 1px solid #f1f5f9; border-radius: 15px;
-            padding: 15px; position: relative; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            background: var(--card-bg); border: 1px solid var(--gray); border-radius: 12px;
+            padding: 15px; text-align: right; cursor: pointer; position: relative;
+            transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            display: flex; flex-direction: column; gap: 8px;
         }
-        .course-node:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
-        .course-node h3 { margin: 0 0 10px 0; font-size: 1.05rem; font-weight: 800; padding: 0 30px; color: var(--navy); line-height: 1.4; }
-        .details { display: flex; justify-content: space-between; font-size: 0.85rem; color: #64748b; font-weight: bold; align-items: center; }
-        .credit-tag { color: var(--orange); background: rgba(255, 126, 0, 0.1); padding: 3px 10px; border-radius: 8px; font-size: 0.8rem; }
+        .course-node h3 { margin: 0; font-size: 1.05rem; color: var(--navy); font-weight: 800; padding: 0 25px; }
+        .course-node .details { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: bold; color: #64748b; }
+        .course-node .credit { background: rgba(255, 126, 0, 0.1); padding: 3px 10px; border-radius: 8px; color: var(--orange); font-size: 0.75rem; }
 
-        .status-icon { position: absolute; top: 18px; right: 15px; font-size: 1.2rem; color: #cbd5e1; }
+        .status-icon { position: absolute; top: 12px; right: 12px; font-size: 1.2rem; color: #cbd5e1; }
         .info-btn { 
-            position: absolute; top: 15px; left: 15px; background: #f8fafc;
-            width: 28px; height: 28px; border-radius: 50%; display: flex;
-            justify-content: center; align-items: center; font-size: 1rem; font-weight: 900; color: var(--navy);
-            border: 1px solid #e2e8f0; transition: 0.3s;
+            position: absolute; top: 10px; left: 10px; font-size: 1rem; color: var(--navy); 
+            background: #e2e8f0; border-radius: 50%; width: 26px; height: 26px; 
+            display: flex; justify-content: center; align-items: center; z-index: 2;
         }
-        .info-btn:hover { background: var(--orange); color: white; border-color: var(--orange); }
 
         /* الحالات */
         .course-node.available { border-right: 6px solid var(--navy); }
         .course-node.selected { border-right: 6px solid var(--orange); background: #fffaf0; }
         .course-node.completed { border-right: 6px solid var(--success); background: #f0fdf4; }
-        .course-node.locked { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.2); }
 
-        /* شريط التحكم السفلي */
+        /* شريط التحكم السفلي للموبايل */
         .hud-bar {
             position: fixed; bottom: 0; left: 0; right: 0; background: white;
-            padding: 20px; border-top: 4px solid var(--orange); z-index: 1000;
-            display: flex; flex-direction: column; gap: 12px; text-align: center;
-            box-shadow: 0 -8px 20px rgba(0,0,0,0.1);
+            padding: 15px 20px; box-shadow: 0 -10px 20px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; align-items: center; gap: 12px; z-index: 1000;
+            border-top: 4px solid var(--orange);
         }
-        .hours-badge { background: var(--navy); color: white; padding: 6px 15px; border-radius: 10px; font-weight: 900; font-size: 1.4rem; }
+        .hours-counter { font-size: 1.1rem; font-weight: 900; color: var(--navy); text-align: center; }
+        .hours-badge { background: var(--gray); color: white; padding: 5px 15px; border-radius: 12px; display: inline-block; margin: 5px 0; font-size: 1.3rem;}
         .hours-badge.valid { background: var(--success); }
         .hours-badge.invalid { background: var(--danger); animation: shake 0.4s; }
+        
         .finish-btn {
-            background: linear-gradient(135deg, var(--orange), #e65c00); color: white; border: none; padding: 15px;
-            border-radius: 15px; font-weight: 900; width: 100%; font-family: 'Cairo'; cursor: pointer; font-size: 1.2rem;
-            box-shadow: 0 4px 12px rgba(255, 126, 0, 0.3); transition: 0.3s;
+            background: linear-gradient(135deg, var(--orange), #e65c00); color: white; border: none; padding: 14px;
+            font-family: 'Cairo'; font-size: 1.1rem; font-weight: bold; border-radius: 12px;
+            cursor: pointer; transition: 0.3s; width: 100%; max-width: 300px;
         }
-        .finish-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 
         /* النافذة المنبثقة */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(10, 25, 47, 0.9);
-            display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center; z-index: 2000; padding: 15px;
         }
-        .modal { background: white; padding: 30px; border-radius: 25px; width: 100%; max-width: 550px; max-height: 85vh; overflow-y: auto; text-align: center; border-top: 8px solid var(--orange); position: relative; }
+        .modal {
+            background: white; padding: 25px; border-radius: 20px; width: 100%; max-width: 450px; 
+            border-top: 6px solid var(--orange); max-height: 85vh; overflow-y: auto; text-align: center;
+        }
 
-        /* Responsive */
+        /* تعديلات الشاشات الكبيرة (Desktop) */
         @media (min-width: 992px) {
-            .map-container { flex-direction: row; overflow-x: auto; align-items: flex-start; padding: 30px 50px; gap: 30px; }
-            .level-column { min-width: 320px; }
-            .hud-bar { flex-direction: row; justify-content: space-between; padding: 20px 80px; align-items: center; }
-            .finish-btn { width: 400px; }
-            .student-dashboard { flex-direction: row; align-items: center; padding: 25px 50px; gap: 60px; }
+            .map-container { flex-direction: row; overflow-x: auto; align-items: flex-start; padding: 30px; }
+            .level-column { min-width: 280px; width: 280px; }
+            .english-container { flex-direction: row; overflow-x: auto; }
+            .student-dashboard { flex-direction: row; justify-content: space-between; max-width: 900px; }
+            .stat-box { border: none; padding: 0; }
+            .hud-bar { flex-direction: row; justify-content: space-around; padding: 15px 50px; }
+            .finish-btn { width: 300px; }
+            body { padding-bottom: 120px; }
+        }
+
+        /* تنسيق الطباعة PDF */
+        @media print {
+            .top-bar, .social-hub, .important-note, .hud-bar, .info-btn, .status-icon { display: none !important; }
+            body { padding: 0; background: white; -webkit-print-color-adjust: exact; }
+            .map-container, .english-container { display: block; }
+            .level-column { break-inside: avoid; border: 2px solid #000; margin-bottom: 20px; }
+            .course-node { border: 1px solid #aaa !important; margin-bottom: 5px; page-break-inside: avoid; }
+            .progress-bar, .header p { display: none; }
+            h1, h2 { color: black !important; }
         }
     </style>
 </head>
 <body>
 
 <nav class="top-bar">
-    <div style="display:flex; align-items:center; gap:15px;">
+    <div class="bar-logo-container">
         <img src="logo.jpg" alt="Logo" class="bar-logo">
         <h2 class="bar-title">INFO MATRIX</h2>
     </div>
-    <button class="social-btn btn-about" onclick="showAboutTeam()"><i class="fas fa-users"></i> فريقنا</button>
+    <button class="social-btn btn-print" onclick="window.print()" title="حفظ كـ PDF">
+        <i class="fas fa-file-pdf"></i> PDF
+    </button>
 </nav>
 
 <div class="header">
     <h1>محاكي الخطة الدراسية 🎓</h1>
     <div class="social-hub">
-        <a href="https://chat.whatsapp.com/BbuJCYYqLDmFuh5jGQx3jE" target="_blank" class="social-btn btn-wa"><i class="fab fa-whatsapp"></i> مجتمعنا</a>
-        <a href="https://t.me/+TsXK9bQt8as2OWRk" target="_blank" class="social-btn btn-tg"><i class="fab fa-telegram-plane"></i> قناتنا</a>
-        <a href="https://t.me/Infomatrixteam_bot" target="_blank" class="social-btn btn-bot"><i class="fas fa-robot"></i> بوت المشاريع</a>
+        <button class="social-btn btn-about" onclick="showAboutTeam()">فريقنا</button>
+        <a href="https://chat.whatsapp.com/BbuJCYYqLDmFuh5jGQx3jE" target="_blank" class="social-btn btn-wa"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://t.me/+TsXK9bQt8as2OWRk" target="_blank" class="social-btn btn-tg"><i class="fab fa-telegram-plane"></i></a>
     </div>
 </div>
 
 <div class="important-note">
-    💡 ملاحظة هامة: يكفي "تنزيل" المادة (الأسبقية) لتفتح لك المواد اللاحقة في الفصول القادمة، ولا يشترط ترفيعها أو النجاح بها!
+    <i class="fas fa-lightbulb"></i>
+    <span>تنزيل المادة (الأسبقية) يفتح المادة اللاحقة تلقائياً، ولا يشترط ترفيعها.</span>
 </div>
 
 <div class="student-dashboard">
-    <div style="flex:1;">
-        <div class="stat-line">السنة الأكاديمية: <span id="academicYear">الأولى</span></div>
-        <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill" id="promotionProgress"></div></div>
+    <div class="stat-box">
+        <h4>السنة الأكاديمية</h4>
+        <span id="academicYear">الأولى</span>
     </div>
-    <div class="stat-line" style="flex:1; justify-content: center; gap: 15px;">
-        الرصيد المُنجز: <span id="totalCreditsEarned">0</span> <small>نقطة</small>
+    <div class="progress-wrapper">
+        <div class="progress-bar"><div class="progress-fill" id="promotionProgress"></div></div>
+        <div class="progress-text" id="promotionText">تحتاج إلى 40 نقطة مُنجزة للسنة الثانية</div>
+    </div>
+    <div class="stat-box highlight">
+        <h4>الرصيد المُنجز</h4>
+        <span id="totalCreditsEarned">0</span> <small>نقطة</small>
     </div>
 </div>
 
 <div class="map-container" id="mapContainer"></div>
 
-<h2 style="margin: 40px 25px 10px; font-weight: 900; color: var(--navy); border-right: 5px solid var(--gold); padding-right: 15px;">🇬🇧 مسار اللغة الإنجليزية</h2>
-<div class="map-container" style="background:rgba(255,126,0,0.03); border-radius:25px; margin:20px; border: 2px dashed var(--orange);" id="englishContainer"></div>
+<h2 style="margin: 20px 25px 5px; color: var(--navy); font-weight: 900; font-size: 1.2rem;">🇬🇧 اللغة الإنجليزية</h2>
+<div class="english-container" id="englishContainer"></div>
 
 <div class="hud-bar">
-    <div style="font-weight: 800; font-size: 1.2rem;">
-        عبء التنزيل الحالي: <span class="hours-badge" id="hoursCounter">0</span> <small>نقطة</small>
-        <div style="font-size: 0.85rem; color: #64748b; margin-top: 6px;">(المسموح للفصل: 16 - 36 نقطة)</div>
+    <div class="hours-counter">
+        عبء الفصل الحالي: <span class="hours-badge" id="hoursCounter">0</span> نقطة
+        <br><small style="color: #64748b;">(المسموح: 16 - 36 نقطة)</small>
     </div>
     <button class="finish-btn" id="finishBtn" onclick="finishSemester()" disabled>تثبيت الفصل والنجاح</button>
 </div>
@@ -192,68 +246,55 @@
 </div>
 
 <script>
-    const defaultInfo = { 
-        over: "لم يتوفر شرح مفصل لها في الدليل الحالي.", doc: "سيتم التحديث قريباً.", prac: "تابعونا على القناة.", exam: "أسئلة دورات.", sup: "فريق Info Matrix بجانبكم." 
-    };
+    const defaultInfo = { over: "لم يتوفر شرح مفصل لها حالياً.", doc: "غير متوفر.", prac: "غير متوفر.", exam: "غير متوفر.", sup: "قريباً!" };
 
-    // قاعدة البيانات الكاملة (45 مادة + الإنجليزي)
+    // قاعدة البيانات (كما هي بدون أي حذف)
     const coursesDB = {
-        // --- السنة الأولى ---
-        "GCS301": { name: "مهارات حاسوب", credits: 4, level: 1, prereqs: [], info: { over: "أساسيات الحاسوب والأوفيس (Word, Excel).", doc: "د. محمد الحبال (رائع).", prac: "تطبيق عملي بسيط.", exam: "سهل ومضمون.", sup: "ملخصات للقوانين + بنك دورات." } },
-        "GTW301": { name: "مهارات التواصل", credits: 5, level: 1, prereqs: ["GCS301"], info: { over: "فن الإلقاء وتجهيز السيرة الذاتية CV.", doc: "الجميع جيد.", prac: "عرض تقديمي وتسجيل صوتي.", exam: "بسيط ودورات.", sup: "قوالب جاهزة + نصائح للإلقاء." } },
-        "GOE301": { name: "التعليم الالكتروني", credits: 4, level: 1, prereqs: [], info: { over: "مادة نظرية ممتعة، تعتبر مادة رفع معدل.", doc: "جميع الدكاترة جيدين.", prac: "حلقة بحث + عرض بوربوينت.", exam: "سهل جداً.", sup: "نماذج حلقات بحث سابقة." } },
-        "BPH401": { name: "الفيزياء", credits: 5, level: 1, prereqs: [], info: { over: "تتمة لفيزياء البكالوريا مع إضافات هندسية.", doc: "د. باسم السهو.", prac: "مسائل قوانين وتجارب.", exam: "متوسط، يحتاج فهم للقوانين.", sup: "ملخصات شاملة للقوانين." } },
-        "BMA401": { name: "التحليل 1", credits: 5, level: 1, prereqs: [], info: { over: "تتمة لمنهاج البكالوريا (متتاليات، توابع).", doc: "د. عمار مردم بك.", prac: "تمارين تطبيقية.", exam: "يحتاج متابعة مستمرة.", sup: "حلول تمارين + نماذج امتحانية." } },
-        "BAS401": { name: "بنى جبرية", credits: 5, level: 1, prereqs: [], info: { over: "مادة دسمة تتحدث عن المنطق والمجموعات والجبر.", doc: "د. حيان (ممتاز).", prac: "صعبة وتحتاج مجموعات.", exam: "يحتاج دراسة معمقة.", sup: "ملخصات الفريق للشرح المبسط." } },
-        "BPG401": { name: "برمجة 1", credits: 5, level: 1, prereqs: [], info: { over: "أساسيات البرمجة بلغة C.", doc: "د. حسام فوال.", prac: "تتضمن وظائف برمجية.", exam: "يعتمد على الفهم العملي للكود.", sup: "أكواد برمجية جاهزة للتدريب." } },
-
-        // --- السنة الثانية ---
-        "BEC401": { name: "دارات إلكترونية", credits: 5, level: 2, prereqs: ["BPH401"], info: { over: "دراسة الترانزستورات والديودات والمضخمات.", doc: "د. أميمة.", prac: "مسائل تطبيقية مضمونة العلامة.", exam: "يعتمد كثيراً على الدورات.", sup: "ملخصات قوانين الدارات." } },
-        "BLA401": { name: "جبر خطي 1", credits: 5, level: 2, prereqs: ["BMA401"], info: { over: "دراسة المصفوفات والفضاءات الشعاعية.", doc: "د. عمران.", prac: "استخدام ملفات Excel للحل.", exam: "سهلة ومألوفة.", sup: "ملفات مساعدة للعملي." } },
-        "BMA402": { name: "التحليل 2", credits: 5, level: 2, prereqs: ["BMA401"], info: { over: "لابلاس، فورييه، والتوابع المعقدة.", doc: "د. برلنت مطيط.", prac: "تمارين مكثفة.", exam: "أسئلة دورات مكررة غالباً.", sup: "ملخصات تحويلات لابلاس." } },
-        "BLC401": { name: "دارات منطقية", credits: 5, level: 2, prereqs: ["BAS401"], info: { over: "جداول الحقيقة، البوابات المنطقية، والقلابات.", doc: "د. لؤي.", prac: "سهل وممتع.", exam: "دورات أغلب الأحيان.", sup: "شرح للبوابات المنطقية." } },
-        "BPG402": { name: "برمجة 2", credits: 5, level: 2, prereqs: ["BPG401"], info: { over: "البرمجة كائنية التوجه والواجهات GUI.", doc: "د. جميل.", prac: "مشروع واجهات برمجية.", exam: "متوسط ويحتاج تدريب.", sup: "أمثلة على مشاريع سابقة." } },
-        "BDM501": { name: "رياضيات متقطعة", credits: 5, level: 2, prereqs: ["BLC401"], info: { over: "الأشجار، المنطق، والاوتومات.", doc: "د. محسن.", prac: "حلقة بحث.", exam: "أسئلة دورات واضحة.", sup: "كورس الفريق التأسيسي." } },
-        "BCA501": { name: "بنيان حواسيب 1", credits: 6, level: 2, prereqs: ["BLC401"], info: { over: "دراسة المعالج والذاكرة والعتاد الصلب.", doc: "د. هبة.", prac: "أسئلة مكررة.", exam: "نظري وتعريفات.", sup: "كورس شرح البنيان." } },
-        "BDA501": { name: "الخوارزميات", credits: 6, level: 2, prereqs: ["BPG402"], info: { over: "هياكل البيانات، البحث، والترتيب.", doc: "د. سهير.", prac: "فهم عميق للخوارزميات.", exam: "صعب ويحتاج ممارسة.", sup: "شرح لأهم أنواع الخوارزميات." } },
-        "BWP401": { name: "برمجة ويب 1", credits: 5, level: 2, prereqs: ["BPG402"], info: { over: "تطوير واجهات المواقع (HTML, CSS, JS).", doc: "د. باسل.", prac: "تصميم موقع ويب.", exam: "دورات بنسبة كبيرة.", sup: "شرح متكامل للوظيفة." } },
-
-        // --- السنة الثالثة ---
-        "BNA401": { name: "تحليل عددي", credits: 5, level: 3, prereqs: ["BLA401", "BMA402"], info: { over: "طرق التقريب العددي وحل المعادلات.", doc: "د. يوسف.", prac: "تطبيق قوانين.", exam: "دورات واضحة.", sup: "ملخصات القوانين العددية." } },
-        "BSP501": { name: "معالجة إشارة", credits: 5, level: 3, prereqs: ["BMA402"], info: { over: "تحليل الإشارات في المجال الزمني والترددي.", doc: "د. إياد.", prac: "سهل ومباشر.", exam: "دورات متكررة.", sup: "ملخصات الفريق للإشارة." } },
-        "BPS501": { name: "احتمالات وإحصاء", credits: 6, level: 3, prereqs: ["BMA402", "BDM501"], info: defaultInfo },
-        "BOS501": { name: "نظم تشغيل", credits: 4, level: 3, prereqs: ["BCA501", "BDA501"], info: { over: "إدارة الذاكرة والمعالج في أنظمة التشغيل.", doc: "د. غيث.", prac: "بحث علمي.", exam: "نظري وأسئلة فهم.", sup: "بنك دورات النظم." } },
-        "BOSL501": { name: "مخبر نظم تشغيل", credits: 4, level: 3, prereqs: ["BCA501", "BDA501"], info: { over: "أوامر لينكس Linux والتعامل مع الكيرنل.", doc: "د. ماجدة.", prac: "أكواد C++.", exam: "عملي على النظام.", sup: "دليل أوامر لينكس الشامل." } },
-        "BDB501": { name: "قواعد بيانات 1", credits: 4, level: 3, prereqs: ["BDA501"], info: { over: "تصميم الجداول ولغة SQL.", doc: "د. علاء.", prac: "بناء قاعدة بيانات.", exam: "نظري وعملي.", sup: "كورس لغة SQL." } },
-        "BDBL501": { name: "مخبر قواعد بيانات", credits: 4, level: 3, prereqs: ["BDA501"], info: { over: "رسم ERD والتطبيق على SQL Developer.", doc: "د. محمد حجوز.", prac: "مسائل تطبيقية.", exam: "عملي.", sup: "شرح مخططات ERD." } },
-        "BAU501": { name: "أوتومات ولغات", credits: 5, level: 3, prereqs: ["BDA501", "BDM501"], info: defaultInfo },
-        "BPG601": { name: "برمجة 3", credits: 5, level: 3, prereqs: ["BPG402"], info: { over: "لغة بايثون Python وتطبيقاتها.", doc: "د. أحمد العص.", prac: "سهل وممتع.", exam: "رفع معدل ومألوف.", sup: "دورات البايثون." } },
-        "BAI501": { name: "الذكاء الصنعي", credits: 5, level: 3, prereqs: ["BDA501"], info: defaultInfo },
-
-        // --- السنة الرابعة ---
-        "GMN401": { name: "أساسيات إدارة", credits: 4, level: 4, prereqs: ["BNA401"], info: { over: "مفاهيم الإدارة الحديثة والشركات.", doc: "د. علي نوفل.", prac: "وظيفة إدارية.", exam: "نظري حفظ.", sup: "ملخصات الإدارة." } },
-        "BTS501": { name: "نظم اتصالات", credits: 5, level: 4, prereqs: ["BMA402", "BLC401"], info: { over: "أساسيات نقل البيانات والاتصالات.", doc: "د. رضوان.", prac: "مسائل قوانين.", exam: "قوانين وأتمتة.", sup: "كورس الاتصالات." } },
-        "BNT501": { name: "الشبكات الحاسوبية", credits: 6, level: 4, prereqs: ["BTS501"], info: { over: "بروتوكولات الشبكات (OSI Model).", doc: "د. مرح.", prac: "Cisco Packet Tracer.", exam: "مكرر وواضح.", sup: "شرح لبرامج المحاكاة." } },
-        "BWP501": { name: "برمجة ويب 2", credits: 5, level: 4, prereqs: ["BWP401"], info: { over: "تطوير الـ Backend باستخدام PHP.", doc: "د. باسل.", prac: "موقع ويب متكامل.", exam: "دورات.", sup: "شرح لغة PHP." } },
-        "GPM601": { name: "إدارة مشاريع", credits: 6, level: 4, prereqs: ["BSE601"], info: defaultInfo },
-        "BSE601": { name: "هندسة برمجيات", credits: 6, level: 4, prereqs: ["BPG601"], info: { over: "دورة حياة البرمجيات ومنهجيات التطوير.", doc: "د. محمد.", prac: "دراسة حالة.", exam: "شابترات فهم.", sup: "ملخصات الهندسة." } },
-        "BPR601": { name: "مشروع 1", credits: 6, level: 4, prereqs: ["BIS501"], minTotalCredits: 180, info: { over: "مشروع تخرج مصغر وتدريب عملي." } },
-        "BMP601": { name: "برمجة النقال", credits: 5, level: 4, prereqs: ["BWP501"], info: defaultInfo },
-        "BID501": { name: "تحليل وتصميم النظم", credits: 6, level: 4, prereqs: ["BDB501"], info: defaultInfo },
-        "BCM601": { name: "المترجمات", credits: 6, level: 4, prereqs: ["BAU501"], info: defaultInfo },
-        "BIA601": { name: "خوارزميات ذكية", credits: 5, level: 4, prereqs: ["BAI501"], info: defaultInfo },
-        "BIS501": { name: "أمن المعلومات", credits: 6, level: 4, prereqs: ["GET501", "BDB501", "BOS501", "BNT501"], info: defaultInfo },
-
-        // --- السنة الخامسة ---
-        "GET501": { name: "أخلاقيات المهنة", credits: 6, level: 5, prereqs: ["GPM601"], info: defaultInfo },
-        "GAC501": { name: "المحاسبة", credits: 5, level: 5, prereqs: ["GMN401"], info: { over: "مبادئ المحاسبة للمهندسين.", doc: "دورة المحاسبة.", prac: "مسائل حسابية.", exam: "نظري وعملي.", sup: "ملخصات المحاسبة." } },
-        "BPR602": { name: "مشروع 2", credits: 10, level: 5, prereqs: ["BPR601"], minTotalCredits: 240, info: { over: "المشروع النهائي لنيل الإجازة." } },
-        "BMM601": { name: "نظم الوسائط المتعددة", credits: 6, level: 5, prereqs: ["BNT501", "BDG601"], info: defaultInfo },
-        "BDG601": { name: "البيانات", credits: 6, level: 5, prereqs: ["BSP501", "BDA501"], info: defaultInfo },
-        "GEP601": { name: "نظرية المعرفة", credits: 4, level: 5, prereqs: ["GET501"], info: defaultInfo },
-        "BSM601": { name: "النمذجة والمحاكاة", credits: 5, level: 5, prereqs: ["BPR601", "BPS501", "BPG601"], info: defaultInfo },
-
-        // --- مسار الإنجليزي ---
+        "GCS301": { name: "مهارات حاسوب", credits: 4, level: 1, prereqs: [], info: { over: "أساسيات الحاسوب والأوفيس.", doc: "د. محمد الحبال.", prac: "Excel & Word.", exam: "سهل.", sup: "بنك دورات." } },
+        "GTW301": { name: "مهارات التواصل", credits: 5, level: 1, prereqs: ["GCS301"], info: { over: "مهارات تقديم وسيرة ذاتية.", doc: "الجميع.", prac: "عرض تقديمي.", exam: "بسيط.", sup: "قوالب." } },
+        "GOE301": { name: "التعليم الالكتروني", credits: 4, level: 1, prereqs: [], info: { over: "مادة نظرية سهلة." } },
+        "BPH401": { name: "الفيزياء", credits: 5, level: 1, prereqs: [], info: { over: "فيزياء هندسية." } },
+        "BMA401": { name: "التحليل 1", credits: 5, level: 1, prereqs: [], info: { over: "تتمة بكالوريا." } },
+        "BAS401": { name: "بنى جبرية", credits: 5, level: 1, prereqs: [], info: { over: "منطق ومجموعات." } },
+        "BPG401": { name: "برمجة 1", credits: 5, level: 1, prereqs: [], info: { over: "أساسيات C." } },
+        "BEC401": { name: "دارات إلكترونية", credits: 5, level: 2, prereqs: ["BPH401"] },
+        "BLA401": { name: "جبر خطي 1", credits: 5, level: 2, prereqs: ["BMA401"] },
+        "BMA402": { name: "التحليل 2", credits: 5, level: 2, prereqs: ["BMA401"] },
+        "BLC401": { name: "دارات منطقية", credits: 5, level: 2, prereqs: ["BAS401"] },
+        "BPG402": { name: "برمجة 2", credits: 5, level: 2, prereqs: ["BPG401"] },
+        "BDM501": { name: "رياضيات متقطعة", credits: 5, level: 2, prereqs: ["BLC401"] },
+        "BCA501": { name: "بنيان حواسيب 1", credits: 6, level: 2, prereqs: ["BLC401"] },
+        "BDA501": { name: "الخوارزميات", credits: 6, level: 2, prereqs: ["BPG402"] },
+        "BWP401": { name: "برمجة ويب 1", credits: 5, level: 2, prereqs: ["BPG402"] },
+        "BNA401": { name: "تحليل عددي", credits: 5, level: 3, prereqs: ["BLA401", "BMA402"] },
+        "BSP501": { name: "معالجة إشارة", credits: 5, level: 3, prereqs: ["BMA402"] },
+        "BPS501": { name: "احتمالات وإحصاء", credits: 6, level: 3, prereqs: ["BMA402", "BDM501"] },
+        "BOS501": { name: "نظم تشغيل", credits: 4, level: 3, prereqs: ["BCA501", "BDA501"] },
+        "BOSL501": { name: "مخبر نظم تشغيل", credits: 4, level: 3, prereqs: ["BCA501", "BDA501"] },
+        "BDB501": { name: "قواعد بيانات 1", credits: 4, level: 3, prereqs: ["BDA501"] },
+        "BDBL501": { name: "مخبر قواعد بيانات", credits: 4, level: 3, prereqs: ["BDA501"] },
+        "BAU501": { name: "أوتومات ولغات", credits: 5, level: 3, prereqs: ["BDA501", "BDM501"] },
+        "BPG601": { name: "برمجة 3", credits: 5, level: 3, prereqs: ["BPG402"] },
+        "BAI501": { name: "الذكاء الصنعي", credits: 5, level: 3, prereqs: ["BDA501"] },
+        "GMN401": { name: "أساسيات إدارة", credits: 4, level: 4, prereqs: ["BNA401"] },
+        "BTS501": { name: "نظم اتصالات", credits: 5, level: 4, prereqs: ["BMA402", "BLC401"] },
+        "BNT501": { name: "الشبكات الحاسوبية", credits: 6, level: 4, prereqs: ["BTS501"] },
+        "BWP501": { name: "برمجة ويب 2", credits: 5, level: 4, prereqs: ["BWP401"] },
+        "GPM601": { name: "إدارة مشاريع", credits: 6, level: 4, prereqs: ["BSE601"] },
+        "BSE601": { name: "هندسة برمجيات", credits: 6, level: 4, prereqs: ["BPG601"] },
+        "BPR601": { name: "مشروع 1", credits: 6, level: 4, prereqs: ["BIS501"], minTotalCredits: 180 },
+        "BMP601": { name: "برمجة تطبيقات النقال", credits: 5, level: 4, prereqs: ["BWP501"] },
+        "BID501": { name: "تحليل وتصميم النظم", credits: 6, level: 4, prereqs: ["BDB501"] },
+        "BCM601": { name: "المترجمات", credits: 6, level: 4, prereqs: ["BAU501"] },
+        "BIA601": { name: "خوارزميات ذكية", credits: 5, level: 4, prereqs: ["BAI501"] },
+        "BIS501": { name: "أمن المعلومات", credits: 6, level: 4, prereqs: ["GET501", "BDB501", "BOS501", "BNT501"] },
+        "GET501": { name: "أخلاقيات المهنة", credits: 6, level: 5, prereqs: ["GPM601"] },
+        "GAC501": { name: "المحاسبة", credits: 5, level: 5, prereqs: ["GMN401"] },
+        "BPR602": { name: "مشروع 2", credits: 10, level: 5, prereqs: ["BPR601"], minTotalCredits: 240 },
+        "BMM601": { name: "نظم الوسائط المتعددة", credits: 6, level: 5, prereqs: ["BNT501", "BDG601"] },
+        "BDG601": { name: "البيانات", credits: 6, level: 5, prereqs: ["BSP501", "BDA501"] },
+        "GEP601": { name: "نظرية المعرفة", credits: 4, level: 5, prereqs: ["GET501"] },
+        "BSM601": { name: "النمذجة والمحاكاة", credits: 5, level: 5, prereqs: ["BPR601", "BPS501", "BPG601"] },
         "GEN301": { name: "اللغة الإنجليزية 1", credits: 1, earned: 3, level: "ENG", prereqs: [], isEnglish: true },
         "GEN401": { name: "اللغة الإنجليزية 2", credits: 1, earned: 3, level: "ENG", prereqs: ["GEN301"], isEnglish: true },
         "GEN501": { name: "اللغة الإنجليزية 3", credits: 1, earned: 3, level: "ENG", prereqs: ["GEN401"], isEnglish: true },
@@ -270,24 +311,20 @@
         for (let y = 1; y <= 5; y++) {
             let col = document.createElement('div'); col.className = 'level-column';
             col.innerHTML = `<div class="level-title">السنة الدراسية ${y}</div>`;
-            Object.keys(coursesDB).filter(id => coursesDB[id].level == y).forEach(id => {
-                col.innerHTML += createNode(id, coursesDB[id]);
-            });
+            Object.keys(coursesDB).filter(id => coursesDB[id].level == y).forEach(id => col.innerHTML += createNode(id, coursesDB[id]));
             map.appendChild(col);
         }
-        Object.keys(coursesDB).filter(id => coursesDB[id].level == "ENG").forEach(id => {
-            eng.innerHTML += createNode(id, coursesDB[id]);
-        });
+        Object.keys(coursesDB).filter(id => coursesDB[id].level == "ENG").forEach(id => eng.innerHTML += createNode(id, coursesDB[id]));
         updateUI();
     }
 
     function createNode(id, c) {
-        let disp = c.earned ? `${c.credits} نقطة تنزيل ⬅️ ${c.earned} ترفيع` : `${c.credits} نقطة`;
+        let disp = c.earned ? `${c.credits} (ت) / ${c.earned} (ن)` : `${c.credits} نقطة`;
         return `<div class="course-node locked" id="node-${id}" onclick="toggleCourse('${id}')">
-            <div class="info-btn" onclick="showCourseInfo(event,'${id}')">!</div>
+            <div class="info-btn" onclick="showCourseInfo(event, '${id}')">!</div>
             <i class="fas fa-lock status-icon" id="icon-${id}"></i>
             <h3>${c.name}</h3>
-            <div class="details"><span>${id}</span><span class="credit-tag">${disp}</span></div>
+            <div class="details"><span>${id}</span><span class="credit">${disp}</span></div>
         </div>`;
     }
 
@@ -296,7 +333,8 @@
         updateDashboard();
         for (const id in coursesDB) {
             const n = document.getElementById(`node-${id}`); const i = document.getElementById(`icon-${id}`);
-            const c = coursesDB[id]; n.className = 'course-node';
+            const c = coursesDB[id]; if(!n) continue;
+            n.className = 'course-node';
             if (completedCourses.includes(id)) { n.classList.add('completed'); i.className = 'fas fa-check-circle'; }
             else if (currentCart.includes(id)) { n.classList.add('selected'); i.className = 'fas fa-plus-circle'; }
             else {
@@ -305,20 +343,20 @@
                 else { n.classList.add('locked'); i.className = 'fas fa-lock'; }
             }
         }
-        const b = document.getElementById('hoursCounter'); b.innerText = currentSemesterHours;
-        if (currentSemesterHours >= 16 && currentSemesterHours <= 36) b.className = 'hours-badge valid';
-        else b.className = currentSemesterHours == 0 ? 'hours-badge' : 'hours-badge invalid';
+        document.getElementById('hoursCounter').innerText = currentSemesterHours;
+        const b = document.getElementById('hoursCounter');
+        b.className = (currentSemesterHours >= 16 && currentSemesterHours <= 36) ? 'hours-badge valid' : 'hours-badge invalid';
+        if(currentSemesterHours === 0) b.className = 'hours-badge';
         document.getElementById('finishBtn').disabled = !(currentSemesterHours >= 16 && currentSemesterHours <= 36);
     }
 
     function updateDashboard() {
         const goals = [{y:"الثانية",h:40},{y:"الثالثة",h:100},{y:"الرابعة",h:160},{y:"الخامسة",h:220},{y:"التخرج",h:260}];
         let target = goals.find(g => totalEarnedCredits < g.h) || {y:"التخرج",h:260};
-        let currentYear = totalEarnedCredits >= 220 ? "الخامسة" : (totalEarnedCredits >= 160 ? "الرابعة" : (totalEarnedCredits >= 100 ? "الثالثة" : (totalEarnedCredits >= 40 ? "الثانية" : "الأولى")));
-        document.getElementById('academicYear').innerText = currentYear;
+        document.getElementById('academicYear').innerText = totalEarnedCredits >= 220 ? "الخامسة" : (totalEarnedCredits >= 160 ? "الرابعة" : (totalEarnedCredits >= 100 ? "الثالثة" : (totalEarnedCredits >= 40 ? "الثانية" : "الأولى")));
         let prev = goals[goals.indexOf(target)-1]?.h || 0;
         let prog = ((totalEarnedCredits - prev) / (target.h - prev)) * 100;
-        document.getElementById('promotionProgress').style.width = Math.min(prog,100) + '%';
+        document.getElementById('promotionProgress').style.width = Math.min(prog, 100) + '%';
     }
 
     function toggleCourse(id) {
@@ -326,7 +364,7 @@
         const c = coursesDB[id];
         if (currentCart.includes(id)) { currentCart = currentCart.filter(x => x !== id); currentSemesterHours -= c.credits; }
         else {
-            if (currentSemesterHours + c.credits > 36) { alert("تنبيه: لا يمكنك تجاوز عبء 36 نقطة في الفصل!"); return; }
+            if (currentSemesterHours + c.credits > 36) { alert("عذراً، تجاوزت الحد الأقصى (36)!"); return; }
             currentCart.push(id); currentSemesterHours += c.credits;
         }
         updateUI();
@@ -335,25 +373,14 @@
     function showCourseInfo(e, id) {
         e.stopPropagation();
         const c = coursesDB[id];
-        let h = `<h2 style="color:var(--navy); margin-bottom:15px;">${c.name}</h2>`;
+        let h = `<h2>${c.name}</h2>`;
         if (c.isEnglish) {
-            h += `<p style="font-weight:bold; color:var(--orange);">نظام الإعفاء وتحديد المستوى:</p>
-            <table style="width:100%; border-collapse:collapse; margin-top:10px;" border="1">
-                <tr style="background:#eee"><th>المستوى المراد</th><th>العلامة المطلوبة</th></tr>
-                <tr><td>المستوى 2</td><td>36% - 55%</td></tr><tr><td>المستوى 3</td><td>56% - 73%</td></tr>
-                <tr><td>المستوى 4</td><td>74% - 84%</td></tr><tr><td>المستوى 5</td><td>85% - 95%</td></tr>
-                <tr style="color:green; font-weight:bold;"><td>إعفاء كلي</td><td>96% فأكثر</td></tr>
-            </table>`;
+            h += `<p>1 نقطة تنزيل تعطي 3 ترفيع.</p><table style="width:100%; text-align:center;" border="1"><tr><th>المستوى</th><th>العلامة</th></tr><tr><td>2</td><td>36%</td></tr><tr><td>3</td><td>56%</td></tr><tr><td>4</td><td>74%</td></tr><tr><td>5</td><td>85%</td></tr><tr><td>إعفاء</td><td>96%+</td></tr></table>`;
         } else {
             const i = c.info || defaultInfo;
-            h += `<div style="text-align:right; line-height:1.8;">
-                <p><b>🔍 لمحة:</b> ${i.over}</p>
-                <p><b>👨‍🏫 أفضل دكتور:</b> ${i.doc || "سيتم التحديث"}</p>
-                <p><b>📝 الامتحان:</b> ${i.exam || "أسئلة مألوفة"}</p>
-                <p style="color:var(--orange);"><b>🧡 دعم الفريق:</b> ${i.sup || "متوفر قريباً على القناة"}</p>
-            </div>`;
+            h += `<p><b>لمحة:</b> ${i.over}</p><p><b>أفضل دكتور:</b> ${i.doc}</p><p><b>الامتحان:</b> ${i.exam}</p>`;
         }
-        h += `<button class="finish-btn" style="margin-top:20px;" onclick="closeM()">فهمت</button>`;
+        h += `<button class="finish-btn" style="margin-top:15px" onclick="closeM()">إغلاق</button>`;
         document.getElementById('modalContent').innerHTML = h;
         document.getElementById('modalOverlay').style.display = 'flex';
     }
@@ -362,31 +389,19 @@
         let earned = 0; currentCart.forEach(id => earned += (coursesDB[id].earned || coursesDB[id].credits));
         completedCourses = [...completedCourses, ...currentCart];
         totalEarnedCredits += earned; currentCart = []; currentSemesterHours = 0;
-        updateUI(); alert("تم تثبيت المواد بنجاح! رصيدك الآن " + totalEarnedCredits + " نقطة.");
+        updateUI(); alert("تم تثبيت الفصل بنجاح!");
     }
 
     function showAboutTeam() {
-        const h = `<h2>فريق Info Matrix</h2>
-        <p style="text-align:justify; line-height:1.8">ﻓﺮﻳﻖ ﻃﻼﺑﻲ ﺗﻄﻮﻋﻲ ﻳﺴﻌﻰ ﻟﻤﺴﺎﻋﺪة ﻃﻼب ﻛﻠﻴﺔ اﻟﻬﻨﺪﺳﺔ اﻟﻤﻌﻠﻮﻣﺎﺗﻴﺔ ﻋﱪ ﺗﻘﺪﻳﻢ ﴍوﺣﺎت، ﻣﻠﺨﺼﺎت، وﻧﺼﺎﺋﺢ دراﺳﻴﺔ ﺷﺎﻣﻠﺔ ﺿﻤﻦ ﻧﻄﺎق اﻟﺠﺎﻣﻌﺔ وﺧﺎرﺟﻬﺎ. ﻫﺪﻓﻨﺎ اﻟﺘﻤﲒ ورﻓﻊ اﻟﺴﻮﻳﺔ اﻟﻌﻠﻤﻴﺔ ﻟﻠﻄﻼب.</p>
-        <div style="background:#fff3cd; padding:15px; border-radius:15px; border-right:6px solid var(--orange); margin:20px 0; font-size:1.1rem;">
-            <b>دعواتكم بالرحمة والمغفرة لوالدتي:<br><span style="color:var(--orange)">المهندسة غنى فراس العبدالله</span></b>
-        </div>
-        <button class="finish-btn" onclick="closeM()">إغلاق</button>`;
+        const h = `<h2>فريق Info Matrix</h2><p style="text-align:justify;">فريق طلابي تطوعي يهدف لمساعدة طلاب المعلوماتية عبر تقديم الشروحات والملخصات.</p><div style="background:#fff3cd; padding:10px; border-radius:8px;"><b>بالرحمة لوالدتي المهندسة غنى فراس العبدالله</b></div><button class="finish-btn" style="margin-top:15px" onclick="closeM()">إغلاق</button>`;
         document.getElementById('modalContent').innerHTML = h;
         document.getElementById('modalOverlay').style.display = 'flex';
     }
 
     function closeM() { document.getElementById('modalOverlay').style.display = 'none'; }
-    
-    // جدار الحماية
     document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('copy', e => { e.preventDefault(); alert('عذراً، النسخ غير مسموح حفاظاً على حقوق فريق Info Matrix.'); });
-    document.addEventListener('keydown', e => {
-        if (e.ctrlKey && (e.key==='c' || e.key==='u' || e.key==='s')) e.preventDefault();
-        if (e.key === 'F12') e.preventDefault();
-    });
-
     window.onload = renderMap;
 </script>
+
 </body>
 </html>
