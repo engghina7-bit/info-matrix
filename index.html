@@ -115,7 +115,6 @@
         .course-node.selected { border-right: 5px solid var(--orange); background: rgba(255, 126, 0, 0.1); transform: scale(1.02); border-color: var(--orange);}
         .course-node.selected .status-icon { color: var(--orange); }
         
-        /* الناجح والمحمول */
         .course-node.passed { border-color: var(--success); border-right: 5px solid var(--success); background: rgba(16, 185, 129, 0.1); }
         .course-node.passed .status-icon { color: var(--success); }
         .course-node.carried { border-color: var(--danger); border-right: 5px solid var(--danger); background: rgba(239, 68, 68, 0.1); }
@@ -136,21 +135,26 @@
         .finish-btn:disabled { background: var(--gray); cursor: not-allowed; opacity: 0.6;}
 
         /* النوافذ المنبثقة */
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 15px; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); display: none; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(4px); padding: 15px; }
         .modal { background: var(--card-bg); padding: 25px; border-radius: 20px; width: 100%; max-width: 450px; border-top: 6px solid var(--orange); max-height: 85vh; overflow-y: auto; text-align: right; color: var(--text-main); }
         .modal.center-text { text-align: center; }
         .modal h2 { margin-top: 0; color: var(--text-main); font-weight: 900; font-size: 1.3rem; text-align: center;}
         .modal p { font-size: 0.95rem; font-weight: 600; line-height: 1.6; }
-        .modal-btn { background: var(--navy-light); color: white; border: none; padding: 10px; border-radius: 8px; font-family: 'Cairo'; font-weight: bold; font-size: 1rem; cursor: pointer; width: 100%; margin-top: 10px; }
-        
-        /* البوالين */
-        .balloon { position: fixed; bottom: -100px; width: 35px; height: 45px; border-radius: 50%; z-index: 9999; animation: floatUp 5s ease-in forwards; box-shadow: inset -5px -5px 0 rgba(0,0,0,0.1); }
+        .modal-btn { background: var(--navy-light); color: white; border: none; padding: 10px; border-radius: 8px; font-family: 'Cairo'; font-weight: bold; font-size: 1rem; cursor: pointer; width: 100%; margin-top: 10px; transition: 0.2s;}
+        .modal-btn:hover { filter: brightness(1.1); }
+
+        /* البوالين (تم إصلاح مشكلة عدم الاستجابة للضغط هنا) */
+        .balloon { 
+            position: fixed; bottom: -100px; width: 35px; height: 45px; border-radius: 50%; z-index: 9999; 
+            animation: floatUp 5s ease-in forwards; box-shadow: inset -5px -5px 0 rgba(0,0,0,0.1); 
+            pointer-events: none; /* هذا السطر السحري يمنع البوالين من تعطيل الأزرار! */
+        }
         .balloon::after { content: ""; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 8px solid rgba(0,0,0,0.5); }
         
         @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-120vh) rotate(20deg); opacity: 0; } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } }
 
-        /* التوافق مع الموبايل والكمبيوتر */
+        /* التوافق مع الموبايل */
         @media (max-width: 768px) {
             .header h1 { font-size: 1.5rem; } .bar-title { font-size: 1.1rem; }
             .student-dashboard { margin: 10px; flex-direction: column; gap: 10px; padding: 15px; } .progress-wrapper { width: 100%; margin: 10px 0; }
@@ -176,7 +180,7 @@
 
 <nav class="top-bar">
     <div class="bar-logo-container">
-        <img src="logo.jpg" alt="Logo" class="bar-logo">
+        <img src="logo.jpg" alt="Info Matrix Logo" class="bar-logo">
         <h2 class="bar-title">INFO MATRIX</h2>
     </div>
     <div style="font-size: 0.9rem; color: #cbd5e1; font-weight: bold; text-align: left;" class="no-mobile">الهندسة المعلوماتية</div>
@@ -188,7 +192,7 @@
     
     <div class="important-note">
         <i class="fas fa-lightbulb" style="color: var(--orange); font-size: 1.5rem;"></i>
-        <div>ملاحظة: تنزيل المادة (حتى لو حمل) يفتح المادة اللاحقة. والمادة "المرفّعة" فقط تُحسب بالرصيد!</div>
+        <div>ملاحظة هامة: يكفي "تنزيل" المادة (حتى لو حمل) لتفتح لك المادة اللاحقة. والمادة "المرفّعة" فقط هي من تُحسب ضمن الرصيد المُنجز!</div>
     </div>
 
     <div class="diff-legend">
@@ -201,8 +205,8 @@
     <div class="social-hub">
         <button class="social-btn btn-dark" onclick="toggleDarkMode()" title="تبديل الوضع الليلي"><i class="fas fa-moon"></i> ليلي/نهاري</button>
         <button class="social-btn btn-about" onclick="showAboutTeam()"><i class="fas fa-users"></i> فريقنا</button>
-        <button class="social-btn btn-print" onclick="window.print()" title="حفظ خطتك كملف PDF"><i class="fas fa-file-pdf"></i> PDF</button>
-        <button class="social-btn btn-reset" onclick="resetData()" title="مسح كل البيانات"><i class="fas fa-trash-alt"></i> تصفير</button>
+        <button class="social-btn btn-print" onclick="window.print()" title="حفظ خطتك كملف PDF"><i class="fas fa-file-pdf"></i> حفظ كـ PDF</button>
+        <button class="social-btn btn-reset" onclick="resetData()" title="مسح كل البيانات والبدء من جديد"><i class="fas fa-trash-alt"></i> تصفير</button>
         <a href="https://chat.whatsapp.com/BbuJCYYqLDmFuh5jGQx3jE" target="_blank" class="social-btn btn-wa"><i class="fab fa-whatsapp"></i></a>
         <a href="https://t.me/+TsXK9bQt8as2OWRk" target="_blank" class="social-btn btn-tg"><i class="fab fa-telegram-plane"></i></a>
     </div>
@@ -353,6 +357,15 @@
         passedCourses.forEach(id => { totalEarnedCredits += (coursesDB[id].earned || coursesDB[id].credits); });
     }
 
+    function getYearFromCredits(credits) {
+        let year = "الأولى";
+        for (let i = 0; i < promotionThresholds.length; i++) {
+            if (credits >= promotionThresholds[i].credits) year = promotionThresholds[i].name;
+            else break;
+        }
+        return year;
+    }
+
     function updateUI() {
         document.getElementById('totalCreditsEarned').innerText = totalEarnedCredits;
         updateStudentDashboard();
@@ -383,21 +396,18 @@
     }
 
     function updateStudentDashboard() {
-        let currentYear = "الأولى"; let nextTarget = promotionThresholds[0];
-        for (let i = 0; i < promotionThresholds.length; i++) {
-            if (totalEarnedCredits >= promotionThresholds[i].credits) {
-                currentYear = promotionThresholds[i].name; nextTarget = promotionThresholds[i+1] || null;
-            } else { nextTarget = promotionThresholds[i]; break; }
-        }
+        let currentYear = getYearFromCredits(totalEarnedCredits);
         document.getElementById('academicYear').innerText = currentYear;
+        
+        let nextTarget = promotionThresholds.find(t => totalEarnedCredits < t.credits) || promotionThresholds[promotionThresholds.length - 1];
         const progressFill = document.getElementById('promotionProgress');
         const progressText = document.getElementById('promotionText');
 
-        if (nextTarget) {
+        if (totalEarnedCredits < 260) {
             let prevThreshold = nextTarget === promotionThresholds[0] ? 0 : promotionThresholds[promotionThresholds.indexOf(nextTarget)-1].credits;
             let progress = ((totalEarnedCredits - prevThreshold) / (nextTarget.credits - prevThreshold)) * 100;
             progressFill.style.width = `${Math.min(progress, 100)}%`;
-            progressText.innerText = `تحتاج ${nextTarget.credits - totalEarnedCredits} نقطة للترفع للسنة ${nextTarget.name}`;
+            progressText.innerText = `تحتاج إلى ${nextTarget.credits - totalEarnedCredits} نقطة مُنجزة للترفع للسنة ${nextTarget.name}`;
         } else {
             progressFill.style.width = `100%`; progressFill.style.background = "var(--success)";
             progressText.innerText = `مبارك التخرج يا مهندس! 🎓`;
@@ -430,7 +440,7 @@
 
     // نافذة التثبيت (ناجح/حمل)
     function openFinishModal() {
-        let html = `<h2>حالة مواد الفصل</h2><p style="color:var(--text-muted); font-size:0.9rem;">الناجحة تعطيك نقاطاً، والمحمولة تفتح المواد اللاحقة فقط.</p>`;
+        let html = `<h2 style="color:var(--text-main);">حالة مواد الفصل</h2><p style="color:var(--text-muted); font-size:0.9rem;">الناجحة تعطيك نقاطاً، والمحمولة تفتح المواد اللاحقة فقط.</p>`;
         currentCart.forEach(id => {
             html += `
             <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg); padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid var(--gray);">
@@ -442,26 +452,24 @@
             </div>`;
         });
         html += `<button class="modal-btn" style="background:var(--success);" onclick="saveSemesterData()">حفظ التقدم</button>
-                 <button class="modal-btn" style="background:var(--gray);" onclick="closeM()">إلغاء</button>`;
+                 <button class="modal-btn" style="background:var(--danger);" onclick="closeM()">إلغاء</button>`;
         const modal = document.getElementById('modalContent'); modal.classList.add('center-text'); modal.innerHTML = html;
         document.getElementById('modalOverlay').style.display = 'flex';
     }
 
     function saveSemesterData() {
-        let oldYear = document.getElementById('academicYear').innerText;
+        let oldCredits = totalEarnedCredits;
         currentCart.forEach(id => {
             if(document.getElementById(`status-${id}`).value === 'passed') passedCourses.push(id);
             else carriedCourses.push(id);
         });
-        currentCart = []; currentSemesterHours = 0; saveDataAndRefresh(false);
-        let newYear = document.getElementById('academicYear').innerText;
-        if(newYear !== oldYear && newYear !== "الأولى") triggerCelebration(newYear);
-        else showModal('تم الحفظ!', 'تم تحديث خطتك بنجاح.', true);
+        currentCart = []; currentSemesterHours = 0; 
+        saveDataAndRefresh(oldCredits);
     }
 
     // نافذة التعديل (لتصحيح الحمل أو الخطأ)
     function showEditPrompt(id, currentState) {
-        let html = `<h2>تعديل حالة المادة</h2>`;
+        let html = `<h2 style="color:var(--text-main)">تعديل حالة المادة</h2>`;
         if(currentState === "مرفعة") {
             html += `<p>المادة <strong>${coursesDB[id].name}</strong> مرفّعة. هل تريد إزالتها؟</p>
             <button class="modal-btn" style="background:var(--danger)" onclick="removeCourse('${id}')">إزالة المادة</button>`;
@@ -475,16 +483,32 @@
         document.getElementById('modalOverlay').style.display = 'flex';
     }
 
-    function convertToPassed(id) { carriedCourses = carriedCourses.filter(x => x !== id); passedCourses.push(id); saveDataAndRefresh(true); }
-    function removeCourse(id) { passedCourses = passedCourses.filter(x => x !== id); carriedCourses = carriedCourses.filter(x => x !== id); saveDataAndRefresh(false); }
+    function convertToPassed(id) { 
+        let oldCredits = totalEarnedCredits;
+        carriedCourses = carriedCourses.filter(x => x !== id); passedCourses.push(id); 
+        saveDataAndRefresh(oldCredits); 
+    }
+    
+    function removeCourse(id) { 
+        let oldCredits = totalEarnedCredits;
+        passedCourses = passedCourses.filter(x => x !== id); carriedCourses = carriedCourses.filter(x => x !== id); 
+        saveDataAndRefresh(oldCredits); 
+    }
 
-    function saveDataAndRefresh(checkPromo) {
-        let oldYear = document.getElementById('academicYear').innerText;
-        localStorage.setItem('im_passed', JSON.stringify(passedCourses)); localStorage.setItem('im_carried', JSON.stringify(carriedCourses));
+    // الدالة المركزية للحفظ والتحديث والتحقق من الترفيع
+    function saveDataAndRefresh(oldCredits) {
+        localStorage.setItem('im_passed', JSON.stringify(passedCourses)); 
+        localStorage.setItem('im_carried', JSON.stringify(carriedCourses));
+        
         calculatePoints(); updateUI(); renderMap(); closeM();
-        if(checkPromo) {
-            let newYear = document.getElementById('academicYear').innerText;
-            if(newYear !== oldYear && newYear !== "الأولى") triggerCelebration(newYear);
+        
+        let oldYear = getYearFromCredits(oldCredits);
+        let newYear = getYearFromCredits(totalEarnedCredits);
+
+        if(newYear !== oldYear && newYear !== "الأولى") {
+            triggerCelebration(newYear);
+        } else {
+            showModal('تم الحفظ!', 'تم تحديث سجل المواد بنجاح.', true);
         }
     }
 
@@ -516,19 +540,39 @@
 
     function showCourseInfo(e, id) {
         e.stopPropagation(); const c = coursesDB[id]; const i = c.info || defaultInfo;
-        let h = `<h2>${c.name}</h2>`;
+        let h = `<h2 style="color:var(--text-main); margin-bottom: 10px;">${c.name}</h2>`;
         if(c.isEnglish) {
-            h += `<p>1 نقطة تنزيل تعطي 3 ترفيع.</p><table style="width:100%; border:1px solid #ccc; text-align:center;"><tr><th>المستوى</th><th>العلامة</th></tr><tr><td>2</td><td>36%</td></tr><tr><td>3</td><td>56%</td></tr><tr><td>4</td><td>74%</td></tr><tr><td>5</td><td>85%</td></tr><tr><td>إعفاء</td><td>96%+</td></tr></table>`;
+            h += `<p>1 نقطة تنزيل تعطي 3 ترفيع.</p><table class="eng-table"><tr><th>المستوى</th><th>العلامة</th></tr><tr><td>2</td><td>36%</td></tr><tr><td>3</td><td>56%</td></tr><tr><td>4</td><td>74%</td></tr><tr><td>5</td><td>85%</td></tr><tr><td>إعفاء</td><td>96%+</td></tr></table>`;
         } else {
             h += `<div style="text-align:right"><p><b>لمحة:</b> ${i.over}</p><p><b>أفضل دكتور:</b> ${i.doc}</p><p><b>الامتحان:</b> ${i.exam}</p><p style="color:var(--orange)"><b>دعم الفريق:</b> ${i.sup}</p></div>`;
         }
-        h += `<button class="modal-btn" onclick="closeM()">إغلاق</button>`;
-        document.getElementById('modalContent').innerHTML = h; document.getElementById('modalOverlay').style.display = 'flex';
+        h += `<button class="modal-btn" onclick="closeM()">إغلاق النافذة</button>`;
+        const modal = document.getElementById('modalContent');
+        modal.classList.remove('center-text'); modal.innerHTML = h; document.getElementById('modalOverlay').style.display = 'flex';
+    }
+
+    // دالة إغلاق النافذة
+    function closeM() { 
+        document.getElementById('modalOverlay').style.display = 'none'; 
+    }
+
+    function showModal(title, msg, isAlert) {
+        const htmlContent = `<h2 style="color:var(--text-main);">${title}</h2><p>${msg}</p><button class="modal-btn" onclick="closeM()">حسناً، فهمت</button>`;
+        const modal = document.getElementById('modalContent');
+        if(isAlert) modal.classList.add('center-text'); else modal.classList.remove('center-text');
+        modal.innerHTML = htmlContent; document.getElementById('modalOverlay').style.display = 'flex';
     }
 
     // جدار الحماية
     document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('copy', e => { e.preventDefault(); alert("النسخ غير مسموح حفاظاً على حقوق الفريق."); });
+    document.addEventListener('copy', e => { e.preventDefault(); showModal('تنبيه ⚠️', 'النسخ غير مسموح حفاظاً على حقوق الفريق.', true); });
+    document.addEventListener('keydown', e => {
+        if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'x' || e.key === 'X' || e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S')) {
+            e.preventDefault(); showModal('تنبيه ⚠️', 'اختصارات النسخ غير مسموحة.', true);
+        }
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'I'))) e.preventDefault();
+    });
+    document.addEventListener('dragstart', e => e.preventDefault());
 
     window.onload = renderMap;
 </script>
