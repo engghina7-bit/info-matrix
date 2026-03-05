@@ -10,14 +10,14 @@
     
     <style>
         :root {
-            /* الألوان الفاتحة */
+            /* الألوان الفاتحة (الافتراضية) */
             --navy: #0a192f; --navy-light: #112240; --orange: #ff7e00; --gold: #ffc107;
             --gray: #cbd5e1; --bg: #f0f4f8; --success: #10b981; --danger: #ef4444;
             --card-bg: #ffffff; --whatsapp: #25D366; --telegram: #0088cc; --pdf-red: #dc2626;
             --text-main: #0a192f; --text-muted: #64748b;
         }
 
-        /* ألوان الوضع الليلي */
+        /* --- ألوان الوضع الليلي (Dark Mode) --- */
         body.dark-mode {
             --bg: #0f172a; --navy: #f8fafc; --navy-light: #1e293b; --card-bg: #1e293b;
             --text-main: #f8fafc; --text-muted: #94a3b8; --gray: #334155;
@@ -261,10 +261,11 @@
 </div>
 
 <script>
-    const defaultInfo = { over: "لم يتوفر شرح مفصل لها في الدليل الحالي.", doc: "غير متوفر حالياً.", prac: "غير متوفر حالياً.", exam: "غير متوفر حالياً.", sup: "سيقوم فريق Info Matrix بتوفير التفاصيل قريباً!" };
+    const defaultInfo = { over: "لم يتوفر شرح مفصل لها حالياً.", doc: "غير متوفر حالياً.", prac: "غير متوفر حالياً.", exam: "غير متوفر حالياً.", sup: "قريباً مع Info Matrix!" };
 
-    // الداتا الأصلية بكامل معلوماتها وشروحاتها كما طلبت
+    // الداتا الأصلية بكل تفاصيلها (العملي، الدكتور، الامتحان، الدعم) كما طلبت حرفياً
     const coursesDB = {
+        // السنة 1
         "GCS301": { name: "مهارات حاسوب", credits: 4, level: 1, prereqs: [], diff: 1, info: { over: "مادة سهلة جداً تتحدث عن أساسيات الكمبيوتر.", doc: "د. محمد الحبال.", prac: "تطبيق عملي على Excel و Word.", exam: "سهل جداً، مادة مضمونة لرفع المعدل غالبا 50 سؤال.", sup: "ملخصات + بنك دورات كورس" } },
         "GTW301": { name: "مهارات التواصل", credits: 5, level: 1, prereqs: ["GCS301"], diff: 1, info: { over: "معلومات عامة ومنطقية. مادة سهلة.", doc: "الجميع جيد.", prac: "سيرة ذاتية وعرض تقديمي.", exam: "بسيط ودورات.", sup: "قوالب جاهزة + نصائح للإلقاء" } },
         "GOE301": { name: "التعليم الالكتروني", credits: 4, level: 1, prereqs: [], diff: 1, info: { over: "مادة نظرية تعتمد على الفهم وليس البصم.", doc: "جميع الدكاترة جيدين.", prac: "ملف وورد (حلقة بحث) + عرض بوربوينت.", exam: "سهل ويمكن الحصول على علامة عالية.", sup: "نماذج حلقات بحث سابقة + دورات" } },
@@ -272,6 +273,8 @@
         "BMA401": { name: "التحليل 1", credits: 5, level: 1, prereqs: [], diff: 2, info: { over: "مادة سهلة وبسيطة تشبه البكالوريا، لكن قسم المتسلسلات جديد.", doc: "د. عمار مردم بك، د. شكري.", prac: "متوسطة الصعوبة.", exam: "يحتاج متابعة، 20 سؤال.", sup: "ملخصات للقوانين + بنك دورات" } },
         "BAS401": { name: "بنى جبرية", credits: 5, level: 1, prereqs: [], diff: 3, info: { over: "مادة دسمة وصعبة نوعاً ما، تحتاج متابعة دقيقة.", doc: "د. حيان، د. نضال، د. سلافة.", prac: "صعبة، مجموعات كبيرة.", exam: "يحتاج دراسة معمقة.", sup: "ملخصات للقوانين + بنك دورات" } },
         "BPG401": { name: "برمجة 1", credits: 5, level: 1, prereqs: [], diff: 2, info: { over: "أساسيات لغة C.", doc: "د. حسام فوال.", prac: "تتشابه كل فصل، كانت فردية وأصبحت مشتركة.", exam: "يعتمد على الفهم والتطبيق العملي.", sup: "أكواد جاهزة للتدريب + شرح عملي" } },
+
+        // السنة 2
         "BEC401": { name: "دارات إلكترونية", credits: 5, level: 2, prereqs: ["BPH401"], diff: 2, info: { over: "تتمة للفيزياء. تعتمد كثيراً على الدورات.", doc: "د. أميمة.", prac: "سهلة مسائل العلامة 100% مضمونة.", exam: "19 سؤال نظري + 1 مقالي.", sup: "ملخصات للقوانين + بنك دورات" } },
         "BLA401": { name: "جبر خطي 1", credits: 5, level: 2, prereqs: ["BMA401"], diff: 1, info: { over: "تتمحور حول المصفوفات والعمليات عليها.", doc: "د. عمران.", prac: "اختر إجابة صحيحة بملف إكسل.", exam: "سهلة مو دايما دورات بس مألوفة.", sup: "ملخصات للقوانين + بنك دورات" } },
         "BMA402": { name: "التحليل 2", credits: 5, level: 2, prereqs: ["BMA401"], diff: 2, info: { over: "سهلة بدها تركيز. (لابلاس، فورييه).", doc: "د. برلنت مطيط، د. إياد زعرور.", prac: "سهلة جداً، اختيار إجابة صحيحة.", exam: "أسئلة دورات مكررة.", sup: "ملخصات للقوانين + بنك دورات" } },
@@ -281,6 +284,8 @@
         "BCA501": { name: "بنيان حواسيب 1", credits: 6, level: 2, prereqs: ["BLC401"], diff: 2, info: { over: "عتاد صلب وذواكر.", doc: "د. هبة.", prac: "اسئلة بتتكرر.", exam: "نظري وتعريفات.", sup: "كورس وامتحانية وشرح للوظيفة" } },
         "BDA501": { name: "الخوارزميات", credits: 6, level: 2, prereqs: ["BPG402"], diff: 3, info: { over: "صعبة جدا بدا شغل وتدريب عالي.", doc: "د. زهير او د. سهير.", prac: "بتتكرر من فصول سابقة.", exam: "صعب.", sup: "ملخصات للقوانين + بنك دورات" } },
         "BWP401": { name: "برمجة ويب 1", credits: 5, level: 2, prereqs: ["BPG402"], diff: 1, info: { over: "تطوير واجهات Front.", doc: "د. باسل.", prac: "تطوير واجهة موقع.", exam: "دوورات بحتة.", sup: "بنك دورات + وشرح وظيفة" } },
+
+        // السنة 3
         "BNA401": { name: "تحليل عددي", credits: 5, level: 3, prereqs: ["BLA401", "BMA402"], diff: 2, info: { over: "حفظ قانون وتطبيق.", doc: "د. يوسف.", prac: "قانون وطبق.", exam: "دورات.", sup: "ملخصات + دورات" } },
         "BSP501": { name: "معالجة إشارة", credits: 5, level: 3, prereqs: ["BMA402"], diff: 2, info: { over: "الاشارات وانواعها.", doc: "د. اياد.", prac: "سهلة.", exam: "دورات متكررة.", sup: "ملخصات + دورات" } },
         "BPS501": { name: "احتمالات وإحصاء", credits: 6, level: 3, prereqs: ["BMA402", "BDM501"], diff: 3, info: defaultInfo },
@@ -291,6 +296,8 @@
         "BPG601": { name: "برمجة 3", credits: 5, level: 3, prereqs: ["BPG402"], diff: 1, info: { over: "لغة بايثون Python.", doc: "د. أحمد العص.", prac: "سهلة.", exam: "دورات بتترفع معدل.", sup: "بنك دورات كورس وامتحانية" } },
         "BDBL501": { name: "مخبر قواعد بيانات", credits: 4, level: 3, prereqs: ["BDA501"], diff: 2, info: { over: "رسم مخطط ERD والتنفيذ.", doc: "د. محمد حجوز.", prac: "مسألة قواعد بيانات.", exam: "أسئلة دروس ومقالي SQL.", sup: "بنك دورات كورس وامتحانية" } },
         "BAI501": { name: "الذكاء الصنعي", credits: 5, level: 3, prereqs: ["BDA501"], diff: 3, info: defaultInfo },
+
+        // السنة 4
         "GMN401": { name: "أساسيات إدارة", credits: 4, level: 4, prereqs: ["BNA401"], diff: 1, info: { over: "نظرية عن الادارة والمدير.", doc: "د. علي نوفل.", prac: "سئيلة وبدا شغل.", exam: "نظري حفظ.", sup: "بنك دورات كورس وامتحانية" } },
         "BTS501": { name: "نظم اتصالات", credits: 5, level: 4, prereqs: ["BMA402", "BLC401"], diff: 2, info: { over: "مختصة بالاتصالات.", doc: "د. رضوان.", prac: "مسائل.", exam: "قوانين واتمتة.", sup: "بنك دورات كورس وامتحانية" } },
         "BNT501": { name: "الشبكات الحاسوبية", credits: 6, level: 4, prereqs: ["BTS501"], diff: 3, info: { over: "مادة معدل.", doc: "د. مرح.", prac: "برنامج Packet Tracer.", exam: "نظري وعملي.", sup: "بنك دورات كورس وامتحانية" } },
@@ -303,6 +310,8 @@
         "BCM601": { name: "المترجمات", credits: 6, level: 4, prereqs: ["BAU501"], diff: 3, info: defaultInfo },
         "BIA601": { name: "خوارزميات ذكية", credits: 5, level: 4, prereqs: ["BAI501"], diff: 3, info: defaultInfo },
         "BIS501": { name: "أمن المعلومات", credits: 6, level: 4, prereqs: ["GET501", "BDB501", "BOS501", "BNT501"], diff: 3, info: defaultInfo },
+
+        // السنة 5
         "GET501": { name: "أخلاقيات المهنة", credits: 6, level: 5, prereqs: ["GPM601"], diff: 1, info: defaultInfo },
         "GAC501": { name: "المحاسبة", credits: 5, level: 5, prereqs: ["GMN401"], diff: 2, info: { over: "أساسيات المحاسبة للمهندسين.", doc: "اسأل الدفعة الحالية.", prac: "وظائف حسابية.", exam: "مسائل ونظري.", sup: "بنك دورات وملخصات" } },
         "BPR602": { name: "مشروع 2", credits: 10, level: 5, prereqs: ["BPR601"], minTotalCredits: 240, diff: 3, info: { over: "مشروع التخرج النهائي.", doc: "المشرف المناسب.", prac: "أطروحة.", exam: "مناقشة علنية.", sup: "نصائح للمناقشة" } },
@@ -310,6 +319,8 @@
         "BDG601": { name: "البيانات", credits: 6, level: 5, prereqs: ["BSP501", "BDA501"], diff: 3, info: defaultInfo },
         "GEP601": { name: "نظرية المعرفة", credits: 4, level: 5, prereqs: ["GET501"], diff: 1, info: defaultInfo },
         "BSM601": { name: "النمذجة والمحاكاة", credits: 5, level: 5, prereqs: ["BPR601", "BPS501", "BPG601"], diff: 3, info: defaultInfo },
+
+        // مسار اللغة الإنجليزية 
         "GEN301": { name: "اللغة الإنجليزية 1", credits: 1, earned: 3, level: "ENG", prereqs: [], isEnglish: true, diff: 1 },
         "GEN401": { name: "اللغة الإنجليزية 2", credits: 1, earned: 3, level: "ENG", prereqs: ["GEN301"], isEnglish: true, diff: 1 },
         "GEN501": { name: "اللغة الإنجليزية 3", credits: 1, earned: 3, level: "ENG", prereqs: ["GEN401"], isEnglish: true, diff: 1 },
@@ -560,7 +571,7 @@
 
     // معلومات المواد والفريق
     function showAboutTeam() {
-        showModal('من نحن؟', `ﻓﺮﻳﻖ ﻃﻼﺑﻲ ﺗﻄﻮﻋﻲ ﻳﺴﻌﻰ ﻟﻤﺴﺎﻋﺪة ﻃﻼب ﻛﻠﻴﺔ اﻟﻬﻨﺪﺳﺔ اﻟﻤﻌﻠﻮﻣﺎﺗﻴﺔ. ﻫﺪﻓﻨﺎ اﻟﺘﻤﲒ ورﻓﻊ اﻟﺴﻮﻳﺔ اﻟﻌﻠﻤﻴﺔ.<br><br><div style="background:rgba(255,126,0,0.1); padding:10px; border-radius:8px;"><b>دعواتكم بالرحمة والمغفرة لوالدتي:<br><span style="color:var(--orange)">المهندسة غنى فراس العبدالله</span></b></div>`, true);
+        showModal('من نحن؟', `ﻓﺮﻳﻖ ﻃﻼﺑﻲ ﺗﻄﻮﻋﻲ ﻳﺴﻌﻰ ﻟﻤﺴﺎﻋﺪة ﻃﻼب ﻛﻠﻴﺔ اﻟﻬﻨﺪﺳﺔ اﻟﻤﻌﻠﻮﻣﺎﺗﻴﺔ. ﻫﺪﻓﻨﺎ اﻟﺘﻤﲒ ورﻓﻊ اﻟﺴﻮﻳﺔ اﻟﻌﻠﻤﻴﺔ.<br><br><div style="background:rgba(255,126,0,0.1); padding:10px; border-radius:8px;"><b> دعواتكم بالرحمة والمغفرة لوالدتي:<br><span style="color:var(--orange)">مع تحيات المهندسة غنى فراس العبدالله</span></b></div>`, true);
     }
 
     function showCourseInfo(e, id) {
@@ -569,7 +580,14 @@
         if(c.isEnglish) {
             h += `<p>1 نقطة تنزيل تعطي 3 ترفيع.</p><table class="eng-table"><tr><th>المستوى</th><th>العلامة</th></tr><tr><td>2</td><td>36%</td></tr><tr><td>3</td><td>56%</td></tr><tr><td>4</td><td>74%</td></tr><tr><td>5</td><td>85%</td></tr><tr><td>إعفاء</td><td>96%+</td></tr></table>`;
         } else {
-            h += `<div style="text-align:right"><p><b>لمحة:</b> ${i.over}</p><p><b>أفضل دكتور:</b> ${i.doc}</p><p><b>الامتحان:</b> ${i.exam}</p><p style="color:var(--orange)"><b>دعم الفريق:</b> ${i.sup}</p></div>`;
+            h += `
+                <div class="info-row"><i class="fas fa-info-circle"></i> <span class="label">لمحة:</span> <span class="content-text">${i.over}</span></div>
+                <div class="info-row"><i class="fas fa-user-tie"></i> <span class="label">أفضل دكتور:</span> <span class="content-text">${i.doc}</span></div>
+                <div class="info-row"><i class="fas fa-laptop-code"></i> <span class="label">العملي:</span> <span class="content-text">${i.prac}</span></div>
+                <div class="info-row"><i class="fas fa-file-signature"></i> <span class="label">الامتحان:</span> <span class="content-text">${i.exam}</span></div>
+                <div class="info-row" style="background: rgba(255, 126, 0, 0.1); border-right: 4px solid var(--orange);">
+                    <i class="fas fa-bolt" style="color:var(--gold);"></i> <span class="label" style="color:var(--orange);">دعم الفريق:</span> <span class="content-text">${i.sup}</span>
+                </div>`;
         }
         h += `<button class="modal-btn" onclick="closeM()">إغلاق النافذة</button>`;
         const modal = document.getElementById('modalContent');
