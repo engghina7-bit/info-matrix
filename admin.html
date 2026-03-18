@@ -3,100 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة الإدارة - Info Matrix</title>
+    <title>لوحة الإدارة الشاملة - infoMatrix</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
-        :root { --navy: #0a192f; --navy-light: #112240; --orange: #ff7e00; --gold: #ffc107; --gray: #e2e8f0; --bg: #f8fafc; --text-main: #0f172a; --danger: #ef4444; --success: #10b981; }
-        body { font-family: 'Cairo', sans-serif; background-color: var(--bg); margin: 0; color: var(--text-main); }
+        :root {
+            --navy: #1a2235; --navy-light: #242f48; --input-bg: #121826;
+            --orange: #ff7e00; --gold: #ffc107; --success: #10b981; --danger: #ef4444;
+            --text-main: #f8fafc; --text-muted: #94a3b8; --border-glass: rgba(255, 255, 255, 0.08);
+        }
         
-        .top-nav { background: var(--navy); height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 30px; border-bottom: 4px solid #ef4444; color: white; position: sticky; top:0; z-index: 100;}
-        .brand { display: flex; align-items: center; gap: 15px; font-weight: 900; font-size: 1.2rem; }
-        .brand span { background: #ef4444; padding: 4px 10px; border-radius: 6px; font-size: 0.9rem; }
-        .btn-top-back { background: rgba(255,255,255,0.1); color: white; padding: 8px 15px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); }
-        .btn-top-back:hover { background: var(--orange); border-color: var(--orange); }
+        body { font-family: 'Cairo', sans-serif; background: radial-gradient(circle at top right, rgba(255,126,0,0.05), transparent), var(--navy); margin: 0; color: var(--text-main); min-height: 100vh;}
+        
+        /* البار العلوي */
+        .top-nav { background: rgba(26, 34, 53, 0.85); backdrop-filter: blur(12px); height: 80px; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; border-bottom: 1px solid rgba(255, 126, 0, 0.15); position: sticky; top:0; z-index: 100;}
+        .brand { display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 1.6rem; text-decoration: none; color:white; letter-spacing: -1px;}
+        .brand img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--orange); object-fit: cover; box-shadow: 0 0 15px rgba(255,126,0,0.3);}
+        .btn-top-back { background: rgba(255,255,255,0.05); color: white; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: bold; transition: 0.3s; border: 1px solid var(--border-glass); display: flex; align-items: center; gap: 8px;}
+        .btn-top-back:hover { background: rgba(255,126,0,0.1); border-color: var(--orange); color: var(--orange);}
 
         .admin-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
 
-        .main-menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .menu-btn { background: white; border-radius: 15px; padding: 30px 20px; text-align: center; cursor: pointer; border: 2px solid var(--gray); box-shadow: 0 10px 20px rgba(0,0,0,0.03); transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .menu-btn:hover { transform: translateY(-5px); border-color: var(--orange); box-shadow: 0 15px 30px rgba(255,126,0,0.1); }
-        .menu-btn i { font-size: 3rem; color: var(--navy-light); transition: 0.3s; }
+        /* القائمة الرئيسية */
+        .main-menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; }
+        .menu-btn { background: var(--navy-light); border-radius: 20px; padding: 30px 15px; text-align: center; cursor: pointer; border: 1px solid var(--border-glass); box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: 0.4s; display: flex; flex-direction: column; align-items: center; gap: 12px;}
+        .menu-btn:hover { transform: translateY(-5px); border-color: var(--orange); }
+        .menu-btn i { font-size: 3rem; color: rgba(255,255,255,0.1); transition: 0.3s; }
         .menu-btn:hover i { color: var(--orange); transform: scale(1.1); }
-        .menu-btn h3 { margin: 0; font-size: 1.2rem; font-weight: 900; color: var(--navy); }
-        .menu-btn p { margin: 0; font-size: 0.9rem; color: var(--text-muted); font-weight: bold; }
+        .menu-btn h3 { margin: 0; font-size: 1.2rem; font-weight: 900; color: white; }
+        .menu-btn p { margin: 0; font-size: 0.85rem; color: var(--text-muted); font-weight: bold; line-height: 1.6;}
 
         .view-section { display: none; animation: fadeIn 0.4s ease; }
         .view-section.active { display: block; }
 
-        .admin-card { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid var(--gray); border-top: 5px solid var(--navy-light); margin-bottom: 25px; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px dashed var(--gray); }
-        .card-header h3 { margin: 0; color: var(--navy); font-weight: 900; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+        .admin-card { background: var(--navy-light); border-radius: 20px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); border: 1px solid var(--border-glass); border-top: 4px solid var(--orange); margin-bottom: 25px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px dashed rgba(255,255,255,0.1); }
+        .card-header h3 { margin: 0; color: white; font-weight: 900; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
         .card-header h3 i { color: var(--orange); }
-        .btn-view-back { background: var(--gray); color: var(--navy); border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; font-family: 'Cairo'; cursor: pointer; transition: 0.3s; }
-        .btn-view-back:hover { background: var(--navy-light); color: white; }
+        .btn-view-back { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 8px; font-weight: bold; font-family: 'Cairo'; cursor: pointer; transition: 0.3s; }
+        .btn-view-back:hover { background: rgba(255,255,255,0.15); }
 
-        .input-group { margin-bottom: 15px; }
+        /* الحقول */
+        .input-group { margin-bottom: 15px; width: 100%;}
         .input-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--text-muted); font-size: 0.9rem; }
-        .input-group input, .input-group select { width: 100%; padding: 12px 15px; border: 2px solid var(--gray); border-radius: 8px; font-family: 'Cairo'; font-size: 1rem; font-weight: bold; color: var(--navy); outline: none; box-sizing: border-box; transition: 0.3s; background: #f8fafc;}
-        .input-group input:focus, .input-group select:focus { border-color: var(--orange); background: white;}
-        .input-group input:read-only { background-color: #e2e8f0; color: #64748b; cursor: not-allowed; border-color: #cbd5e1;}
+        .input-group input, .input-group select { width: 100%; padding: 12px 15px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-family: 'Cairo'; font-size: 1rem; font-weight: bold; color: white; background: var(--input-bg); outline: none; box-sizing: border-box; transition: 0.3s;}
+        .input-group input:focus, .input-group select:focus { border-color: var(--orange); }
+        .input-group input:read-only { background-color: rgba(255,255,255,0.05); color: var(--text-muted); cursor: not-allowed; border-color: transparent;}
         
-        .btn-submit { background: var(--navy); color: white; border: none; width: 100%; padding: 14px; border-radius: 8px; font-family: 'Cairo'; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        .btn-submit:hover { background: var(--orange); }
-        .btn-submit:disabled { background: var(--gray); cursor: not-allowed; }
-        .flex-row { display: flex; gap: 15px; }
+        .btn-submit { background: linear-gradient(135deg, var(--orange), #e65c00); color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-family: 'Cairo'; font-weight: 900; font-size: 1.1rem; cursor: pointer; transition: 0.3s; margin-top: 15px; box-shadow: 0 10px 25px rgba(255,126,0,0.3);}
+        .btn-submit:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(255,126,0,0.4); }
+        .btn-submit:disabled { background: rgba(255,255,255,0.1); color: var(--text-muted); cursor: not-allowed; box-shadow: none; transform: none;}
+        .flex-row { display: flex; gap: 15px; flex-wrap: wrap;}
+        .flex-row > div { flex: 1; min-width: 200px; }
 
+        /* الجداول */
         .table-responsive { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; min-width: 600px; }
-        th, td { padding: 15px; text-align: right; border-bottom: 1px solid var(--gray); font-size: 0.95rem; }
-        th { background: rgba(10, 25, 47, 0.05); color: var(--navy); font-weight: 900; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; min-width: 800px; }
+        th, td { padding: 15px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem; }
+        th { background: rgba(0,0,0,0.2); color: white; font-weight: 900; border-radius: 8px 8px 0 0;}
         td { font-weight: bold; color: var(--text-muted); }
-        .badge { background: rgba(255, 126, 0, 0.1); color: var(--orange); padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; }
+        .badge { background: rgba(255, 126, 0, 0.1); color: var(--orange); padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-family: monospace;}
         
-        .action-btn { background: transparent; border: none; font-size: 1.1rem; cursor: pointer; margin-left: 10px; transition: 0.2s; }
+        .action-btn { background: transparent; border: none; font-size: 1.2rem; cursor: pointer; margin-left: 10px; transition: 0.2s; padding: 5px;}
         .btn-edit { color: var(--success); } .btn-edit:hover { transform: scale(1.2); }
         .btn-delete { color: var(--danger); } .btn-delete:hover { transform: scale(1.2); }
 
+        #syncLog { background: #0f172a; color: #10b981; padding: 15px; border-radius: 12px; font-family: monospace; font-size: 0.9rem; max-height: 250px; overflow-y: auto; direction: ltr; text-align: left; display: none; margin-top: 15px; border: 1px solid rgba(16, 185, 129, 0.2);}
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 768px) { .flex-row { flex-direction: column; gap: 0; } }
     </style>
 </head>
 <body>
 
     <nav class="top-nav">
-        <div class="brand"><i class="fas fa-shield-alt" style="font-size: 1.5rem;"></i> INFO MATRIX <span>الإدارة</span></div>
+        <a href="dashboard.html" class="brand">
+            <img src="img/photo_2_2026-03-18_22-23-47.jpg" alt="info"> 
+            <span>infoMatrix<i>.</i> Admin</span>
+        </a>
         <a href="dashboard.html" class="btn-top-back"><i class="fas fa-arrow-right"></i> الداشبورد</a>
     </nav>
 
-    <div class="admin-container">
+    <div class="admin-container" id="adminContent" style="display: none;">
 
         <div id="mainMenu" class="main-menu view-section active">
             <div class="menu-btn" onclick="openSection('courseSection', 'add')">
-                <i class="fas fa-book-medical"></i><h3>إضافة مادة جديدة</h3><p>إنشاء مادة جديدة كلياً</p>
+                <i class="fas fa-book-medical"></i><h3>إضافة مادة</h3><p>تعريف مادة جديدة</p>
             </div>
             <div class="menu-btn" onclick="openSection('courseSection', 'edit')">
-                <i class="fas fa-edit"></i><h3>تعديل ورفع مادة</h3><p>رفع بياناتك القديمة للسيرفر أو تعديلها</p>
+                <i class="fas fa-edit"></i><h3>تعديل مادة</h3><p>تعديل الشرح والمتطلبات</p>
             </div>
             <div class="menu-btn" onclick="openSection('classSection', 'add')">
-                <i class="fas fa-chalkboard-teacher"></i><h3>إضافة شعبة / وقت</h3><p>إدراج محاضرة جديدة</p>
+                <i class="fas fa-calendar-plus" style="color:var(--success)"></i><h3>إضافة وقت/شعبة</h3><p>محاضرة يدوية جديدة</p>
             </div>
             <div class="menu-btn" onclick="openSection('manageClassesSection')">
-                <i class="fas fa-tasks"></i><h3>إدارة الشعب المسجلة</h3><p>استعراض، تعديل، وحذف</p>
+                <i class="fas fa-tasks" style="color:var(--success)"></i><h3>جدول الشعب</h3><p>تعديل وحذف الأوقات القديمة</p>
+            </div>
+            <div class="menu-btn" onclick="openSection('syncSection')" style="grid-column: 1 / -1;">
+                <i class="fas fa-database" style="color:var(--gold)"></i><h3>المزامنة الشاملة 🚀</h3><p>رفع 250 شعبة للسيرفر بضغطة زر</p>
             </div>
         </div>
 
         <div id="courseSection" class="view-section">
-            <div class="admin-card">
+            <div class="admin-card" style="border-top-color: #3b82f6;">
                 <div class="card-header">
                     <h3 id="courseSectionTitle"><i class="fas fa-book"></i> إضافة مادة جديدة</h3>
                     <button class="btn-view-back" onclick="showMainMenu()"><i class="fas fa-arrow-left"></i> رجوع</button>
                 </div>
                 
-                <div class="input-group" id="editCourseSelector" style="display: none; background: rgba(255, 126, 0, 0.05); padding: 15px; border-radius: 10px; border: 2px dashed var(--orange);">
-                    <label style="color: var(--orange);"><i class="fas fa-search"></i> اختر مادة (قديمة أو جديدة) لرفعها/تعديلها على السيرفر:</label>
+                <div class="input-group" id="editCourseSelector" style="display: none; background: rgba(255, 126, 0, 0.05); padding: 15px; border-radius: 10px; border: 1px dashed var(--orange);">
+                    <label style="color: var(--orange);"><i class="fas fa-search"></i> اختر مادة لتعديلها على السيرفر:</label>
                     <select id="editCourseSelect"></select>
                 </div>
 
@@ -110,16 +128,16 @@
                         <div class="input-group" style="flex:1;"><label>السنة</label>
                             <select id="courseYear"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="ENG">مسار إنكليزي</option></select>
                         </div>
-                        <div class="input-group" style="flex:1;"><label>النقاط</label><input type="number" id="courseCredits" value="5" required></div>
-                        <div class="input-group" style="flex:1;"><label>الصعوبة</label>
+                        <div class="input-group" style="flex:1;"><label>النقاط (الوزن)</label><input type="number" id="courseCredits" value="5" required></div>
+                        <div class="input-group" style="flex:1;"><label>مستوى الصعوبة</label>
                             <select id="courseDiff"><option value="1">سهل</option><option value="2" selected>متوسط</option><option value="3">صعب</option></select>
                         </div>
                     </div>
 
-                    <div class="input-group"><label>المتطلبات السابقة (افصل بينها بفاصلة ،)</label><input type="text" id="coursePrereqs" placeholder="مثال: GCS301, BPH401"></div>
+                    <div class="input-group"><label>المتطلبات السابقة (رموز المواد مفصولة بفاصلة ،)</label><input type="text" id="coursePrereqs" placeholder="مثال: GCS301, BPH401"></div>
                     <div class="flex-row">
-                        <div class="input-group" style="flex:1;"><label>لمحة عامة</label><input type="text" id="infoOver"></div>
-                        <div class="input-group" style="flex:1;"><label>أفضل الدكاترة</label><input type="text" id="infoDoc"></div>
+                        <div class="input-group" style="flex:1;"><label>لمحة عامة عن المادة</label><input type="text" id="infoOver"></div>
+                        <div class="input-group" style="flex:1;"><label>أفضل الدكاترة لها</label><input type="text" id="infoDoc"></div>
                     </div>
                     <div class="flex-row">
                         <div class="input-group" style="flex:1;"><label>طبيعة العملي</label><input type="text" id="infoPrac"></div>
@@ -127,15 +145,15 @@
                     </div>
                     <div class="input-group"><label>دعم الفريق (كورسات/ملخصات)</label><input type="text" id="infoSup" value="قريباً مع Info Matrix!"></div>
                     
-                    <button type="submit" class="btn-submit" id="btnCourse">حفظ المادة في السيرفر</button>
+                    <button type="submit" class="btn-submit" id="btnCourse">حفظ المادة في السيرفر ✅</button>
                 </form>
             </div>
         </div>
 
         <div id="classSection" class="view-section">
-            <div class="admin-card" style="border-top-color: var(--orange);">
+            <div class="admin-card" style="border-top-color: var(--success);">
                 <div class="card-header">
-                    <h3 id="classSectionTitle"><i class="fas fa-chalkboard-teacher"></i> إضافة شعبة / وقت</h3>
+                    <h3 id="classSectionTitle"><i class="fas fa-chalkboard-teacher"></i> إضافة/تعديل شعبة</h3>
                     <button class="btn-view-back" onclick="showMainMenu()"><i class="fas fa-arrow-left"></i> رجوع</button>
                 </div>
 
@@ -144,18 +162,21 @@
                     
                     <div class="flex-row">
                         <div class="input-group" style="flex:2;"><label>اختر المادة</label><select id="selectCourseClass" required></select></div>
-                        <div class="input-group" style="flex:2;"><label>الدكتور / المنسق</label><input type="text" id="profName" required></div>
-                        <div class="input-group" style="flex:1;"><label>النقاط</label><input type="number" id="classCredits" value="5" required></div>
+                        <div class="input-group" style="flex:2;"><label>الدكتور / المنسق</label><input type="text" id="profName" placeholder="مثال: د. أحمد" required></div>
                     </div>
                     
                     <div class="flex-row">
+                        <div class="input-group" style="flex:1;"><label>رقم الصف (الشعبة)</label><input type="text" id="sectionCode" placeholder="مثال: C12" required></div>
+                        <div class="input-group" style="flex:1;"><label>النقاط</label><input type="number" id="classCredits" value="5" required></div>
+                    </div>
+                    <div class="flex-row">
                         <div class="input-group" style="flex:2;"><label>اليوم</label>
-                            <select id="classDay"><option value="الأحد">الأحد</option><option value="الإثنين">الإثنين</option><option value="الثلاثاء">الثلاثاء</option><option value="الأربعاء">الأربعاء</option><option value="الخميس">الخميس</option></select>
+                            <select id="classDay"><option value="الأحد">الأحد</option><option value="الإثنين">الإثنين</option><option value="الثلاثاء">الثلاثاء</option><option value="الأربعاء">الأربعاء</option><option value="الخميس">الخميس</option><option value="الجمعة">الجمعة</option><option value="السبت">السبت</option></select>
                         </div>
                         <div class="input-group" style="flex:1;"><label>وقت البدء</label><input type="time" id="startTime" required></div>
                         <div class="input-group" style="flex:1;"><label>وقت الانتهاء</label><input type="time" id="endTime" required></div>
                     </div>
-                    <button type="submit" class="btn-submit" id="btnClass">حفظ الشعبة</button>
+                    <button type="submit" class="btn-submit" id="btnClass" style="background:var(--success);">حفظ الشعبة ✅</button>
                 </form>
             </div>
         </div>
@@ -166,325 +187,530 @@
                     <h3><i class="fas fa-table"></i> إدارة الشعب المسجلة</h3>
                     <button class="btn-view-back" onclick="showMainMenu()"><i class="fas fa-arrow-left"></i> رجوع</button>
                 </div>
-                
+                <div style="background: rgba(255, 126, 0, 0.05); padding: 15px; border-radius: 10px; margin-bottom: 20px; font-weight:bold; color:var(--orange);">
+                    <i class="fas fa-info-circle"></i> اضغط على أيقونة القلم الخضراء بجانب أي شعبة لتعديل وقتها أو دكتورها أو رقم صفها.
+                </div>
                 <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
                                 <th>المادة</th>
                                 <th>الدكتور</th>
+                                <th>الصف (الشعبة)</th>
                                 <th>اليوم والوقت</th>
                                 <th>إجراءات</th>
                             </tr>
                         </thead>
                         <tbody id="classesTableBody">
-                            <tr><td colspan="4" style="text-align: center;"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</td></tr>
+                            <tr><td colspan="5" style="text-align: center;"><i class="fas fa-spinner fa-spin"></i> جاري التحميل من السيرفر...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
+        <div id="syncSection" class="view-section">
+            <div class="admin-card" style="border-top-color: var(--gold);">
+                <div class="card-header">
+                    <h3><i class="fas fa-database"></i> مزامنة الشعب الشاملة</h3>
+                    <button class="btn-view-back" onclick="showMainMenu()"><i class="fas fa-arrow-left"></i> رجوع</button>
+                </div>
+                <div style="text-align:center; padding: 20px;">
+                    <i class="fas fa-cloud-upload-alt" style="font-size:4rem; color:var(--gold); margin-bottom:20px;"></i>
+                    <h3 style="color:white; margin:0 0 10px;">رفع 250 شعبة للسيرفر</h3>
+                    <p style="color:var(--text-muted); font-size:1rem; font-weight:bold; line-height:1.6;">
+                        هذا الزر يحتوي بداخله على كافة الشعب الأصلية المستخرجة من ملفات الكلية (من الأحد للسبت).<br>بمجرد الضغط عليه، سيتم إرسالها كلها إلى السيرفر لتتمكن لاحقاً من تعديلها يدوياً من "جدول الشعب".
+                    </p>
+                    <button class="btn-submit" id="btnSyncAll" onclick="syncEverything()" style="background:var(--gold); color:var(--navy); font-size:1.2rem; padding:18px;">
+                        بدء المزامنة والرفع الآن 🚀
+                    </button>
+                </div>
+                <div id="syncLog"></div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // إعدادات Supabase
+        // ================= الأمان =================
+        window.onload = function() {
+            let userEntry = localStorage.getItem('im_student_email') || sessionStorage.getItem('im_student_email');
+            if (userEntry && userEntry.split('@')[0].trim().toLowerCase() === 'admin111') {
+                document.getElementById('adminContent').style.display = 'block';
+                fetchInitialData();
+            } else {
+                document.body.innerHTML = `
+                    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; text-align:center;">
+                        <h1 style="color:#ef4444; font-size:3rem; margin:0;">⛔ منطقة محظورة</h1>
+                        <button onclick="window.location.href='login.html'" style="margin-top:20px; padding:10px 25px; background:#ff7e00; color:white; border:none; border-radius:10px; cursor:pointer; font-weight:bold; font-family:'Cairo';">العودة لتسجيل الدخول</button>
+                    </div>`;
+            }
+        };
+
+        // ================= الإعدادات =================
         const supabaseUrl = 'https://tykiptvqnotedkubnuts.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5a2lwdHZxbm90ZWRrdWJudXRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3ODc2OTUsImV4cCI6MjA4OTM2MzY5NX0.-41FydKVds7-Iq3AfIsbJ85mPAhH6qe_ZH8grlAeoAg';
         const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        const defaultInfo = { over: "لم يتوفر شرح مفصل لها حالياً.", doc: "غير متوفر حالياً.", prac: "غير متوفر حالياً.", exam: "غير متوفر حالياً.", sup: "قريباً مع Info Matrix!" };
-
-        // 🌟 بياناتك المحلية القديمة بالكامل (لكي لا تضيع)
-        const localCoursesDB = {
-            "GCS301": { name: "مهارات حاسوب", credits: 4, level: 1, prereqs: [], diff: 1, info: { over: "مادة سهلة جداً تتحدث عن أساسيات الكمبيوتر.", doc: "د. محمد الحبال.", prac: "تطبيق عملي على Excel و Word.", exam: "سهل جداً، مادة مضمونة لرفع المعدل غالبا 50 سؤال.", sup: "ملخصات + بنك دورات كورس" } },
-            "GTW301": { name: "مهارات التواصل", credits: 5, level: 1, prereqs: ["GCS301"], diff: 1, info: { over: "معلومات عامة ومنطقية. مادة سهلة.", doc: "الجميع جيد.", prac: "سيرة ذاتية وعرض تقديمي.", exam: "بسيط ودورات.", sup: "قوالب جاهزة + نصائح للإلقاء" } },
-            "GOE301": { name: "التعليم الالكتروني", credits: 4, level: 1, prereqs: [], diff: 1, info: { over: "مادة نظرية تعتمد على الفهم وليس البصم.", doc: "جميع الدكاترة جيدين.", prac: "ملف وورد (حلقة بحث) + عرض بوربوينت.", exam: "سهل ويمكن الحصول على علامة عالية.", sup: "نماذج حلقات بحث سابقة + دورات" } },
-            "BPH401": { name: "الفيزياء", credits: 5, level: 1, prereqs: [], diff: 2, info: { over: "مادة تشبه فيزياء البكالوريا مع بعض الإضافات.", doc: "د. باسم السهو، د. محمد سعيد معروف.", prac: "سهلة ومضمونة مسائل.", exam: "أسئلة مألوفة، تحتاج دراسة وفهم للقوانين.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BMA401": { name: "التحليل 1", credits: 5, level: 1, prereqs: [], diff: 2, info: { over: "مادة سهلة وبسيطة تشبه البكالوريا، لكن قسم المتسلسلات جديد.", doc: "د. عمار مردم بك، د. شكري.", prac: "متوسطة الصعوبة.", exam: "يحتاج متابعة، 20 سؤال.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BAS401": { name: "بنى جبرية", credits: 5, level: 1, prereqs: [], diff: 3, info: { over: "مادة دسمة وصعبة نوعاً ما، تحتاج متابعة دقيقة.", doc: "د. حيان، د. نضال، د. سلافة.", prac: "صعبة، مجموعات كبيرة.", exam: "يحتاج دراسة معمقة.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BPG401": { name: "برمجة 1", credits: 5, level: 1, prereqs: [], diff: 2, info: { over: "أساسيات لغة C.", doc: "د. حسام فوال.", prac: "تتشابه كل فصل، كانت فردية وأصبحت مشتركة.", exam: "يعتمد على الفهم والتطبيق العملي.", sup: "أكواد جاهزة للتدريب + شرح عملي" } },
-            "BEC401": { name: "دارات إلكترونية", credits: 5, level: 2, prereqs: ["BPH401"], diff: 2, info: { over: "تتمة للفيزياء. تعتمد كثيراً على الدورات.", doc: "د. أميمة.", prac: "سهلة مسائل العلامة 100% مضمونة.", exam: "19 سؤال نظري + 1 مقالي.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BLA401": { name: "جبر خطي 1", credits: 5, level: 2, prereqs: ["BMA401"], diff: 1, info: { over: "تتمحور حول المصفوفات والعمليات عليها.", doc: "د. عمران.", prac: "اختر إجابة صحيحة بملف إكسل.", exam: "سهلة مو دايما دورات بس مألوفة.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BMA402": { name: "التحليل 2", credits: 5, level: 2, prereqs: ["BMA401"], diff: 2, info: { over: "سهلة بدها تركيز. (لابلاس، فورييه).", doc: "د. برلنت مطيط، د. إياد زعرور.", prac: "سهلة جداً، اختيار إجابة صحيحة.", exam: "أسئلة دورات مكررة.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BLC401": { name: "دارات منطقية", credits: 5, level: 2, prereqs: ["BAS401"], diff: 1, info: { over: "جداول حقيقة وبوابات منطقية.", doc: "د. لؤي.", prac: "عادة وسهلين.", exam: "دورات اغلب الاحيان.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BPG402": { name: "برمجة 2", credits: 5, level: 2, prereqs: ["BPG401"], diff: 2, info: { over: "الواجهات التخاطبية (GUI).", doc: "د. حسام فوال، د. جميل.", prac: "مشاريع واجهات.", exam: "سهل ويأتي نسبة جيدة من الدورات.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BDM501": { name: "الرياضيات المتقطعة", credits: 5, level: 2, prereqs: ["BLC401"], diff: 2, info: { over: "جبر بولياني واشجار.", doc: "د. محسن.", prac: "حلقة بحث وعرض بوربوينت.", exam: "اسئلة دورات.", sup: "كورس مدلل وشرح للوظيفة" } },
-            "BCA501": { name: "بنيان حواسيب 1", credits: 6, level: 2, prereqs: ["BLC401"], diff: 2, info: { over: "عتاد صلب وذواكر.", doc: "د. هبة.", prac: "اسئلة بتتكرر.", exam: "نظري وتعريفات.", sup: "كورس وامتحانية وشرح للوظيفة" } },
-            "BDA501": { name: "الخوارزميات", credits: 6, level: 2, prereqs: ["BPG402"], diff: 3, info: { over: "صعبة جدا بدا شغل وتدريب عالي.", doc: "د. زهير او د. سهير.", prac: "بتتكرر من فصول سابقة.", exam: "صعب.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BWP401": { name: "برمجة ويب 1", credits: 5, level: 2, prereqs: ["BPG402"], diff: 1, info: { over: "تطوير واجهات Front.", doc: "د. باسل.", prac: "تطوير واجهة موقع.", exam: "دوورات بحتة.", sup: "بنك دورات + وشرح وظيفة" } },
-            "BNA401": { name: "تحليل عددي", credits: 5, level: 3, prereqs: ["BLA401", "BMA402"], diff: 2, info: { over: "حفظ قانون وتطبيق.", doc: "د. يوسف.", prac: "قانون وطبق.", exam: "دورات.", sup: "ملخصات + دورات" } },
-            "BSP501": { name: "معالجة إشارة", credits: 5, level: 3, prereqs: ["BMA402"], diff: 2, info: { over: "الاشارات وانواعها.", doc: "د. اياد.", prac: "سهلة.", exam: "دورات متكررة.", sup: "ملخصات + دورات" } },
-            "BPS501": { name: "احتمالات وإحصاء", credits: 6, level: 3, prereqs: ["BMA402", "BDM501"], diff: 3 },
-            "BOS501": { name: "نظم تشغيل", credits: 4, level: 3, prereqs: ["BCA501", "BDA501"], diff: 3, info: { over: "كلها انكليزي واساسيات النظام.", doc: "د. غيث.", prac: "حلقة بحث علمي.", exam: "مقالي وأسئلة.", sup: "بنك دورات و كورس" } },
-            "BOSL501": { name: "مخبر نظم تشغيل", credits: 4, level: 3, prereqs: ["BCA501", "BDA501"], diff: 2, info: { over: "اوامر لينكس.", doc: "د. ماجدة.", prac: "اكواد C++.", exam: "مقالي وأوامر.", sup: "كورس وشرح ومساعدة" } },
-            "BDB501": { name: "قواعد بيانات 1", credits: 4, level: 3, prereqs: ["BDA501"], diff: 3, info: { over: "بدها شغل منيح.", doc: "د. علاء عيسى.", prac: "تنزيل برامج.", exam: "اغلب نظري.", sup: "بنك دورات كورس وامتحانية" } },
-            "BAU501": { name: "أوتومات ولغات", credits: 5, level: 3, prereqs: ["BDA501", "BDM501"], diff: 3 },
-            "BPG601": { name: "برمجة 3", credits: 5, level: 3, prereqs: ["BPG402"], diff: 1, info: { over: "لغة بايثون Python.", doc: "د. أحمد العص.", prac: "سهلة.", exam: "دورات بتترفع معدل.", sup: "بنك دورات كورس وامتحانية" } },
-            "BDBL501": { name: "مخبر قواعد بيانات", credits: 4, level: 3, prereqs: ["BDA501"], diff: 2, info: { over: "رسم مخطط ERD والتنفيذ.", doc: "د. محمد حجوز.", prac: "مسألة قواعد بيانات.", exam: "أسئلة دروس ومقالي SQL.", sup: "بنك دورات كورس وامتحانية" } },
-            "BAI501": { name: "الذكاء الصنعي", credits: 5, level: 3, prereqs: ["BDA501"], diff: 3 },
-            "GMN401": { name: "أساسيات إدارة", credits: 4, level: 4, prereqs: ["BNA401"], diff: 1, info: { over: "نظرية عن الادارة والمدير.", doc: "د. علي نوفل.", prac: "سئيلة وبدا شغل.", exam: "نظري حفظ.", sup: "بنك دورات كورس وامتحانية" } },
-            "BTS501": { name: "نظم اتصالات", credits: 5, level: 4, prereqs: ["BMA402", "BLC401"], diff: 2, info: { over: "مختصة بالاتصالات.", doc: "د. رضوان.", prac: "مسائل.", exam: "قوانين واتمتة.", sup: "بنك دورات كورس وامتحانية" } },
-            "BNT501": { name: "الشبكات الحاسوبية", credits: 6, level: 4, prereqs: ["BTS501"], diff: 3, info: { over: "مادة معدل.", doc: "د. مرح.", prac: "برنامج Packet Tracer.", exam: "نظري وعملي.", sup: "بنك دورات كورس وامتحانية" } },
-            "BWP501": { name: "برمجة ويب 2", credits: 5, level: 4, prereqs: ["BWP401"], diff: 2, info: { over: "الجزء الثاني (PHP).", doc: "د. باسل.", prac: "موقع php.", exam: "دورات.", sup: "بنك دورات وشرح وظيفة" } },
-            "GPM601": { name: "إدارة مشاريع", credits: 6, level: 4, prereqs: ["BSE601"], diff: 1 },
-            "BSE601": { name: "هندسة برمجيات", credits: 6, level: 4, prereqs: ["BPG601"], diff: 3, info: { over: "دورة حياة البرمجيات.", doc: "د. محمد.", prac: "من المحاضرات.", exam: "اسئلة شابترات.", sup: "بنك دورات كورس وامتحانية" } },
-            "BPR601": { name: "مشروع 1", credits: 6, level: 4, prereqs: ["BIS501"], diff: 2, info: { over: "مشروع تخرج مصغر.", doc: "حسب المشرف.", prac: "تطوير وبحث.", exam: "مناقشة.", sup: "توجيهات ونصائح الفريق" } },
-            "BMP601": { name: "برمجة تطبيقات النقال", credits: 5, level: 4, prereqs: ["BWP501"], diff: 2 },
-            "BID501": { name: "تحليل وتصميم النظم", credits: 6, level: 4, prereqs: ["BDB501"], diff: 2 },
-            "BCM601": { name: "المترجمات", credits: 6, level: 4, prereqs: ["BAU501"], diff: 3 },
-            "BIA601": { name: "خوارزميات ذكية", credits: 5, level: 4, prereqs: ["BAI501"], diff: 3 },
-            "BIS501": { name: "أمن المعلومات", credits: 6, level: 4, prereqs: ["GET501", "BDB501", "BOS501", "BNT501"], diff: 3 },
-            "GET501": { name: "أخلاقيات المهنة", credits: 6, level: 5, prereqs: ["GPM601"], diff: 1 },
-            "GAC501": { name: "المحاسبة", credits: 5, level: 5, prereqs: ["GMN401"], diff: 2, info: { over: "أساسيات المحاسبة للمهندسين.", doc: "اسأل الدفعة الحالية.", prac: "وظائف حسابية.", exam: "مسائل ونظري.", sup: "بنك دورات وملخصات" } },
-            "BPR602": { name: "مشروع 2", credits: 10, level: 5, prereqs: ["BPR601"], diff: 3, info: { over: "مشروع التخرج النهائي.", doc: "المشرف المناسب.", prac: "أطروحة.", exam: "مناقشة علنية.", sup: "نصائح للمناقشة" } },
-            "BMM601": { name: "نظم الوسائط المتعددة", credits: 6, level: 5, prereqs: ["BNT501", "BDG601"], diff: 2 },
-            "BDG601": { name: "البيانات", credits: 6, level: 5, prereqs: ["BSP501", "BDA501"], diff: 3 },
-            "GEP601": { name: "نظرية المعرفة", credits: 4, level: 5, prereqs: ["GET501"], diff: 1 },
-            "BSM601": { name: "النمذجة والمحاكاة", credits: 5, level: 5, prereqs: ["BPR601", "BPS501", "BPG601"], diff: 3 },
-            "GEN301": { name: "اللغة الإنجليزية 1", credits: 1, level: "ENG", prereqs: [], diff: 1 },
-            "GEN401": { name: "اللغة الإنجليزية 2", credits: 1, level: "ENG", prereqs: ["GEN301"], diff: 1 },
-            "GEN501": { name: "اللغة الإنجليزية 3", credits: 1, level: "ENG", prereqs: ["GEN401"], diff: 1 },
-            "GEN502": { name: "اللغة الإنجليزية 4", credits: 1, level: "ENG", prereqs: ["GEN501"], diff: 1 },
-            "GEN601": { name: "اللغة الإنجليزية 5", credits: 1, level: "ENG", prereqs: ["GEN502"], diff: 1 }
-        };
-
         let mergedCoursesData = {}; 
         let allClassesData = []; 
 
-        // ----------------- إدارة الواجهات (التنقل) -----------------
-        function hideAllSections() {
-            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
-        }
-
-        function showMainMenu() {
-            hideAllSections();
-            document.getElementById('mainMenu').classList.add('active');
-        }
+        function hideAllSections() { document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active')); }
+        function showMainMenu() { hideAllSections(); document.getElementById('mainMenu').classList.add('active'); }
 
         function openSection(sectionId, mode = null) {
-            hideAllSections();
-            document.getElementById(sectionId).classList.add('active');
-
+            hideAllSections(); document.getElementById(sectionId).classList.add('active');
             if (sectionId === 'courseSection') {
                 document.getElementById('courseForm').reset();
-                const selector = document.getElementById('editCourseSelector');
-                const courseIdInput = document.getElementById('courseId');
-                
                 if (mode === 'add') {
                     document.getElementById('courseSectionTitle').innerHTML = '<i class="fas fa-book-medical"></i> إضافة مادة جديدة';
-                    selector.style.display = 'none';
-                    courseIdInput.readOnly = false;
-                } else if (mode === 'edit') {
-                    document.getElementById('courseSectionTitle').innerHTML = '<i class="fas fa-edit"></i> تعديل ورفع مادة';
-                    selector.style.display = 'block';
-                    courseIdInput.readOnly = true;
+                    document.getElementById('editCourseSelector').style.display = 'none'; document.getElementById('courseId').readOnly = false;
+                } else {
+                    document.getElementById('courseSectionTitle').innerHTML = '<i class="fas fa-edit"></i> تعديل بيانات مادة';
+                    document.getElementById('editCourseSelector').style.display = 'block'; document.getElementById('courseId').readOnly = true;
                 }
-            } 
-            else if (sectionId === 'classSection') {
-                if(mode === 'add') {
-                    document.getElementById('classSectionTitle').innerHTML = '<i class="fas fa-chalkboard-teacher"></i> إضافة شعبة جديدة';
-                    document.getElementById('classForm').reset();
-                    document.getElementById('editingClassId').value = ""; 
-                    document.getElementById('btnClass').innerText = "حفظ الشعبة كجديدة";
-                }
-            }
-            else if (sectionId === 'manageClassesSection') {
+            } else if (sectionId === 'classSection' && mode === 'add') {
+                document.getElementById('classForm').reset();
+                document.getElementById('editingClassId').value = ""; 
+                document.getElementById('classSectionTitle').innerHTML = '<i class="fas fa-plus"></i> إضافة شعبة جديدة';
+                document.getElementById('btnClass').innerText = "إضافة الشعبة للسيرفر ✅";
+            } else if (sectionId === 'manageClassesSection') {
                 fetchClassesTable();
             }
         }
 
-        // ----------------- الدمج الذكي (المحلي + السيرفر) -----------------
+        // ================= جلب بيانات المواد =================
         async function fetchInitialData() {
-            // 1. تحويل البيانات المحلية إلى الشكل المطلوب
-            for(let id in localCoursesDB) {
-                let c = localCoursesDB[id];
-                mergedCoursesData[id] = {
-                    id: id,
-                    name: c.name,
-                    academic_year: c.level === 'ENG' ? 'ENG' : c.level.toString(),
-                    credits: c.credits,
-                    difficulty: c.diff,
-                    prereqs: JSON.stringify(c.prereqs || []),
-                    is_english: c.level === 'ENG',
-                    info_overview: c.info ? c.info.over : defaultInfo.over,
-                    info_doctor: c.info ? c.info.doc : defaultInfo.doc,
-                    info_practical: c.info ? c.info.prac : defaultInfo.prac,
-                    info_exam: c.info ? c.info.exam : defaultInfo.exam,
-                    info_support: c.info ? c.info.sup : defaultInfo.sup
-                };
-            }
-
-            // 2. جلب التحديثات من السيرفر (إن وجدت) والكتابة فوق المحلية
-            let { data: courses } = await supabaseClient.from('courses').select('*');
-            if(courses) {
-                courses.forEach(c => {
-                    mergedCoursesData[c.id] = c; // المادة المرفوعة للسيرفر هي التي ستظهر
-                });
-            }
+            // بيانات محلية (احتياطية)
+            const localCoursesDB = {
+                "GCS301": { name: "مهارات حاسوب", credits: 4, level: 1, diff: 1 }, "GTW301": { name: "مهارات التواصل", credits: 5, level: 1, diff: 1 },
+                "BPH401": { name: "الفيزياء", credits: 5, level: 1, diff: 2 }, "BMA401": { name: "التحليل 1", credits: 5, level: 1, diff: 2 },
+                "BAS401": { name: "بنى جبرية", credits: 5, level: 1, diff: 3 }, "BPG401": { name: "برمجة 1", credits: 5, level: 1, diff: 2 },
+                "BEC401": { name: "دارات إلكترونية", credits: 5, level: 2, diff: 2 }, "BLA401": { name: "جبر خطي 1", credits: 5, level: 2, diff: 1 },
+                "BMA402": { name: "التحليل 2", credits: 5, level: 2, diff: 2 }, "BLC401": { name: "دارات منطقية", credits: 5, level: 2, diff: 1 },
+                "BPG402": { name: "برمجة 2", credits: 5, level: 2, diff: 2 }, "BDA501": { name: "الخوارزميات", credits: 6, level: 2, diff: 3 },
+                "BWP401": { name: "برمجة ويب 1", credits: 5, level: 2, diff: 1 }, "BSE601": { name: "هندسة برمجيات", credits: 6, level: 4, diff: 3 },
+                "BNT501": { name: "الشبكات الحاسوبية", credits: 6, level: 4, diff: 3 }, "BSP501": { name: "معالجة إشارة", credits: 5, level: 3, diff: 2 },
+                "BOSL501":{ name: "مخبر نظم تشغيل", credits: 4, level: 3, diff: 2 }, "GMN401": { name: "أساسيات إدارة", credits: 4, level: 4, diff: 1 },
+                "BDM501": { name: "الرياضيات المتقطعة", credits: 5, level: 2, diff: 2 }, "BAU501": { name: "أوتومات ولغات", credits: 5, level: 3, diff: 3 },
+                "GAC501": { name: "المحاسبة", credits: 5, level: 5, diff: 2 }, "BOS501": { name: "نظم تشغيل", credits: 4, level: 3, diff: 3 },
+                "BDBL501":{ name: "مخبر قواعد بيانات", credits: 4, level: 3, diff: 2 }, "BNA401": { name: "تحليل عددي", credits: 5, level: 3, diff: 2 },
+                "BPG601": { name: "برمجة 3", credits: 5, level: 3, diff: 1 }, "BTS501": { name: "نظم اتصالات", credits: 5, level: 4, diff: 2 },
+                "BPS501": { name: "احتمالات وإحصاء", credits: 6, level: 3, diff: 3 }, "BDB501": { name: "قواعد بيانات 1", credits: 4, level: 3, diff: 3 }
+            };
             
-            // 3. تعبئة القوائم
+            for(let id in localCoursesDB) {
+                mergedCoursesData[id] = { id: id, name: localCoursesDB[id].name, academic_year: localCoursesDB[id].level, credits: localCoursesDB[id].credits, difficulty: localCoursesDB[id].diff };
+            }
+            let { data: courses } = await supabaseClient.from('courses').select('*');
+            if(courses) { courses.forEach(c => { mergedCoursesData[c.id] = c; }); }
+            
             const selectEdit = document.getElementById('editCourseSelect');
             const selectClass = document.getElementById('selectCourseClass');
-            
-            selectEdit.innerHTML = '<option value="">-- ✨ إضافة مادة جديدة (اترك هذا الخيار) ✨ --</option>';
+            selectEdit.innerHTML = '<option value="">-- ✨ اختر مادة لتعديلها ✨ --</option>';
             selectClass.innerHTML = '<option value="">-- اختر المادة --</option>';
             
             Object.values(mergedCoursesData).forEach(c => {
-                selectEdit.innerHTML += `<option value="${c.id}">${c.name} (${c.id})</option>`;
-                selectClass.innerHTML += `<option value="${c.id}">${c.name} (${c.id})</option>`;
+                const opt = `<option value="${c.id}">${c.name} (${c.id})</option>`;
+                selectEdit.innerHTML += opt; selectClass.innerHTML += opt;
             });
         }
 
+        // ================= جلب الشعب للجدول =================
         async function fetchClassesTable() {
             const tbody = document.getElementById('classesTableBody');
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;"><i class="fas fa-spinner fa-spin"></i> تحديث البيانات...</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;"><i class="fas fa-spinner fa-spin"></i> جاري جلب الأوقات من السيرفر...</td></tr>`;
             
             let { data: classes } = await supabaseClient.from('classes').select('*, courses(name)');
-            allClassesData = classes || [];
+            allClassesData = classes || []; tbody.innerHTML = '';
 
-            tbody.innerHTML = '';
             if (allClassesData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">لا توجد أي شعب مضافة.</td></tr>`;
-                return;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">الجدول فارغ! اذهب إلى (المزامنة الشاملة) لرفع الملفات.</td></tr>`; return;
             }
 
             allClassesData.forEach(cls => {
-                const start = cls.start_time.substring(0, 5);
-                const end = cls.end_time.substring(0, 5);
+                const start = cls.start_time.substring(0, 5); const end = cls.end_time.substring(0, 5);
                 tbody.innerHTML += `
                     <tr>
-                        <td><span class="badge">${cls.course_id}</span> ${cls.courses ? cls.courses.name : ''}</td>
+                        <td><span class="badge">${cls.course_id}</span> <br> ${cls.courses ? cls.courses.name : ''}</td>
                         <td>${cls.prof}</td>
+                        <td><strong style="color:var(--orange);">${cls.section || 'غير محدد'}</strong></td>
                         <td>${cls.day} | <span style="direction:ltr; display:inline-block;">${start} - ${end}</span></td>
                         <td>
-                            <button class="action-btn btn-edit" onclick="editClass(${cls.id})" title="تعديل"><i class="fas fa-pencil-alt"></i></button>
+                            <button class="action-btn btn-edit" onclick="triggerClassEdit(${cls.id})" title="تعديل"><i class="fas fa-pencil-alt"></i></button>
                             <button class="action-btn btn-delete" onclick="deleteClass(${cls.id})" title="حذف"><i class="fas fa-trash"></i></button>
                         </td>
-                    </tr>
-                `;
+                    </tr>`;
             });
         }
 
-        // ----------------- تعبئة الفورم عند التعديل -----------------
+        // ================= دوال التعديل =================
         document.getElementById('editCourseSelect').addEventListener('change', function() {
-            const courseId = this.value;
-            const courseIdInput = document.getElementById('courseId');
-            const form = document.getElementById('courseForm');
-
-            if(!courseId) {
-                form.reset();
-                courseIdInput.readOnly = false;
-                document.getElementById('infoSup').value = 'قريباً مع Info Matrix!';
-                return;
-            }
-
-            const course = mergedCoursesData[courseId];
+            const course = mergedCoursesData[this.value];
             if(course) {
-                courseIdInput.value = course.id;
-                courseIdInput.readOnly = true; 
-                
+                document.getElementById('courseId').value = course.id;
                 document.getElementById('courseName').value = course.name || "";
                 document.getElementById('courseYear').value = course.academic_year || "1";
                 document.getElementById('courseCredits').value = course.credits || 5;
                 document.getElementById('courseDiff').value = course.difficulty || 2;
-                
-                let prereqs = "[]"; try { prereqs = JSON.parse(course.prereqs); } catch(e){}
-                document.getElementById('coursePrereqs').value = (Array.isArray(prereqs) ? prereqs.join(', ') : "");
-                
+                try { document.getElementById('coursePrereqs').value = JSON.parse(course.prereqs).join(', '); } catch(e){}
                 document.getElementById('infoOver').value = course.info_overview || "";
                 document.getElementById('infoDoc').value = course.info_doctor || "";
                 document.getElementById('infoPrac').value = course.info_practical || "";
                 document.getElementById('infoExam').value = course.info_exam || "";
-                document.getElementById('infoSup').value = course.info_support || "قريباً!";
             }
         });
 
-        // ----------------- حفظ المادة (Add/Edit Course) -----------------
         document.getElementById('courseForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnCourse'); btn.disabled = true; btn.innerText = 'جاري الحفظ والرفع...';
-            
+            e.preventDefault(); const btn = document.getElementById('btnCourse'); btn.disabled = true; btn.innerText = 'جاري الحفظ...';
             let prereqsStr = document.getElementById('coursePrereqs').value;
-            let prereqsArray = prereqsStr ? prereqsStr.split(',').map(s => s.trim().toUpperCase()) : [];
-            
             const courseData = {
-                id: document.getElementById('courseId').value.toUpperCase(),
-                name: document.getElementById('courseName').value,
-                credits: parseInt(document.getElementById('courseCredits').value),
-                academic_year: document.getElementById('courseYear').value,
-                difficulty: parseInt(document.getElementById('courseDiff').value),
-                prereqs: JSON.stringify(prereqsArray),
-                is_english: document.getElementById('courseYear').value === 'ENG',
-                info_overview: document.getElementById('infoOver').value || 'لم يتوفر شرح',
-                info_doctor: document.getElementById('infoDoc').value || 'غير متوفر',
-                info_practical: document.getElementById('infoPrac').value || 'غير متوفر',
-                info_exam: document.getElementById('infoExam').value || 'غير متوفر',
-                info_support: document.getElementById('infoSup').value || 'قريباً!'
+                id: document.getElementById('courseId').value.toUpperCase(), name: document.getElementById('courseName').value,
+                credits: parseInt(document.getElementById('courseCredits').value), academic_year: document.getElementById('courseYear').value,
+                difficulty: parseInt(document.getElementById('courseDiff').value), prereqs: JSON.stringify(prereqsStr ? prereqsStr.split(',').map(s=>s.trim()) : []),
+                is_english: document.getElementById('courseYear').value === 'ENG', info_overview: document.getElementById('infoOver').value || 'لم يتوفر شرح',
+                info_doctor: document.getElementById('infoDoc').value || 'غير متوفر', info_practical: document.getElementById('infoPrac').value || 'غير متوفر',
+                info_exam: document.getElementById('infoExam').value || 'غير متوفر', info_support: document.getElementById('infoSup').value || 'قريباً!'
             };
-
             const { error } = await supabaseClient.from('courses').upsert([courseData]);
-            if (error) alert('خطأ: ' + error.message);
-            else { alert('تم الحفظ والرفع للسيرفر بنجاح! ✅'); fetchInitialData(); showMainMenu(); }
-            btn.disabled = false; btn.innerText = 'حفظ المادة في السيرفر';
+            if (error) alert('خطأ: ' + error.message); else { alert('تم حفظ المادة! ✅'); fetchInitialData(); showMainMenu(); }
+            btn.disabled = false; btn.innerText = 'حفظ المادة في السيرفر ✅';
         });
 
-        // ----------------- حفظ الشعبة (Add/Update Class) -----------------
-        document.getElementById('classForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnClass'); btn.disabled = true; btn.innerText = 'جاري الحفظ...';
-            
-            const classId = document.getElementById('editingClassId').value;
-            const classData = {
-                course_id: document.getElementById('selectCourseClass').value,
-                prof: document.getElementById('profName').value,
-                day: document.getElementById('classDay').value,
-                credits: parseInt(document.getElementById('classCredits').value),
-                start_time: document.getElementById('startTime').value,
-                end_time: document.getElementById('endTime').value
-            };
-
-            let error;
-            if (classId) {
-                const res = await supabaseClient.from('classes').update(classData).eq('id', classId);
-                error = res.error;
-            } else {
-                const res = await supabaseClient.from('classes').insert([classData]);
-                error = res.error;
-            }
-
-            if (error) alert('خطأ في الحفظ'); 
-            else { alert('تم الحفظ بنجاح! ✅'); showMainMenu(); }
-            btn.disabled = false;
-        });
-
-        // ----------------- تعديل وحذف الشعب (من الجدول) -----------------
-        function editClass(id) {
+        function triggerClassEdit(id) {
             const cls = allClassesData.find(c => c.id === id);
             if(cls) {
                 openSection('classSection', 'edit');
-                document.getElementById('classSectionTitle').innerHTML = '<i class="fas fa-pencil-alt"></i> تعديل بيانات الشعبة';
-                document.getElementById('btnClass').innerText = "تحديث بيانات الشعبة";
-                
+                document.getElementById('classSectionTitle').innerHTML = '<i class="fas fa-pencil-alt"></i> تعديل بيانات الشعبة القديمة';
+                document.getElementById('btnClass').innerText = "حفظ التعديلات بالسيرفر 🔄";
                 document.getElementById('editingClassId').value = cls.id;
                 document.getElementById('selectCourseClass').value = cls.course_id;
                 document.getElementById('profName').value = cls.prof;
+                document.getElementById('sectionCode').value = cls.section || "";
                 document.getElementById('classDay').value = cls.day;
-                document.getElementById('classCredits').value = cls.credits;
+                document.getElementById('classCredits').value = cls.credits || 5;
                 document.getElementById('startTime').value = cls.start_time.substring(0, 5);
                 document.getElementById('endTime').value = cls.end_time.substring(0, 5);
             }
         }
 
+        document.getElementById('classForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); const btn = document.getElementById('btnClass'); btn.disabled = true; btn.innerText = 'جاري الحفظ...';
+            const classId = document.getElementById('editingClassId').value;
+            const classData = {
+                course_id: document.getElementById('selectCourseClass').value, prof: document.getElementById('profName').value,
+                section: document.getElementById('sectionCode').value, day: document.getElementById('classDay').value,
+                credits: parseInt(document.getElementById('classCredits').value), start_time: document.getElementById('startTime').value, end_time: document.getElementById('endTime').value
+            };
+            let res = classId ? await supabaseClient.from('classes').update(classData).eq('id', classId) : await supabaseClient.from('classes').insert([classData]);
+            if (res.error) alert('خطأ في الحفظ'); else { alert('تم الحفظ بنجاح! ✅'); showMainMenu(); }
+            btn.disabled = false;
+        });
+
         async function deleteClass(id) {
-            if(confirm("هل أنت متأكد أنك تريد حذف هذه الشعبة نهائياً؟")) {
-                await supabaseClient.from('classes').delete().eq('id', id);
-                fetchClassesTable();
+            if(confirm("هل أنت متأكد أنك تريد حذف هذه الشعبة نهائياً من السيرفر؟")) {
+                await supabaseClient.from('classes').delete().eq('id', id); fetchClassesTable();
             }
         }
 
-        // ----------------- التشغيل الأولي -----------------
-        window.onload = fetchInitialData;
+        // ================= المصفوفة الكاملة لـ 250 شعبة (المزامنة الشاملة) =================
+        const massiveDatabase = [
+            // الأحد
+            {course_id:'BPH401', prof:'Mohammad Saeed Mustafa Marouf', section:'C4', day:'الأحد', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BPH401', prof:'Mohammad Saeed Mustafa Marouf', section:'C12', day:'الأحد', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPH401', prof:'Mohammad Saeed Mustafa Marouf', section:'C14', day:'الأحد', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPH401', prof:'shadi -Saab', section:'C7', day:'الأحد', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPH401', prof:'shadi -Saab', section:'C6', day:'الأحد', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPH401', prof:'bassem lutfi alsahwa', section:'C20', day:'الأحد', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BMA401', prof:'Louay Hussein Saleh', section:'C2', day:'الأحد', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C1', day:'الأحد', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C2', day:'الأحد', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'GTW301', prof:'Ghossoun Mouner Alashkar', section:'C7', day:'الأحد', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'GTW301', prof:'Hwaida mohammad aldaood', section:'C11', day:'الأحد', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BMA402', prof:'Berlant sabri Matii', section:'C2', day:'الأحد', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BEC401', prof:'Oumayma Dakkak', section:'C1', day:'الأحد', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPG402', prof:'غير محدد', section:'C5', day:'الأحد', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPG402', prof:'غير محدد', section:'C6', day:'الأحد', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPG402', prof:'غير محدد', section:'C8', day:'الأحد', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BWP401', prof:'Bassel Alkhatib', section:'C2', day:'الأحد', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BWP401', prof:'Bassel Alkhatib', section:'C4', day:'الأحد', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BWP401', prof:'Bassel Alkhatib', section:'C3', day:'الأحد', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BWP401', prof:'Bassel Alkhatib', section:'C1', day:'الأحد', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BWP401', prof:'Bassel Alkhatib', section:'C7', day:'الأحد', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BWP401', prof:'Bassel Alkhatib', section:'C5', day:'الأحد', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BWP401', prof:'Bassel Alkhatib', section:'C6', day:'الأحد', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BWP401', prof:'Bassel Alkhatib', section:'C8', day:'الأحد', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BSP501', prof:'Iyad Mohamad Alabboud', section:'C4', day:'الأحد', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'BDA501', prof:'Zuheir Ali Ahmad', section:'C2', day:'الأحد', start_time:'20:00', end_time:'22:00', credits:6},
+            {course_id:'BDA501', prof:'Sohair_ Ibraheem', section:'C3', day:'الأحد', start_time:'20:00', end_time:'22:00', credits:6},
+            {course_id:'BDA501', prof:'Sohair_ Ibraheem', section:'C4', day:'الأحد', start_time:'22:00', end_time:'24:00', credits:6},
+            {course_id:'BDB501', prof:'Mohamad Firas Hajouz', section:'C1', day:'الأحد', start_time:'08:00', end_time:'10:00', credits:4},
+            {course_id:'BDB501', prof:'Mohamad Firas Hajouz', section:'C2', day:'الأحد', start_time:'10:00', end_time:'12:00', credits:4},
+            {course_id:'BDB501', prof:'Mohamad Firas Hajouz', section:'C3', day:'الأحد', start_time:'12:00', end_time:'14:00', credits:4},
+            {course_id:'BDBL501', prof:'Alaa Saleh Al natour', section:'C3', day:'الأحد', start_time:'08:00', end_time:'10:00', credits:4},
+            {course_id:'BPS501', prof:'Soulafa Mohammad Ali', section:'C1', day:'الأحد', start_time:'10:00', end_time:'12:00', credits:6},
+            {course_id:'BPS501', prof:'Alaa Eddin Sarhan', section:'C3', day:'الأحد', start_time:'22:00', end_time:'24:00', credits:6},
+            {course_id:'BOSL501', prof:'Majdasaad', section:'C1', day:'الأحد', start_time:'20:00', end_time:'22:00', credits:4},
+            {course_id:'BOSL501', prof:'Majdasaad', section:'C2', day:'الأحد', start_time:'22:00', end_time:'24:00', credits:4},
+            // الإثنين
+            {course_id:'BPH401', prof:'Mohammad Saeed Mustafa Marouf', section:'C18', day:'الإثنين', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BPH401', prof:'Mazen Georgi Khouri', section:'C2', day:'الإثنين', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPH401', prof:'Redwan Mouhmad allaham', section:'C16', day:'الإثنين', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPH401', prof:'Redwan Mouhmad allaham', section:'C19', day:'الإثنين', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BMA401', prof:'Ammar Mouafak Mardembek', section:'C17', day:'الإثنين', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPG401', prof:'Houssam (حسام فوال)', section:'C3', day:'الإثنين', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPG401', prof:'Houssam (حسام فوال)', section:'C4', day:'الإثنين', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BLA401', prof:'Moaaz Ali Abdelmajeed', section:'C2', day:'الإثنين', start_time:'14:00', end_time:'16:00', credits:5},
+            {course_id:'BLA401', prof:'Moaaz Ali Abdelmajeed', section:'C3', day:'الإثنين', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BMA402', prof:'Berlant sabri Matii', section:'C3', day:'الإثنين', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BEC401', prof:'Oumayma Dakkak', section:'C2', day:'الإثنين', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BEC401', prof:'Oumayma Dakkak', section:'C3', day:'الإثنين', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BEC401', prof:'Oumayma Dakkak', section:'C4', day:'الإثنين', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BLC401', prof:'Louay Saleh', section:'C5', day:'الإثنين', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BLC401', prof:'Louay Saleh', section:'C8', day:'الإثنين', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPG402', prof:'غير محدد', section:'C14', day:'الإثنين', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPG402', prof:'غير محدد', section:'C9', day:'الإثنين', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPG402', prof:'غير محدد', section:'C15', day:'الإثنين', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPG402', prof:'غير محدد', section:'C10', day:'الإثنين', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BSP501', prof:'Iyad Mohamad Alabboud', section:'C5', day:'الإثنين', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'BDA501', prof:'Zuheir Ali Ahmad', section:'C5', day:'الإثنين', start_time:'20:00', end_time:'22:00', credits:6},
+            {course_id:'BDA501', prof:'Sohair_ Ibraheem', section:'C6', day:'الإثنين', start_time:'20:00', end_time:'22:00', credits:6},
+            {course_id:'BDA501', prof:'Sohair_ Ibraheem', section:'C7', day:'الإثنين', start_time:'22:00', end_time:'24:00', credits:6},
+            {course_id:'GMN401', prof:'Nisrin Mahmmoud Abdoulrahman', section:'C10', day:'الإثنين', start_time:'16:00', end_time:'18:00', credits:4},
+            {course_id:'BTS501', prof:'Nader Khadro', section:'C2', day:'الإثنين', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BTS501', prof:'Nader Khadro', section:'C3', day:'الإثنين', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BDBL501', prof:'Alaa Eddin Alhamdah', section:'C7', day:'الإثنين', start_time:'22:00', end_time:'24:00', credits:4},
+            {course_id:'BWP501', prof:'Bassel Alkhatib', section:'C1', day:'الإثنين', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BWP501', prof:'Bassel Alkhatib', section:'C3', day:'الإثنين', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPS501', prof:'Alaa Eddin Sarhan', section:'C4', day:'الإثنين', start_time:'20:00', end_time:'22:00', credits:6},
+            {course_id:'BPS501', prof:'Alaa Eddin Sarhan', section:'C5', day:'الإثنين', start_time:'22:00', end_time:'24:00', credits:6},
+            {course_id:'BPG601', prof:'Ahmad Alous', section:'C1', day:'الإثنين', start_time:'10:00', end_time:'12:00', credits:5},
+            // الثلاثاء
+            {course_id:'BMA401', prof:'Issa Moustafa Mashriki', section:'C11', day:'الثلاثاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BMA401', prof:'Issa Moustafa Mashriki', section:'C12', day:'الثلاثاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPH401', prof:'Mohammad Saeed Mustafa Marouf', section:'C24', day:'الثلاثاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPH401', prof:'Mohammad Saeed Mustafa Marouf', section:'C23', day:'الثلاثاء', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BPH401', prof:'bassem lutfi alsahwa', section:'C21', day:'الثلاثاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPH401', prof:'shadi Saab', section:'C25', day:'الثلاثاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPH401', prof:'shadi Saab', section:'C26', day:'الثلاثاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPH401', prof:'Mazen Georgi Khouri', section:'C22', day:'الثلاثاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPH401', prof:'Mohammad Hasan Drbass', section:'C15', day:'الثلاثاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C26', day:'الثلاثاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C11', day:'الثلاثاء', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BPG401', prof:'diaa mohammad khalouf', section:'C23', day:'الثلاثاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C5', day:'الثلاثاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BAS401', prof:'Mouhamad Hassan Dib', section:'C2', day:'الثلاثاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BAS401', prof:'Mouhamad Hassan Dib', section:'C13', day:'الثلاثاء', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BNT501', prof:'Marah Naji Mfleh', section:'C1', day:'الثلاثاء', start_time:'20:00', end_time:'22:00', credits:6},
+            {course_id:'BPS501', prof:'Soulafa Mohammad Ali', section:'C9', day:'الثلاثاء', start_time:'18:00', end_time:'20:00', credits:6},
+            {course_id:'BPS501', prof:'Soulafa Mohammad Ali', section:'C8', day:'الثلاثاء', start_time:'20:00', end_time:'22:00', credits:6},
+            {course_id:'BSE601', prof:'Mohamed Ali Mohamed', section:'C2', day:'الثلاثاء', start_time:'22:00', end_time:'24:00', credits:6},
+            {course_id:'BSE601', prof:'Mohamed Ali Mohamed', section:'C1', day:'الثلاثاء', start_time:'22:00', end_time:'24:00', credits:6},
+            {course_id:'BMA402', prof:'Amran-Ali Dalloul', section:'C12', day:'الثلاثاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BMA402', prof:'Amran-Ali Dalloul', section:'C11', day:'الثلاثاء', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BMA402', prof:'Berlant sabri Matii', section:'C6', day:'الثلاثاء', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BPG402', prof:'غير محدد', section:'C12', day:'الثلاثاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BEC401', prof:'Oumayma Dakkak', section:'C5', day:'الثلاثاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BEC401', prof:'Oumayma Dakkak', section:'C6', day:'الثلاثاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BEC401', prof:'Oumayma Dakkak', section:'C7', day:'الثلاثاء', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BLC401', prof:'Mohammad Kallash', section:'C11', day:'الثلاثاء', start_time:'12:00', end_time:'14:00', credits:5},
+            {course_id:'BLC401', prof:'Wissam Khalaf', section:'C7', day:'الثلاثاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BNA401', prof:'Alaa Eddin Sarhan', section:'C7', day:'الثلاثاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BNA401', prof:'Alaa Eddin Sarhan', section:'C8', day:'الثلاثاء', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BSP501', prof:'Iyad Mohamad Alabboud', section:'C6', day:'الثلاثاء', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'BDA501', prof:'Zuheir Ali Ahmad', section:'C8', day:'الثلاثاء', start_time:'20:00', end_time:'22:00', credits:6},
+            {course_id:'BTS501', prof:'Nader Khadro', section:'C4', day:'الثلاثاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BTS501', prof:'Nader Khadro', section:'C6', day:'الثلاثاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BDB501', prof:'Mohamad Firas Hajouz', section:'C4', day:'الثلاثاء', start_time:'08:00', end_time:'10:00', credits:4},
+            {course_id:'BDB501', prof:'Mohamad Firas Hajouz', section:'C5', day:'الثلاثاء', start_time:'10:00', end_time:'12:00', credits:4},
+            {course_id:'BDB501', prof:'Mohamad Firas Hajouz', section:'C6', day:'الثلاثاء', start_time:'12:00', end_time:'14:00', credits:4},
+            {course_id:'BDBL501', prof:'Alaa Nouraldeen Eissa', section:'C6', day:'الثلاثاء', start_time:'18:00', end_time:'20:00', credits:4},
+            // الأربعاء
+            {course_id:'BMA401', prof:'Ammar Mouafak Mardembek', section:'C20', day:'الأربعاء', start_time:'10:00', end_time:'12:00', credits:5},
+            {course_id:'BMA401', prof:'Ammar Mouafak Mardembek', section:'C22', day:'الأربعاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BMA401', prof:'Lama nazem aldroubi', section:'C4', day:'الأربعاء', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'BMA401', prof:'Lama nazem aldroubi', section:'C7', day:'الأربعاء', start_time:'10:00', end_time:'12:00', credits:5},
+            {course_id:'BMA401', prof:'Lama nazem aldroubi', section:'C13', day:'الأربعاء', start_time:'12:00', end_time:'14:00', credits:5},
+            {course_id:'BMA401', prof:'Lama nazem aldroubi', section:'C14', day:'الأربعاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BMA401', prof:'Alaa Eddin Sarhan', section:'C3', day:'الأربعاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BMA401', prof:'Alaa Eddin Sarhan', section:'C5', day:'الأربعاء', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BPH401', prof:'Mohammad Saeed Mustafa Marouf', section:'C27', day:'الأربعاء', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BPH401', prof:'Mohammad Saeed Mustafa Marouf', section:'C28', day:'الأربعاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPH401', prof:'Mohammad Hasan Drbass', section:'C3', day:'الأربعاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C14', day:'الأربعاء', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C15', day:'الأربعاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C12', day:'الأربعاء', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BPG401', prof:'diaa mohammad khalouf', section:'C21', day:'الأربعاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C31', day:'الأربعاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BAS401', prof:'Soulafa Mohammad Ali', section:'C3', day:'الأربعاء', start_time:'14:00', end_time:'16:00', credits:5},
+            {course_id:'BAS401', prof:'Soulafa Mohammad Ali', section:'C20', day:'الأربعاء', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BAS401', prof:'Mouhamad Hassan Dib', section:'C16', day:'الأربعاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BAS401', prof:'Mouhamad Hassan Dib', section:'C17', day:'الأربعاء', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BAS401', prof:'Nidal Yacoub chamoun', section:'C1', day:'الأربعاء', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'BAS401', prof:'Nidal Yacoub chamoun', section:'C6', day:'الأربعاء', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BAS401', prof:'Mazen Georgi Khouri', section:'C21', day:'الأربعاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BOSL501', prof:'Majdasaad', section:'C3', day:'الأربعاء', start_time:'16:00', end_time:'18:00', credits:4},
+            {course_id:'BOSL501', prof:'Majdasaad', section:'C4', day:'الأربعاء', start_time:'18:00', end_time:'20:00', credits:4},
+            {course_id:'BOSL501', prof:'Majdasaad', section:'C5', day:'الأربعاء', start_time:'22:00', end_time:'24:00', credits:4},
+            {course_id:'BLA401', prof:'Moaaz Ali Abdelmajeed', section:'C8', day:'الأربعاء', start_time:'14:00', end_time:'16:00', credits:5},
+            {course_id:'BLA401', prof:'Moaaz Ali Abdelmajeed', section:'C9', day:'الأربعاء', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BLA401', prof:'Amran-Ali Dalloul', section:'C4', day:'الأربعاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BLA401', prof:'Amran-Ali Dalloul', section:'C12', day:'الأربعاء', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BSE601', prof:'Mohamed Ali Mohamed', section:'C5', day:'الأربعاء', start_time:'22:00', end_time:'24:00', credits:6},
+            {course_id:'BSE601', prof:'Mohamed Ali Mohamed', section:'C4', day:'الأربعاء', start_time:'22:00', end_time:'24:00', credits:6},
+            {course_id:'BSE601', prof:'Mohamed Ali Mohamed', section:'C3', day:'الأربعاء', start_time:'20:00', end_time:'22:00', credits:6},
+            {course_id:'BMA402', prof:'issa Moustafa mashriki', section:'C7', day:'الأربعاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BMA402', prof:'issa Moustafa mashriki', section:'C8', day:'الأربعاء', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'GTW301', prof:'Ammar Mouafak Mardembek', section:'C8', day:'الأربعاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'GTW301', prof:'Sahar Hussien Abd Alsalam', section:'C16', day:'الأربعاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'GTW301', prof:'Sahar Hussien Abd Alsalam', section:'C17', day:'الأربعاء', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BLC401', prof:'Ali Mohmoud Haassan', section:'C3', day:'الأربعاء', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BLC401', prof:'Ali Mohmoud Haassan', section:'C4', day:'الأربعاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BLC401', prof:'Mohammad Kallash', section:'C1', day:'الأربعاء', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'BLC401', prof:'Mohammad Kallash', section:'C2', day:'الأربعاء', start_time:'10:00', end_time:'12:00', credits:5},
+            {course_id:'BLC401', prof:'Mohammad Kallash', section:'C10', day:'الأربعاء', start_time:'12:00', end_time:'14:00', credits:5},
+            {course_id:'BSP501', prof:'Iyad Mohamad Alabboud', section:'C7', day:'الأربعاء', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'GMN401', prof:'Lama M. Bader', section:'C5', day:'الأربعاء', start_time:'10:00', end_time:'12:00', credits:4},
+            {course_id:'BDM501', prof:'Moushin Mounir Hussien', section:'C1', day:'الأربعاء', start_time:'14:00', end_time:'16:00', credits:5},
+            {course_id:'BDM501', prof:'Moushin Mounir Hussien', section:'C2', day:'الأربعاء', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BDM501', prof:'Moushin Mounir Hussien', section:'C4', day:'الأربعاء', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BAU501', prof:'Rima ALkamha', section:'C2', day:'الأربعاء', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BAU501', prof:'Rima ALkamha', section:'C3', day:'الأربعاء', start_time:'18:00', end_time:'20:00', credits:5},
+            // الخميس
+            {course_id:'BMA401', prof:'Qosai Hussein Kanafani', section:'C6', day:'الخميس', start_time:'12:00', end_time:'14:00', credits:5},
+            {course_id:'BMA401', prof:'Qosai Hussein Kanafani', section:'C8', day:'الخميس', start_time:'14:00', end_time:'16:00', credits:5},
+            {course_id:'BMA401', prof:'Qosai Hussein Kanafani', section:'C9', day:'الخميس', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BMA401', prof:'Qosai Hussein Kanafani', section:'C10', day:'الخميس', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BMA401', prof:'Issa Moustafa Mashriki', section:'C25', day:'الخميس', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BMA401', prof:'Issa Moustafa Mashriki', section:'C26', day:'الخميس', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BMA401', prof:'Mohammad saeed mustafa marouf', section:'C18', day:'الخميس', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BMA401', prof:'Mohammad saeed mustafa marouf', section:'C19', day:'الخميس', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPG401', prof:'Ahmad Aqul (أحمد عقول)', section:'C17', day:'الخميس', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BPG401', prof:'Ahmad Aqul (أحمد عقول)', section:'C18', day:'الخميس', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPG401', prof:'Ahmad Aqul (أحمد عقول)', section:'C19', day:'الخميس', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPG401', prof:'Ahmad Aqul (أحمد عقول)', section:'C20', day:'الخميس', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C30', day:'الخميس', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C13', day:'الخميس', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C32', day:'الخميس', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BLA401', prof:'Moaaz Ali Abdelmajeed', section:'C11', day:'الخميس', start_time:'14:00', end_time:'16:00', credits:5},
+            {course_id:'BNT501', prof:'Marah Naji Mfleh', section:'C3', day:'الخميس', start_time:'10:00', end_time:'12:00', credits:6},
+            {course_id:'BNT501', prof:'Marah Naji Mfleh', section:'C4', day:'الخميس', start_time:'10:00', end_time:'12:00', credits:6},
+            {course_id:'BAS401', prof:'Nidal Yacoub chamoun', section:'C14', day:'الخميس', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'BAS401', prof:'Nidal Yacoub chamoun', section:'C15', day:'الخميس', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BAS401', prof:'Soulafa Mohammad Ali', section:'C19', day:'الخميس', start_time:'14:00', end_time:'16:00', credits:5},
+            {course_id:'BAS401', prof:'Soulafa Mohammad Ali', section:'C18', day:'الخميس', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BAS401', prof:'Mazen Georgi Khouri', section:'C22', day:'الخميس', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BAS401', prof:'Amran-Ali Dalloul', section:'C11', day:'الخميس', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BLC401', prof:'Ali Mohmoud Haassan', section:'C9', day:'الخميس', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BLC401', prof:'Ali Mohmoud Haassan', section:'C12', day:'الخميس', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPG402', prof:'غير محدد', section:'C13', day:'الخميس', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BSP501', prof:'Iyad Mohamad Alabboud', section:'C9', day:'الخميس', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'GMN401', prof:'Ayman Ali Dayoub', section:'C1', day:'الخميس', start_time:'08:00', end_time:'10:00', credits:4},
+            {course_id:'GMN401', prof:'Ayman Ali Dayoub', section:'C9', day:'الخميس', start_time:'10:00', end_time:'12:00', credits:4},
+            {course_id:'BDM501', prof:'Moushin Mounir Hussien', section:'C5', day:'الخميس', start_time:'12:00', end_time:'14:00', credits:5},
+            {course_id:'BDM501', prof:'Moushin Mounir Hussien', section:'C6', day:'الخميس', start_time:'14:00', end_time:'16:00', credits:5},
+            {course_id:'BDM501', prof:'Moushin Mounir Hussien', section:'C7', day:'الخميس', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BDM501', prof:'Moushin Mounir Hussien', section:'C8', day:'الخميس', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BOS501', prof:'Ghiath Moustafa', section:'C1', day:'الخميس', start_time:'16:00', end_time:'18:00', credits:4},
+            {course_id:'BAU501', prof:'Rima ALkamha', section:'C4', day:'الخميس', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BAU501', prof:'Rima ALkamha', section:'C5', day:'الخميس', start_time:'18:00', end_time:'20:00', credits:5},
+            // الجمعة
+            {course_id:'BMA402', prof:'Amran-Ali Dalloul', section:'C10', day:'الجمعة', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BMA402', prof:'Amran-Ali Dalloul', section:'C9', day:'الجمعة', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPH401', prof:'Mohammad Ahmad Dib', section:'C29', day:'الجمعة', start_time:'10:00', end_time:'12:00', credits:5},
+            {course_id:'BPH401', prof:'Mohammad Ahmad Dib', section:'C30', day:'الجمعة', start_time:'12:00', end_time:'14:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C28', day:'الجمعة', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C29', day:'الجمعة', start_time:'10:00', end_time:'12:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C24', day:'الجمعة', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BPG401', prof:'Houssam (حسام فوال)', section:'C6', day:'الجمعة', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPG401', prof:'غير محدد', section:'C25', day:'الجمعة', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BPG401', prof:'diaa mohammad khalouf', section:'C22', day:'الجمعة', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BAS401', prof:'Amran-Ali Dalloul', section:'C7', day:'الجمعة', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'BAS401', prof:'Amran-Ali Dalloul', section:'C8', day:'الجمعة', start_time:'10:00', end_time:'12:00', credits:5},
+            {course_id:'BAS401', prof:'Amran-Ali Dalloul', section:'C9', day:'الجمعة', start_time:'14:00', end_time:'16:00', credits:5},
+            {course_id:'BAS401', prof:'Amran-Ali Dalloul', section:'C10', day:'الجمعة', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'GAC501', prof:'Nizar Ashrifa', section:'C1', day:'الجمعة', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'GAC501', prof:'Nizar Ashrifa', section:'C2', day:'الجمعة', start_time:'10:00', end_time:'12:00', credits:5},
+            {course_id:'GAC501', prof:'Nizar Ashrifa', section:'C3', day:'الجمعة', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'GAC501', prof:'Nizar Ashrifa', section:'C4', day:'الجمعة', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BOS501', prof:'Ghiath Moustafa', section:'C2', day:'الجمعة', start_time:'08:00', end_time:'10:00', credits:4},
+            {course_id:'BOS501', prof:'Ghiath Moustafa', section:'C3', day:'الجمعة', start_time:'10:00', end_time:'12:00', credits:4},
+            {course_id:'BOS501', prof:'Ghiath Moustafa', section:'C4', day:'الجمعة', start_time:'20:00', end_time:'22:00', credits:4},
+            {course_id:'BOS501', prof:'Ghiath Moustafa', section:'C5', day:'الجمعة', start_time:'22:00', end_time:'24:00', credits:4},
+            {course_id:'BDBL501', prof:'Alaa Saleh Al natour', section:'C5', day:'الجمعة', start_time:'08:00', end_time:'10:00', credits:4},
+            {course_id:'BDBL501', prof:'Alaa Nouraldeen Eissa', section:'C4', day:'الجمعة', start_time:'16:00', end_time:'18:00', credits:4},
+            {course_id:'BDBL501', prof:'Alaa Nouraldeen Eissa', section:'C2', day:'الجمعة', start_time:'18:00', end_time:'20:00', credits:4},
+            {course_id:'GMN401', prof:'Ali Mohamad Nofel', section:'C4', day:'الجمعة', start_time:'16:00', end_time:'18:00', credits:4},
+            {course_id:'GMN401', prof:'Ali Mohamad Nofel', section:'C8', day:'الجمعة', start_time:'18:00', end_time:'20:00', credits:4},
+            {course_id:'GMN401', prof:'Nisrin Mahmmoud Abdoulrahman', section:'C2', day:'الجمعة', start_time:'16:00', end_time:'18:00', credits:4},
+            {course_id:'BPG402', prof:'Ahmad Aqul (أحمد عقول)', section:'C1', day:'الجمعة', start_time:'10:00', end_time:'12:00', credits:5},
+            {course_id:'BPG402', prof:'Ahmad Aqul (أحمد عقول)', section:'C2', day:'الجمعة', start_time:'12:00', end_time:'14:00', credits:5},
+            {course_id:'GTW301', prof:'Ghossoun Mouner Alashkar', section:'C5', day:'الجمعة', start_time:'12:00', end_time:'14:00', credits:5},
+            {course_id:'BLA401', prof:'Nidal Yacoub chamoun', section:'C5', day:'الجمعة', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'BLA401', prof:'Nidal Yacoub chamoun', section:'C10', day:'الجمعة', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BNA401', prof:'Yousef Alkhatib', section:'C1', day:'الجمعة', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'BNA401', prof:'Yousef Alkhatib', section:'C2', day:'الجمعة', start_time:'10:00', end_time:'12:00', credits:5},
+            {course_id:'BNA401', prof:'Barlent Mattit', section:'C5', day:'الجمعة', start_time:'10:00', end_time:'12:00', credits:5},
+            {course_id:'BSP501', prof:'Yaser Khadra', section:'C2', day:'الجمعة', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'BSP501', prof:'Yaser Khadra', section:'C3', day:'الجمعة', start_time:'10:00', end_time:'12:00', credits:5},
+            {course_id:'BSP501', prof:'Yaser Khadra', section:'C8', day:'الجمعة', start_time:'14:00', end_time:'16:00', credits:5},
+            {course_id:'BAU501', prof:'Rima ALkamha', section:'C1', day:'الجمعة', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'BPG601', prof:'Riad ballach', section:'C3', day:'الجمعة', start_time:'08:00', end_time:'10:00', credits:5},
+            {course_id:'BPG601', prof:'Riad ballach', section:'C4', day:'الجمعة', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BPG601', prof:'Riad ballach', section:'C6', day:'الجمعة', start_time:'22:00', end_time:'24:00', credits:5},
+            // السبت
+            {course_id:'BMA401', prof:'Shadi Saab', section:'C15', day:'السبت', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BMA401', prof:'Shadi Saab', section:'C21', day:'السبت', start_time:'16:00', end_time:'18:00', credits:5},
+            {course_id:'BMA401', prof:'Louay Hussein Saleh', section:'C1', day:'السبت', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BMA401', prof:'Ammar Mouafak Mardembek', section:'C16', day:'السبت', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'GTW301', prof:'Nizar Ashrifa', section:'C12', day:'السبت', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'GTW301', prof:'Nizar Ashrifa', section:'C13', day:'السبت', start_time:'10:00', end_time:'12:00', credits:5},
+            {course_id:'GTW301', prof:'Lilas Youssef Mazloum', section:'C1', day:'السبت', start_time:'14:00', end_time:'16:00', credits:5},
+            {course_id:'GTW301', prof:'Ammar Mouafak Mardembek', section:'C6', day:'السبت', start_time:'12:00', end_time:'14:00', credits:5},
+            {course_id:'GTW301', prof:'Hwaida mohammad aldaood', section:'C10', day:'السبت', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BLA401', prof:'Amran-Ali Dalloul', section:'C1', day:'السبت', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BMA402', prof:'Berlant sabri Matii', section:'C1', day:'السبت', start_time:'22:00', end_time:'24:00', credits:5},
+            {course_id:'BPG402', prof:'Ahmad Aqol(أحمد عقول)', section:'C3', day:'السبت', start_time:'10:00', end_time:'12:00', credits:5},
+            {course_id:'BPG402', prof:'Ahmad Aqol(أحمد عقول)', section:'C4', day:'السبت', start_time:'12:00', end_time:'14:00', credits:5},
+            {course_id:'BPG402', prof:'Houssam (حسام فوال)', section:'C11', day:'السبت', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BNA401', prof:'shadi saab', section:'C3', day:'السبت', start_time:'12:00', end_time:'14:00', credits:5},
+            {course_id:'BNA401', prof:'shadi saab', section:'C10', day:'السبت', start_time:'12:00', end_time:'14:00', credits:5},
+            {course_id:'BNA401', prof:'shadi saab', section:'C9', day:'السبت', start_time:'14:00', end_time:'16:00', credits:5},
+            {course_id:'BNA401', prof:'shadi saab', section:'C4', day:'السبت', start_time:'14:00', end_time:'16:00', credits:5},
+            {course_id:'BNA401', prof:'Barlent Mattit', section:'C6', day:'السبت', start_time:'12:00', end_time:'14:00', credits:5},
+            {course_id:'BSP501', prof:'Iyad Mohamad Alabboud', section:'C1', day:'السبت', start_time:'12:00', end_time:'14:00', credits:5},
+            {course_id:'BDA501', prof:'Zuheir Ali Ahmad', section:'C1', day:'السبت', start_time:'20:00', end_time:'22:00', credits:6},
+            {course_id:'GMN401', prof:'Riad ballach', section:'C6', day:'السبت', start_time:'22:00', end_time:'24:00', credits:4},
+            {course_id:'BTS501', prof:'Redwan kousntantin', section:'C1', day:'السبت', start_time:'10:00', end_time:'12:00', credits:5},
+            {course_id:'BTS501', prof:'Redwan kousntantin', section:'C5', day:'السبت', start_time:'18:00', end_time:'20:00', credits:5},
+            {course_id:'BTS501', prof:'Redwan kousntantin', section:'C7', day:'السبت', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BDBL501', prof:'Alaa Eddin Alhamdah', section:'C1', day:'السبت', start_time:'08:00', end_time:'10:00', credits:4},
+            {course_id:'BPS501', prof:'hayan ahmed hasan', section:'C2', day:'السبت', start_time:'12:00', end_time:'14:00', credits:6},
+            {course_id:'BPS501', prof:'hayan ahmed hasan', section:'C6', day:'السبت', start_time:'14:00', end_time:'16:00', credits:6},
+            {course_id:'BPS501', prof:'hayan ahmed hasan', section:'C7', day:'السبت', start_time:'22:00', end_time:'24:00', credits:6},
+            {course_id:'BPG601', prof:'Riad ballach', section:'C7', day:'السبت', start_time:'20:00', end_time:'22:00', credits:5},
+            {course_id:'BNT501', prof:'Marah Naji Mfleh', section:'C6', day:'السبت', start_time:'10:00', end_time:'12:00', credits:6}
+        ];
+
+        async function syncEverything() {
+            const btn = document.getElementById('btnSyncAll');
+            const log = document.getElementById('syncLog');
+            btn.disabled = true; log.style.display = 'block';
+            log.innerHTML = "⏳ جاري بدء الرفع الجماعي لجدول الكلية الأصلي...";
+            
+            const { error } = await supabaseClient.from('classes').insert(fullCollegeTable);
+            
+            if(error) { 
+                log.innerHTML += `<div style="color:var(--danger)">❌ خطأ: ${error.message}</div>`; 
+            } else { 
+                log.innerHTML += `<div>✅ مبروك! تم رفع ${fullCollegeTable.length} شعبة للسيرفر بنجاح.</div>`; 
+                alert("تمت المزامنة الشاملة!");
+                fetchClassesTable();
+                showMainMenu(); 
+            }
+            btn.disabled = false;
+        }
+
     </script>
 </body>
 </html>
