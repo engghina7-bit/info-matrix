@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الصفوف - info</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        :root {
+            /* الهوية الليلية الفخمة */
+            --navy: #1a2235; --navy-light: #242f48; --input-bg: #121826;
+            --orange: #ff7e00; --gold: #ffc107; --success: #10b981; --danger: #ef4444;
+            --text-main: #f8fafc; --text-muted: #94a3b8; --border-glass: rgba(255, 255, 255, 0.08);
+        }
+
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background: radial-gradient(circle at top right, rgba(255,126,0,0.05), transparent), var(--navy);
+            color: var(--text-main); margin: 0; padding: 100px 20px 20px 20px; 
+            display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; min-height: 100vh;
+        }
+
+        /* ---------------- البار العلوي ---------------- */
+        .top-bar {
+            position: fixed; top: 0; left: 0; right: 0; height: 80px; 
+            background: rgba(26, 34, 53, 0.85); backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 126, 0, 0.15); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 5%; z-index: 1001; box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+        }
+        .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .brand img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--orange); object-fit: cover; box-shadow: 0 0 15px rgba(255,126,0,0.3);}
+        .brand span { font-size: 1.8rem; font-weight: 900; color: white; letter-spacing: -1px; }
+        .brand span i { color: var(--orange); font-style: normal; }
+        .top-actions a { color: var(--text-muted); text-decoration: none; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+        .top-actions a:hover { color: white; transform: translateX(-5px); }
+
+        /* ---------------- شريط اختيار المواد ---------------- */
+        .course-selector-container { 
+            width: 100%; background: var(--navy-light); padding: 25px; border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3); border: 1px solid var(--border-glass); 
+            border-top: 4px solid var(--gold); display: flex; flex-direction: column; gap: 15px; 
+        }
+
+        .input-group { display: flex; gap: 15px; align-items: center; flex-wrap: wrap;}
+        select { 
+            flex: 1; min-width: 250px; padding: 14px; border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 12px; font-family: 'Cairo'; font-size: 1rem; font-weight: bold; 
+            color: white; background-color: var(--input-bg); outline: none; transition: 0.3s;
+        }
+        select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px rgba(255,126,0,0.1); }
+
+        .selected-courses-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+        .course-tag { 
+            background: rgba(255, 126, 0, 0.1); color: white; padding: 8px 15px; border-radius: 50px; 
+            font-weight: bold; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; 
+            border: 1px solid rgba(255,126,0,0.3); box-shadow: 0 5px 15px rgba(255,126,0,0.1);
+        }
+        .course-tag i { cursor: pointer; color: #ff6b6b; transition: 0.2s;}
+        .course-tag i:hover { transform: scale(1.2); color: #ef4444; }
+
+        /* ---------------- حاويات الأقسام ---------------- */
+        .section-container { 
+            background: var(--navy-light); border-radius: 20px; padding: 25px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3); flex: 1; min-width: 320px; 
+            border: 1px solid var(--border-glass); border-top: 4px solid #3b82f6; 
+            height: calc(100vh - 260px); overflow-y: auto; position: relative;
+        }
+        
+        .section-container::-webkit-scrollbar { width: 8px; }
+        .section-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px;}
+        .section-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px;}
+        .section-container::-webkit-scrollbar-thumb:hover { background: var(--orange); }
+
+        .section-header { 
+            font-size: 1.2rem; font-weight: 900; color: white; margin-bottom: 20px; 
+            padding-bottom: 15px; border-bottom: 1px dashed rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* كروت الشعب المتاحة */
+        .class-card { border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 15px; margin-bottom: 20px; background: rgba(0,0,0,0.15); }
+        .class-title { font-weight: 900; font-size: 1.1rem; color: var(--orange); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;}
+        .time-slot { 
+            display: flex; justify-content: space-between; align-items: center; 
+            background: var(--input-bg); padding: 12px 15px; border-radius: 12px; margin-top: 10px; 
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; flex-wrap: wrap; gap: 10px;
+        }
+        .time-slot:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2);}
+        .class-prof { font-size: 0.95rem; color: white; font-weight: bold; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;}
+        .class-prof i { color: var(--gold); }
+        .class-time-info { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;}
+        .class-section-badge { background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 6px; color: white; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px; border: 1px solid rgba(255,255,255,0.05);}
+
+        /* الأزرار */
+        .btn-add { 
+            background: linear-gradient(135deg, var(--orange), #e65c00); color: white; border: none; 
+            padding: 10px 20px; border-radius: 10px; cursor: pointer; font-family: 'Cairo'; 
+            font-weight: bold; transition: 0.3s; box-shadow: 0 5px 15px rgba(255,126,0,0.2);
+        }
+        .btn-add:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255,126,0,0.4); }
+        .btn-remove { background: rgba(239, 68, 68, 0.15); color: #ff6b6b; border: 1px solid rgba(239, 68, 68, 0.3); box-shadow: none; padding: 10px 15px;}
+        .btn-remove:hover { background: #ef4444; color: white; }
+
+        /* الجدول المحدد */
+        .schedule-item { 
+            display: flex; align-items: center; justify-content: space-between; 
+            background: rgba(16, 185, 129, 0.08); border-right: 4px solid var(--success); 
+            padding: 15px; border-radius: 12px; margin-bottom: 12px; 
+            border: 1px solid rgba(16, 185, 129, 0.15); transition: 0.3s;
+            position: relative; z-index: 2; /* ليكون فوق العلامة المائية */
+        }
+        .schedule-item:hover { transform: translateX(-5px); box-shadow: 0 5px 15px rgba(16,185,129,0.1);}
+        .schedule-info h4 { margin: 0 0 5px 0; color: white; font-weight: 800;}
+        .schedule-info p { margin: 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; line-height: 1.6;}
+
+        /* اللمبة للتحذير */
+        .conflict-warning { 
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(200px); 
+            background: var(--navy-light); border: 2px solid rgba(239, 68, 68, 0.5); padding: 15px 25px; 
+            border-radius: 20px; display: flex; align-items: center; gap: 15px; 
+            box-shadow: 0 15px 40px rgba(239, 68, 68, 0.2), 0 0 20px rgba(0,0,0,0.5); 
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2000; 
+        }
+        .conflict-warning.show { transform: translateX(-50%) translateY(0); }
+        .conflict-warning img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--danger); animation: pulseRed 2s infinite; object-fit: cover;}
+        .conflict-text { color: white; font-weight: 800; font-size: 1rem; line-height: 1.5;}
+        .conflict-text span { color: #ff6b6b; }
+        
+        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+        /* ---------------- العلامة المائية (تظهر فقط عند التصوير) ---------------- */
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            display: none; 
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.06; 
+            pointer-events: none;
+            z-index: 1;
+        }
+        .watermark img { width: 160px; height: 160px; border-radius: 50%; border: 5px solid var(--orange); margin-bottom: 10px; object-fit: cover;}
+        .watermark h1 { color: white; font-size: 3.5rem; margin: 0; font-weight: 900; letter-spacing: 2px; }
+
+        .export-mode { background: var(--navy-light) !important; padding: 30px !important; }
+        .export-mode .watermark { display: flex; }
+        .export-mode .btn-remove { display: none !important; }
+        .export-mode .capture-hide { display: none !important; }
+
+        @media (max-width: 768px) { body { padding-top: 100px; } .section-container { height: 400px; } }
+    </style>
+</head>
+<body>
+
+    <nav class="top-bar">
+        <a href="dashboard.html" class="brand"><img src="img/photo_2_2026-03-18_22-23-47.jpg" alt="info logo"><span>info<i>.</i></span></a>
+        <div class="top-actions"><a href="dashboard.html"><i class="fas fa-arrow-right"></i> العودة للداشبورد</a></div>
+    </nav>
+
+    <div class="course-selector-container">
+        <h3 style="margin:0; color:white; font-size:1.1rem;"><i class="fas fa-search" style="color:var(--orange)"></i> 1. حدد المواد التي ترغب بتسجيلها:</h3>
+        <div class="input-group">
+            <select id="courseDropdown"><option value="">-- اختر مادة لتظهر شعبها المتاحة --</option></select>
+            <button class="btn-add" onclick="addCourseToFilter()" style="padding: 14px 25px;"><i class="fas fa-plus"></i> إضافة للبحث</button>
+        </div>
+        <div class="selected-courses-tags" id="selectedCoursesTags"></div>
+    </div>
+
+    <div class="section-container">
+        <div class="section-header"><span>2. الشعب والأوقات المتاحة 📝</span></div>
+        <div id="availableClassesList">
+            <div style="text-align:center; color:var(--text-muted); padding:40px 20px; font-weight:bold; line-height:1.8;">
+                <i class="fas fa-inbox" style="font-size:3rem; opacity:0.2; margin-bottom:15px; display:block;"></i>الرجاء تحديد مادة من الأعلى.
+            </div>
+        </div>
+    </div>
+
+    <div class="section-container" id="captureContainer" style="border-top-color: var(--success);">
+        
+        <div class="watermark" id="watermarkElement">
+            <img src="img/photo_2_2026-03-18_22-23-47.jpg" alt="infoMatrix">
+            <h1>infoMatrix</h1>
+        </div>
+
+        <div class="section-header">
+            <span>3. مسودتك النهائية 📅</span>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <button class="btn-add capture-hide" onclick="downloadScheduleImage()" style="padding: 6px 15px; font-size: 0.85rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); box-shadow: none;">
+                    <i class="fas fa-camera"></i> حفظ صورة
+                </button>
+                <span id="creditCounter" style="font-size: 0.85rem; background: rgba(255,255,255,0.1); color:white; padding: 4px 12px; border-radius: 10px;">0 نقطة</span>
+            </div>
+        </div>
+        <div id="myScheduleList">
+            <div style="text-align:center; color:var(--text-muted); padding:40px 20px; font-weight:bold; line-height:1.8;">
+                <i class="fas fa-calendar-times" style="font-size:3rem; opacity:0.2; margin-bottom:15px; display:block;"></i>لم تقم بتثبيت أي شعبة بعد.
+            </div>
+        </div>
+    </div>
+
+    <div class="conflict-warning" id="conflictWarning">
+        <img src="img/photo_2_2026-03-18_22-23-47.jpg" alt="Smart Bulb">
+        <div class="conflict-text" id="conflictText">خطأ</div>
+    </div>
+
+    <script>
+        const coursesDB = {
+            "GCS301": { name: "مهارات حاسوب", credits: 4 }, "GTW301": { name: "مهارات التواصل", credits: 5 },
+            "GOE301": { name: "التعليم الالكتروني", credits: 4 }, "BPH401": { name: "الفيزياء", credits: 5 },
+            "BMA401": { name: "التحليل 1", credits: 5 }, "BAS401": { name: "بنى جبرية", credits: 5 },
+            "BPG401": { name: "برمجة 1", credits: 5 }, "BEC401": { name: "دارات إلكترونية", credits: 5 },
+            "BLA401": { name: "جبر خطي 1", credits: 5 }, "BMA402": { name: "التحليل 2", credits: 5 },
+            "BLC401": { name: "دارات منطقية", credits: 5 }, "BPG402": { name: "برمجة 2", credits: 5 },
+            "BDM501": { name: "الرياضيات المتقطعة", credits: 5 }, "BCA501": { name: "بنيان حواسيب 1", credits: 6 },
+            "BDA501": { name: "الخوارزميات", credits: 6 }, "BWP401": { name: "برمجة ويب 1", credits: 5 },
+            "BNA401": { name: "تحليل عددي", credits: 5 }, "BSP501": { name: "معالجة إشارة", credits: 5 },
+            "BPS501": { name: "احتمالات وإحصاء", credits: 6 }, "BOS501": { name: "نظم تشغيل", credits: 4 },
+            "BOSL501": { name: "مخبر نظم تشغيل", credits: 4 }, "BDB501": { name: "قواعد بيانات 1", credits: 4 },
+            "BAU501": { name: "أوتومات ولغات", credits: 5 }, "BPG601": { name: "برمجة 3", credits: 5 },
+            "BDBL501": { name: "مخبر قواعد بيانات", credits: 4 }, "BAI501": { name: "الذكاء الصنعي", credits: 5 },
+            "GMN401": { name: "أساسيات إدارة", credits: 4 }, "BTS501": { name: "نظم اتصالات", credits: 5 },
+            "BNT501": { name: "الشبكات الحاسوبية", credits: 6 }, "BWP501": { name: "برمجة ويب 2", credits: 5 },
+            "GPM601": { name: "إدارة مشاريع", credits: 6 }, "BSE601": { name: "هندسة برمجيات", credits: 6 },
+            "BPR601": { name: "مشروع 1", credits: 6 }, "BMP601": { name: "برمجة تطبيقات النقال", credits: 5 },
+            "BID501": { name: "تحليل وتصميم النظم", credits: 6 }, "BCM601": { name: "المترجمات", credits: 6 },
+            "BIA601": { name: "خوارزميات ذكية", credits: 5 }, "BIS501": { name: "أمن المعلومات", credits: 6 },
+            "GET501": { name: "أخلاقيات المهنة", credits: 6 }, "GAC501": { name: "المحاسبة", credits: 5 },
+            "BPR602": { name: "مشروع 2", credits: 10 }, "BMM601": { name: "نظم الوسائط المتعددة", credits: 6 },
+            "BDG601": { name: "البيانات", credits: 6 }, "GEP601": { name: "نظرية المعرفة", credits: 4 },
+            "BSM601": { name: "النمذجة والمحاكاة", credits: 5 }
+        };
+
+        const dbClasses = [
+            // الأحد
+            {id: 1, courseId: 'BPH401', prof: 'د. محمد معروف', day: 'الأحد', start: '16:00', end: '18:00', section: 'C4'},
+            {id: 2, courseId: 'BPH401', prof: 'د. محمد معروف', day: 'الأحد', start: '18:00', end: '20:00', section: 'C12'},
+            {id: 3, courseId: 'BPH401', prof: 'د. محمد معروف', day: 'الأحد', start: '20:00', end: '22:00', section: 'C14'},
+            {id: 4, courseId: 'BPH401', prof: 'د. شادي صعب', day: 'الأحد', start: '18:00', end: '20:00', section: 'C7'},
+            {id: 5, courseId: 'BPH401', prof: 'د. باسم السهو', day: 'الأحد', start: '18:00', end: '20:00', section: 'C20'},
+            {id: 6, courseId: 'BMA401', prof: 'د. لؤي صالح', day: 'الأحد', start: '20:00', end: '22:00', section: 'C2'},
+            {id: 7, courseId: 'BPG401', prof: 'غير محدد', day: 'الأحد', start: '18:00', end: '20:00', section: 'C1'},
+            {id: 8, courseId: 'BPG401', prof: 'غير محدد', day: 'الأحد', start: '20:00', end: '22:00', section: 'C2'},
+            {id: 9, courseId: 'GTW301', prof: 'د. غصون الأشقر', day: 'الأحد', start: '20:00', end: '22:00', section: 'C7'},
+            {id: 10, courseId: 'GTW301', prof: 'د. هويدا الداوود', day: 'الأحد', start: '22:00', end: '24:00', section: 'C11'},
+            {id: 11, courseId: 'BMA402', prof: 'د. برلنت مطيط', day: 'الأحد', start: '22:00', end: '24:00', section: 'C2'},
+            {id: 12, courseId: 'BEC401', prof: 'د. أميمة دكاك', day: 'الأحد', start: '18:00', end: '20:00', section: 'C1'},
+            {id: 13, courseId: 'BPG402', prof: 'غير محدد', day: 'الأحد', start: '18:00', end: '20:00', section: 'C5'},
+            {id: 14, courseId: 'BPG402', prof: 'غير محدد', day: 'الأحد', start: '20:00', end: '22:00', section: 'C6'},
+            {id: 15, courseId: 'BPG402', prof: 'غير محدد', day: 'الأحد', start: '22:00', end: '24:00', section: 'C8'},
+            {id: 16, courseId: 'BWP401', prof: 'د. باسل الخطيب', day: 'الأحد', start: '16:00', end: '18:00', section: 'C2'},
+            {id: 17, courseId: 'BWP401', prof: 'د. باسل الخطيب', day: 'الأحد', start: '18:00', end: '20:00', section: 'C7'},
+            {id: 18, courseId: 'BSP501', prof: 'د. إياد العبود', day: 'الأحد', start: '08:00', end: '10:00', section: 'C4'},
+            {id: 19, courseId: 'BDA501', prof: 'د. زهير علي أحمد', day: 'الأحد', start: '20:00', end: '22:00', section: 'C2'},
+            {id: 20, courseId: 'BDA501', prof: 'د. سهير إبراهيم', day: 'الأحد', start: '20:00', end: '22:00', section: 'C3'},
+            {id: 21, courseId: 'BDA501', prof: 'د. سهير إبراهيم', day: 'الأحد', start: '22:00', end: '24:00', section: 'C4'},
+            {id: 22, courseId: 'BDB501', prof: 'د. محمد حجوز', day: 'الأحد', start: '08:00', end: '10:00', section: 'C1'},
+            {id: 23, courseId: 'BDB501', prof: 'د. محمد حجوز', day: 'الأحد', start: '10:00', end: '12:00', section: 'C2'},
+            {id: 24, courseId: 'BDB501', prof: 'د. محمد حجوز', day: 'الأحد', start: '12:00', end: '14:00', section: 'C3'},
+            {id: 25, courseId: 'BDBL501', prof: 'د. آلاء الناطور', day: 'الأحد', start: '08:00', end: '10:00', section: 'C3'},
+            {id: 26, courseId: 'BPS501', prof: 'د. سلافة علي', day: 'الأحد', start: '10:00', end: '12:00', section: 'C1'},
+            {id: 27, courseId: 'BPS501', prof: 'د. علاء الدين سرحان', day: 'الأحد', start: '22:00', end: '24:00', section: 'C3'},
+            {id: 28, courseId: 'BOSL501', prof: 'د. ماجدة أسعد', day: 'الأحد', start: '20:00', end: '22:00', section: 'C1'},
+            {id: 29, courseId: 'BOSL501', prof: 'د. ماجدة أسعد', day: 'الأحد', start: '22:00', end: '24:00', section: 'C2'},
+            
+            // الإثنين
+            {id: 30, courseId: 'BPH401', prof: 'د. محمد معروف', day: 'الإثنين', start: '16:00', end: '18:00', section: 'C18'},
+            {id: 31, courseId: 'BPH401', prof: 'د. مازن خوري', day: 'الإثنين', start: '18:00', end: '20:00', section: 'C2'},
+            {id: 32, courseId: 'BPH401', prof: 'د. رضوان اللحام', day: 'الإثنين', start: '18:00', end: '20:00', section: 'C16'},
+            {id: 33, courseId: 'BPH401', prof: 'د. رضوان اللحام', day: 'الإثنين', start: '20:00', end: '22:00', section: 'C19'},
+            {id: 34, courseId: 'BMA401', prof: 'د. عمار مردم بك', day: 'الإثنين', start: '20:00', end: '22:00', section: 'C17'},
+            {id: 35, courseId: 'BPG401', prof: 'د. حسام فوال', day: 'الإثنين', start: '18:00', end: '20:00', section: 'C3'},
+            {id: 36, courseId: 'BPG401', prof: 'د. حسام فوال', day: 'الإثنين', start: '20:00', end: '22:00', section: 'C4'},
+            {id: 37, courseId: 'BLA401', prof: 'د. معاذ عبد المجيد', day: 'الإثنين', start: '14:00', end: '16:00', section: 'C2'},
+            {id: 38, courseId: 'BLA401', prof: 'د. معاذ عبد المجيد', day: 'الإثنين', start: '16:00', end: '18:00', section: 'C3'},
+            {id: 39, courseId: 'BMA402', prof: 'د. برلنت مطيط', day: 'الإثنين', start: '22:00', end: '24:00', section: 'C3'},
+            {id: 40, courseId: 'BEC401', prof: 'د. أميمة دكاك', day: 'الإثنين', start: '18:00', end: '20:00', section: 'C2'},
+            {id: 41, courseId: 'BEC401', prof: 'د. أميمة دكاك', day: 'الإثنين', start: '20:00', end: '22:00', section: 'C3'},
+            {id: 42, courseId: 'BEC401', prof: 'د. أميمة دكاك', day: 'الإثنين', start: '22:00', end: '24:00', section: 'C4'},
+            {id: 43, courseId: 'BLC401', prof: 'د. لؤي صالح', day: 'الإثنين', start: '18:00', end: '20:00', section: 'C5'},
+            {id: 44, courseId: 'BLC401', prof: 'د. لؤي صالح', day: 'الإثنين', start: '20:00', end: '22:00', section: 'C8'},
+            {id: 45, courseId: 'BPG402', prof: 'غير محدد', day: 'الإثنين', start: '18:00', end: '20:00', section: 'C14'},
+            {id: 46, courseId: 'BPG402', prof: 'غير محدد', day: 'الإثنين', start: '20:00', end: '22:00', section: 'C9'},
+            {id: 47, courseId: 'BPG402', prof: 'غير محدد', day: 'الإثنين', start: '22:00', end: '24:00', section: 'C10'},
+            {id: 48, courseId: 'BSP501', prof: 'د. إياد العبود', day: 'الإثنين', start: '08:00', end: '10:00', section: 'C5'},
+            {id: 49, courseId: 'BDA501', prof: 'د. زهير علي أحمد', day: 'الإثنين', start: '20:00', end: '22:00', section: 'C5'},
+            {id: 50, courseId: 'BDA501', prof: 'د. سهير إبراهيم', day: 'الإثنين', start: '20:00', end: '22:00', section: 'C6'},
+            {id: 51, courseId: 'BDA501', prof: 'د. سهير إبراهيم', day: 'الإثنين', start: '22:00', end: '24:00', section: 'C7'},
+            {id: 52, courseId: 'GMN401', prof: 'د. نسرين عبد الرحمن', day: 'الإثنين', start: '16:00', end: '18:00', section: 'C10'},
+            {id: 53, courseId: 'BTS501', prof: 'د. نادر خضرو', day: 'الإثنين', start: '18:00', end: '20:00', section: 'C2'},
+            {id: 54, courseId: 'BTS501', prof: 'د. نادر خضرو', day: 'الإثنين', start: '20:00', end: '22:00', section: 'C3'},
+            {id: 55, courseId: 'BDBL501', prof: 'د. علاء الدين الحمدة', day: 'الإثنين', start: '22:00', end: '24:00', section: 'C7'},
+            {id: 56, courseId: 'BWP501', prof: 'د. باسل الخطيب', day: 'الإثنين', start: '16:00', end: '18:00', section: 'C1'},
+            {id: 57, courseId: 'BWP501', prof: 'د. باسل الخطيب', day: 'الإثنين', start: '18:00', end: '20:00', section: 'C3'},
+            {id: 58, courseId: 'BPS501', prof: 'د. علاء الدين سرحان', day: 'الإثنين', start: '20:00', end: '22:00', section: 'C4'},
+            {id: 59, courseId: 'BPS501', prof: 'د. علاء الدين سرحان', day: 'الإثنين', start: '22:00', end: '24:00', section: 'C5'},
+            {id: 60, courseId: 'BPG601', prof: 'د. أحمد العوص', day: 'الإثنين', start: '10:00', end: '12:00', section: 'C1'},
+
+            // الثلاثاء
+            {id: 61, courseId: 'BMA401', prof: 'د. عيسى مشريقي', day: 'الثلاثاء', start: '20:00', end: '22:00', section: 'C11'},
+            {id: 62, courseId: 'BPH401', prof: 'د. محمد معروف', day: 'الثلاثاء', start: '20:00', end: '22:00', section: 'C24'},
+            {id: 63, courseId: 'BPH401', prof: 'د. محمد معروف', day: 'الثلاثاء', start: '22:00', end: '24:00', section: 'C23'},
+            {id: 64, courseId: 'BPH401', prof: 'د. باسم السهو', day: 'الثلاثاء', start: '18:00', end: '20:00', section: 'C21'},
+            {id: 65, courseId: 'BPH401', prof: 'د. شادي صعب', day: 'الثلاثاء', start: '18:00', end: '20:00', section: 'C25'},
+            {id: 66, courseId: 'BPH401', prof: 'د. مازن خوري', day: 'الثلاثاء', start: '18:00', end: '20:00', section: 'C22'},
+            {id: 67, courseId: 'BPH401', prof: 'د. محمد حسن درباس', day: 'الثلاثاء', start: '20:00', end: '22:00', section: 'C15'},
+            {id: 68, courseId: 'BPG401', prof: 'غير محدد', day: 'الثلاثاء', start: '20:00', end: '22:00', section: 'C26'},
+            {id: 69, courseId: 'BPG401', prof: 'غير محدد', day: 'الثلاثاء', start: '22:00', end: '24:00', section: 'C11'},
+            {id: 70, courseId: 'BPG401', prof: 'د. ضياء خلوف', day: 'الثلاثاء', start: '18:00', end: '20:00', section: 'C23'},
+            {id: 71, courseId: 'BPG401', prof: 'غير محدد', day: 'الثلاثاء', start: '18:00', end: '20:00', section: 'C5'},
+            {id: 72, courseId: 'BAS401', prof: 'د. محمد ديب', day: 'الثلاثاء', start: '20:00', end: '22:00', section: 'C2'},
+            {id: 73, courseId: 'BAS401', prof: 'د. محمد ديب', day: 'الثلاثاء', start: '22:00', end: '24:00', section: 'C13'},
+            {id: 74, courseId: 'BNT501', prof: 'م. مرح مفلح', day: 'الثلاثاء', start: '20:00', end: '22:00', section: 'C1'},
+            {id: 75, courseId: 'BPS501', prof: 'د. سلافة علي', day: 'الثلاثاء', start: '18:00', end: '20:00', section: 'C9'},
+            {id: 76, courseId: 'BPS501', prof: 'د. سلافة علي', day: 'الثلاثاء', start: '20:00', end: '22:00', section: 'C8'},
+            {id: 77, courseId: 'BSE601', prof: 'د. محمد علي', day: 'الثلاثاء', start: '22:00', end: '24:00', section: 'C2'},
+            {id: 78, courseId: 'BMA402', prof: 'د. عمران دلول', day: 'الثلاثاء', start: '20:00', end: '22:00', section: 'C12'},
+            {id: 79, courseId: 'BMA402', prof: 'د. عمران دلول', day: 'الثلاثاء', start: '22:00', end: '24:00', section: 'C11'},
+            {id: 80, courseId: 'BMA402', prof: 'د. برلنت مطيط', day: 'الثلاثاء', start: '22:00', end: '24:00', section: 'C6'},
+            {id: 81, courseId: 'BPG402', prof: 'غير محدد', day: 'الثلاثاء', start: '18:00', end: '20:00', section: 'C12'},
+            {id: 82, courseId: 'BEC401', prof: 'د. أميمة دكاك', day: 'الثلاثاء', start: '18:00', end: '20:00', section: 'C5'},
+            {id: 83, courseId: 'BEC401', prof: 'د. أميمة دكاك', day: 'الثلاثاء', start: '20:00', end: '22:00', section: 'C6'},
+            {id: 84, courseId: 'BEC401', prof: 'د. أميمة دكاك', day: 'الثلاثاء', start: '22:00', end: '24:00', section: 'C7'},
+            {id: 85, courseId: 'BLC401', prof: 'د. محمد كلاش', day: 'الثلاثاء', start: '12:00', end: '14:00', section: 'C11'},
+            {id: 86, courseId: 'BLC401', prof: 'د. وسام خلف', day: 'الثلاثاء', start: '20:00', end: '22:00', section: 'C7'},
+            {id: 87, courseId: 'BNA401', prof: 'د. علاء الدين سرحان', day: 'الثلاثاء', start: '20:00', end: '22:00', section: 'C7'},
+            {id: 88, courseId: 'BNA401', prof: 'د. علاء الدين سرحان', day: 'الثلاثاء', start: '22:00', end: '24:00', section: 'C8'},
+            {id: 89, courseId: 'BSP501', prof: 'د. إياد العبود', day: 'الثلاثاء', start: '08:00', end: '10:00', section: 'C6'},
+            {id: 90, courseId: 'BDA501', prof: 'د. زهير علي أحمد', day: 'الثلاثاء', start: '20:00', end: '22:00', section: 'C8'},
+            {id: 91, courseId: 'BTS501', prof: 'د. نادر خضرو', day: 'الثلاثاء', start: '18:00', end: '20:00', section: 'C4'},
+            {id: 92, courseId: 'BTS501', prof: 'د. نادر خضرو', day: 'الثلاثاء', start: '20:00', end: '22:00', section: 'C6'},
+            {id: 93, courseId: 'BDB501', prof: 'د. محمد حجوز', day: 'الثلاثاء', start: '08:00', end: '10:00', section: 'C4'},
+            {id: 94, courseId: 'BDB501', prof: 'د. محمد حجوز', day: 'الثلاثاء', start: '10:00', end: '12:00', section: 'C5'},
+            {id: 95, courseId: 'BDB501', prof: 'د. محمد حجوز', day: 'الثلاثاء', start: '12:00', end: '14:00', section: 'C6'},
+            {id: 96, courseId: 'BDBL501', prof: 'د. آلاء عيسى', day: 'الثلاثاء', start: '18:00', end: '20:00', section: 'C6'},
+
+            // الأربعاء
+            {id: 97, courseId: 'BMA401', prof: 'د. عمار مردم بك', day: 'الأربعاء', start: '10:00', end: '12:00', section: 'C20'},
+            {id: 98, courseId: 'BMA401', prof: 'د. عمار مردم بك', day: 'الأربعاء', start: '20:00', end: '22:00', section: 'C22'},
+            {id: 99, courseId: 'BMA401', prof: 'د. لمى الدروبي', day: 'الأربعاء', start: '08:00', end: '10:00', section: 'C4'},
+            {id: 100, courseId: 'BMA401', prof: 'د. لمى الدروبي', day: 'الأربعاء', start: '10:00', end: '12:00', section: 'C7'},
+            {id: 101, courseId: 'BMA401', prof: 'د. لمى الدروبي', day: 'الأربعاء', start: '12:00', end: '14:00', section: 'C13'},
+            {id: 102, courseId: 'BMA401', prof: 'د. لمى الدروبي', day: 'الأربعاء', start: '20:00', end: '22:00', section: 'C14'},
+            {id: 103, courseId: 'BMA401', prof: 'د. علاء الدين سرحان', day: 'الأربعاء', start: '20:00', end: '22:00', section: 'C3'},
+            {id: 104, courseId: 'BMA401', prof: 'د. علاء الدين سرحان', day: 'الأربعاء', start: '22:00', end: '24:00', section: 'C5'},
+            {id: 105, courseId: 'BPH401', prof: 'د. محمد معروف', day: 'الأربعاء', start: '16:00', end: '18:00', section: 'C27'},
+            {id: 106, courseId: 'BPH401', prof: 'د. محمد معروف', day: 'الأربعاء', start: '18:00', end: '20:00', section: 'C28'},
+            {id: 107, courseId: 'BPH401', prof: 'د. محمد درباس', day: 'الأربعاء', start: '20:00', end: '22:00', section: 'C3'},
+            {id: 108, courseId: 'BPG401', prof: 'غير محدد', day: 'الأربعاء', start: '16:00', end: '18:00', section: 'C14'},
+            {id: 109, courseId: 'BPG401', prof: 'غير محدد', day: 'الأربعاء', start: '18:00', end: '20:00', section: 'C15'},
+            {id: 110, courseId: 'BPG401', prof: 'غير محدد', day: 'الأربعاء', start: '22:00', end: '24:00', section: 'C12'},
+            {id: 111, courseId: 'BPG401', prof: 'د. ضياء خلوف', day: 'الأربعاء', start: '18:00', end: '20:00', section: 'C21'},
+            {id: 112, courseId: 'BPG401', prof: 'غير محدد', day: 'الأربعاء', start: '20:00', end: '22:00', section: 'C31'},
+            {id: 113, courseId: 'BAS401', prof: 'د. سلافة علي', day: 'الأربعاء', start: '14:00', end: '16:00', section: 'C3'},
+            {id: 114, courseId: 'BAS401', prof: 'د. سلافة علي', day: 'الأربعاء', start: '16:00', end: '18:00', section: 'C20'},
+            {id: 115, courseId: 'BAS401', prof: 'د. محمد ديب', day: 'الأربعاء', start: '18:00', end: '20:00', section: 'C16'},
+            {id: 116, courseId: 'BAS401', prof: 'د. محمد ديب', day: 'الأربعاء', start: '22:00', end: '24:00', section: 'C17'},
+            {id: 117, courseId: 'BAS401', prof: 'د. نضال شمعون', day: 'الأربعاء', start: '08:00', end: '10:00', section: 'C1'},
+            {id: 118, courseId: 'BAS401', prof: 'د. نضال شمعون', day: 'الأربعاء', start: '22:00', end: '24:00', section: 'C6'},
+            {id: 119, courseId: 'BAS401', prof: 'د. مازن خوري', day: 'الأربعاء', start: '18:00', end: '20:00', section: 'C21'},
+            {id: 120, courseId: 'BOSL501', prof: 'د. ماجدة أسعد', day: 'الأربعاء', start: '16:00', end: '18:00', section: 'C3'},
+            {id: 121, courseId: 'BOSL501', prof: 'د. ماجدة أسعد', day: 'الأربعاء', start: '18:00', end: '20:00', section: 'C4'},
+            {id: 122, courseId: 'BOSL501', prof: 'د. ماجدة أسعد', day: 'الأربعاء', start: '22:00', end: '24:00', section: 'C5'},
+            {id: 123, courseId: 'BLA401', prof: 'د. معاذ عبد المجيد', day: 'الأربعاء', start: '14:00', end: '16:00', section: 'C8'},
+            {id: 124, courseId: 'BLA401', prof: 'د. معاذ عبد المجيد', day: 'الأربعاء', start: '16:00', end: '18:00', section: 'C9'},
+            {id: 125, courseId: 'BLA401', prof: 'د. عمران دلول', day: 'الأربعاء', start: '20:00', end: '22:00', section: 'C4'},
+            {id: 126, courseId: 'BLA401', prof: 'د. عمران دلول', day: 'الأربعاء', start: '22:00', end: '24:00', section: 'C12'},
+            {id: 127, courseId: 'BSE601', prof: 'د. محمد علي', day: 'الأربعاء', start: '20:00', end: '22:00', section: 'C3'},
+            {id: 128, courseId: 'BSE601', prof: 'د. محمد علي', day: 'الأربعاء', start: '22:00', end: '24:00', section: 'C4'},
+            {id: 129, courseId: 'BMA402', prof: 'د. عيسى مشريقي', day: 'الأربعاء', start: '18:00', end: '20:00', section: 'C7'},
+            {id: 130, courseId: 'BMA402', prof: 'د. عيسى مشريقي', day: 'الأربعاء', start: '20:00', end: '22:00', section: 'C8'},
+            {id: 131, courseId: 'GTW301', prof: 'د. عمار مردم بك', day: 'الأربعاء', start: '18:00', end: '20:00', section: 'C8'},
+            {id: 132, courseId: 'GTW301', prof: 'د. سحر عبد السلام', day: 'الأربعاء', start: '20:00', end: '22:00', section: 'C16'},
+            {id: 133, courseId: 'GTW301', prof: 'د. سحر عبد السلام', day: 'الأربعاء', start: '22:00', end: '24:00', section: 'C17'},
+            {id: 134, courseId: 'BLC401', prof: 'د. علي حسان', day: 'الأربعاء', start: '18:00', end: '20:00', section: 'C3'},
+            {id: 135, courseId: 'BLC401', prof: 'د. علي حسان', day: 'الأربعاء', start: '20:00', end: '22:00', section: 'C4'},
+            {id: 136, courseId: 'BLC401', prof: 'د. محمد كلاش', day: 'الأربعاء', start: '08:00', end: '10:00', section: 'C1'},
+            {id: 137, courseId: 'BLC401', prof: 'د. محمد كلاش', day: 'الأربعاء', start: '10:00', end: '12:00', section: 'C2'},
+            {id: 138, courseId: 'BLC401', prof: 'د. محمد كلاش', day: 'الأربعاء', start: '12:00', end: '14:00', section: 'C10'},
+            {id: 139, courseId: 'BSP501', prof: 'د. إياد العبود', day: 'الأربعاء', start: '08:00', end: '10:00', section: 'C7'},
+            {id: 140, courseId: 'GMN401', prof: 'د. لمى بدر', day: 'الأربعاء', start: '10:00', end: '12:00', section: 'C5'},
+            {id: 141, courseId: 'BDM501', prof: 'د. محسن حسين', day: 'الأربعاء', start: '14:00', end: '16:00', section: 'C1'},
+            {id: 142, courseId: 'BDM501', prof: 'د. محسن حسين', day: 'الأربعاء', start: '16:00', end: '18:00', section: 'C2'},
+            {id: 143, courseId: 'BDM501', prof: 'د. محسن حسين', day: 'الأربعاء', start: '20:00', end: '22:00', section: 'C4'},
+            {id: 144, courseId: 'BAU501', prof: 'د. ريما القمحا', day: 'الأربعاء', start: '16:00', end: '18:00', section: 'C2'},
+            {id: 145, courseId: 'BAU501', prof: 'د. ريما القمحا', day: 'الأربعاء', start: '18:00', end: '20:00', section: 'C3'},
+
+            // الخميس
+            {id: 146, courseId: 'BMA401', prof: 'د. قصي كنفاني', day: 'الخميس', start: '12:00', end: '14:00', section: 'C6'},
+            {id: 147, courseId: 'BMA401', prof: 'د. قصي كنفاني', day: 'الخميس', start: '14:00', end: '16:00', section: 'C8'},
+            {id: 148, courseId: 'BMA401', prof: 'د. قصي كنفاني', day: 'الخميس', start: '16:00', end: '18:00', section: 'C9'},
+            {id: 149, courseId: 'BMA401', prof: 'د. قصي كنفاني', day: 'الخميس', start: '18:00', end: '20:00', section: 'C10'},
+            {id: 150, courseId: 'BMA401', prof: 'د. عيسى مشريقي', day: 'الخميس', start: '20:00', end: '22:00', section: 'C25'},
+            {id: 151, courseId: 'BMA401', prof: 'د. محمد معروف', day: 'الخميس', start: '18:00', end: '20:00', section: 'C18'},
+            {id: 152, courseId: 'BMA401', prof: 'د. محمد معروف', day: 'الخميس', start: '20:00', end: '22:00', section: 'C19'},
+            {id: 153, courseId: 'BPG401', prof: 'د. أحمد عقول', day: 'الخميس', start: '16:00', end: '18:00', section: 'C17'},
+            {id: 154, courseId: 'BPG401', prof: 'د. أحمد عقول', day: 'الخميس', start: '18:00', end: '20:00', section: 'C18'},
+            {id: 155, courseId: 'BPG401', prof: 'د. أحمد عقول', day: 'الخميس', start: '20:00', end: '22:00', section: 'C19'},
+            {id: 156, courseId: 'BPG401', prof: 'د. أحمد عقول', day: 'الخميس', start: '22:00', end: '24:00', section: 'C20'},
+            {id: 157, courseId: 'BPG401', prof: 'غير محدد', day: 'الخميس', start: '18:00', end: '20:00', section: 'C30'},
+            {id: 158, courseId: 'BPG401', prof: 'غير محدد', day: 'الخميس', start: '20:00', end: '22:00', section: 'C13'},
+            {id: 159, courseId: 'BPG401', prof: 'غير محدد', day: 'الخميس', start: '22:00', end: '24:00', section: 'C32'},
+            {id: 160, courseId: 'BLA401', prof: 'د. معاذ عبد المجيد', day: 'الخميس', start: '14:00', end: '16:00', section: 'C11'},
+            {id: 161, courseId: 'BNT501', prof: 'م. مرح مفلح', day: 'الخميس', start: '10:00', end: '12:00', section: 'C3'},
+            {id: 162, courseId: 'BAS401', prof: 'د. نضال شمعون', day: 'الخميس', start: '08:00', end: '10:00', section: 'C14'},
+            {id: 163, courseId: 'BAS401', prof: 'د. نضال شمعون', day: 'الخميس', start: '22:00', end: '24:00', section: 'C15'},
+            {id: 164, courseId: 'BAS401', prof: 'د. سلافة علي', day: 'الخميس', start: '14:00', end: '16:00', section: 'C19'},
+            {id: 165, courseId: 'BAS401', prof: 'د. سلافة علي', day: 'الخميس', start: '16:00', end: '18:00', section: 'C18'},
+            {id: 166, courseId: 'BAS401', prof: 'د. مازن خوري', day: 'الخميس', start: '18:00', end: '20:00', section: 'C22'},
+            {id: 167, courseId: 'BAS401', prof: 'د. عمران دلول', day: 'الخميس', start: '22:00', end: '24:00', section: 'C11'},
+            {id: 168, courseId: 'BLC401', prof: 'د. علي حسان', day: 'الخميس', start: '18:00', end: '20:00', section: 'C9'},
+            {id: 169, courseId: 'BLC401', prof: 'د. علي حسان', day: 'الخميس', start: '20:00', end: '22:00', section: 'C12'},
+            {id: 170, courseId: 'BPG402', prof: 'غير محدد', day: 'الخميس', start: '18:00', end: '20:00', section: 'C13'},
+            {id: 171, courseId: 'BSP501', prof: 'د. إياد العبود', day: 'الخميس', start: '08:00', end: '10:00', section: 'C9'},
+            {id: 172, courseId: 'GMN401', prof: 'د. أيمن ديوب', day: 'الخميس', start: '08:00', end: '10:00', section: 'C1'},
+            {id: 173, courseId: 'GMN401', prof: 'د. أيمن ديوب', day: 'الخميس', start: '10:00', end: '12:00', section: 'C9'},
+            {id: 174, courseId: 'BDM501', prof: 'د. محسن حسين', day: 'الخميس', start: '12:00', end: '14:00', section: 'C5'},
+            {id: 175, courseId: 'BDM501', prof: 'د. محسن حسين', day: 'الخميس', start: '14:00', end: '16:00', section: 'C6'},
+            {id: 176, courseId: 'BDM501', prof: 'د. محسن حسين', day: 'الخميس', start: '16:00', end: '18:00', section: 'C7'},
+            {id: 177, courseId: 'BDM501', prof: 'د. محسن حسين', day: 'الخميس', start: '18:00', end: '20:00', section: 'C8'},
+            {id: 178, courseId: 'BOS501', prof: 'د. غيث مصطفى', day: 'الخميس', start: '16:00', end: '18:00', section: 'C1'},
+            {id: 179, courseId: 'BAU501', prof: 'د. ريما القمحا', day: 'الخميس', start: '16:00', end: '18:00', section: 'C4'},
+            {id: 180, courseId: 'BAU501', prof: 'د. ريما القمحا', day: 'الخميس', start: '18:00', end: '20:00', section: 'C5'},
+
+            // الجمعة
+            {id: 181, courseId: 'BMA402', prof: 'د. عمران دلول', day: 'الجمعة', start: '18:00', end: '20:00', section: 'C10'},
+            {id: 182, courseId: 'BPH401', prof: 'د. محمد ديب', day: 'الجمعة', start: '10:00', end: '12:00', section: 'C29'},
+            {id: 183, courseId: 'BPH401', prof: 'د. محمد ديب', day: 'الجمعة', start: '12:00', end: '14:00', section: 'C30'},
+            {id: 184, courseId: 'BPG401', prof: 'غير محدد', day: 'الجمعة', start: '08:00', end: '10:00', section: 'C28'},
+            {id: 185, courseId: 'BPG401', prof: 'غير محدد', day: 'الجمعة', start: '10:00', end: '12:00', section: 'C29'},
+            {id: 186, courseId: 'BPG401', prof: 'غير محدد', day: 'الجمعة', start: '20:00', end: '22:00', section: 'C24'},
+            {id: 187, courseId: 'BPG401', prof: 'د. حسام فوال', day: 'الجمعة', start: '18:00', end: '20:00', section: 'C6'},
+            {id: 188, courseId: 'BPG401', prof: 'غير محدد', day: 'الجمعة', start: '22:00', end: '24:00', section: 'C25'},
+            {id: 189, courseId: 'BPG401', prof: 'د. ضياء خلوف', day: 'الجمعة', start: '18:00', end: '20:00', section: 'C22'},
+            {id: 190, courseId: 'BAS401', prof: 'د. عمران دلول', day: 'الجمعة', start: '08:00', end: '10:00', section: 'C7'},
+            {id: 191, courseId: 'BAS401', prof: 'د. عمران دلول', day: 'الجمعة', start: '10:00', end: '12:00', section: 'C8'},
+            {id: 192, courseId: 'BAS401', prof: 'د. عمران دلول', day: 'الجمعة', start: '14:00', end: '16:00', section: 'C9'},
+            {id: 193, courseId: 'BAS401', prof: 'د. عمران دلول', day: 'الجمعة', start: '22:00', end: '24:00', section: 'C10'},
+            {id: 194, courseId: 'GAC501', prof: 'د. نزار أشرفية', day: 'الجمعة', start: '08:00', end: '10:00', section: 'C1'},
+            {id: 195, courseId: 'GAC501', prof: 'د. نزار أشرفية', day: 'الجمعة', start: '10:00', end: '12:00', section: 'C2'},
+            {id: 196, courseId: 'GAC501', prof: 'د. نزار أشرفية', day: 'الجمعة', start: '16:00', end: '18:00', section: 'C3'},
+            {id: 197, courseId: 'GAC501', prof: 'د. نزار أشرفية', day: 'الجمعة', start: '18:00', end: '20:00', section: 'C4'},
+            {id: 198, courseId: 'BOS501', prof: 'د. غيث مصطفى', day: 'الجمعة', start: '08:00', end: '10:00', section: 'C2'},
+            {id: 199, courseId: 'BOS501', prof: 'د. غيث مصطفى', day: 'الجمعة', start: '10:00', end: '12:00', section: 'C3'},
+            {id: 200, courseId: 'BOS501', prof: 'د. غيث مصطفى', day: 'الجمعة', start: '20:00', end: '22:00', section: 'C4'},
+            {id: 201, courseId: 'BOS501', prof: 'د. غيث مصطفى', day: 'الجمعة', start: '22:00', end: '24:00', section: 'C5'},
+            {id: 202, courseId: 'BDBL501', prof: 'د. آلاء الناطور', day: 'الجمعة', start: '08:00', end: '10:00', section: 'C5'},
+            {id: 203, courseId: 'BDBL501', prof: 'د. آلاء عيسى', day: 'الجمعة', start: '16:00', end: '18:00', section: 'C4'},
+            {id: 204, courseId: 'BDBL501', prof: 'د. آلاء عيسى', day: 'الجمعة', start: '18:00', end: '20:00', section: 'C2'},
+            {id: 205, courseId: 'GMN401', prof: 'د. علي نوفل', day: 'الجمعة', start: '16:00', end: '18:00', section: 'C4'},
+            {id: 206, courseId: 'GMN401', prof: 'د. علي نوفل', day: 'الجمعة', start: '18:00', end: '20:00', section: 'C8'},
+            {id: 207, courseId: 'GMN401', prof: 'د. نسرين عبد الرحمن', day: 'الجمعة', start: '16:00', end: '18:00', section: 'C2'},
+            {id: 208, courseId: 'BPG402', prof: 'د. أحمد عقول', day: 'الجمعة', start: '10:00', end: '12:00', section: 'C1'},
+            {id: 209, courseId: 'BPG402', prof: 'د. أحمد عقول', day: 'الجمعة', start: '12:00', end: '14:00', section: 'C2'},
+            {id: 210, courseId: 'GTW301', prof: 'د. غصون الأشقر', day: 'الجمعة', start: '12:00', end: '14:00', section: 'C5'},
+            {id: 211, courseId: 'BLA401', prof: 'د. نضال شمعون', day: 'الجمعة', start: '08:00', end: '10:00', section: 'C5'},
+            {id: 212, courseId: 'BLA401', prof: 'د. نضال شمعون', day: 'الجمعة', start: '22:00', end: '24:00', section: 'C10'},
+            {id: 213, courseId: 'BNA401', prof: 'د. يوسف الخطيب', day: 'الجمعة', start: '08:00', end: '10:00', section: 'C1'},
+            {id: 214, courseId: 'BNA401', prof: 'د. يوسف الخطيب', day: 'الجمعة', start: '10:00', end: '12:00', section: 'C2'},
+            {id: 215, courseId: 'BNA401', prof: 'د. برلنت مطيط', day: 'الجمعة', start: '10:00', end: '12:00', section: 'C5'},
+            {id: 216, courseId: 'BSP501', prof: 'د. ياسر خضرة', day: 'الجمعة', start: '08:00', end: '10:00', section: 'C2'},
+            {id: 217, courseId: 'BSP501', prof: 'د. ياسر خضرة', day: 'الجمعة', start: '10:00', end: '12:00', section: 'C3'},
+            {id: 218, courseId: 'BSP501', prof: 'د. ياسر خضرة', day: 'الجمعة', start: '14:00', end: '16:00', section: 'C8'},
+            {id: 219, courseId: 'BAU501', prof: 'د. ريما القمحا', day: 'الجمعة', start: '08:00', end: '10:00', section: 'C1'},
+            {id: 220, courseId: 'BPG601', prof: 'د. رياض بلش', day: 'الجمعة', start: '08:00', end: '10:00', section: 'C3'},
+            {id: 221, courseId: 'BPG601', prof: 'د. رياض بلش', day: 'الجمعة', start: '18:00', end: '20:00', section: 'C4'},
+            {id: 222, courseId: 'BPG601', prof: 'د. رياض بلش', day: 'الجمعة', start: '22:00', end: '24:00', section: 'C6'},
+
+            // السبت
+            {id: 223, courseId: 'BMA401', prof: 'د. شادي صعب', day: 'السبت', start: '16:00', end: '18:00', section: 'C15'},
+            {id: 224, courseId: 'BMA401', prof: 'د. لؤي صالح', day: 'السبت', start: '18:00', end: '20:00', section: 'C1'},
+            {id: 225, courseId: 'BMA401', prof: 'د. عمار مردم بك', day: 'السبت', start: '20:00', end: '22:00', section: 'C16'},
+            {id: 226, courseId: 'GTW301', prof: 'د. نزار أشرفية', day: 'السبت', start: '10:00', end: '12:00', section: 'C13'},
+            {id: 227, courseId: 'GTW301', prof: 'د. نزار أشرفية', day: 'السبت', start: '18:00', end: '20:00', section: 'C12'},
+            {id: 228, courseId: 'GTW301', prof: 'د. ليلاس مظلوم', day: 'السبت', start: '14:00', end: '16:00', section: 'C1'},
+            {id: 229, courseId: 'GTW301', prof: 'د. عمار مردم بك', day: 'السبت', start: '12:00', end: '14:00', section: 'C6'},
+            {id: 230, courseId: 'GTW301', prof: 'د. هويدا الداوود', day: 'السبت', start: '22:00', end: '24:00', section: 'C10'},
+            {id: 231, courseId: 'BLA401', prof: 'د. عمران دلول', day: 'السبت', start: '22:00', end: '24:00', section: 'C1'},
+            {id: 232, courseId: 'BMA402', prof: 'د. برلنت مطيط', day: 'السبت', start: '22:00', end: '24:00', section: 'C1'},
+            {id: 233, courseId: 'BPG402', prof: 'د. أحمد عقول', day: 'السبت', start: '10:00', end: '12:00', section: 'C3'},
+            {id: 234, courseId: 'BPG402', prof: 'د. أحمد عقول', day: 'السبت', start: '12:00', end: '14:00', section: 'C4'},
+            {id: 235, courseId: 'BPG402', prof: 'د. حسام فوال', day: 'السبت', start: '18:00', end: '20:00', section: 'C11'},
+            {id: 236, courseId: 'BNA401', prof: 'د. شادي صعب', day: 'السبت', start: '12:00', end: '14:00', section: 'C3'},
+            {id: 237, courseId: 'BNA401', prof: 'د. شادي صعب', day: 'السبت', start: '14:00', end: '16:00', section: 'C9'},
+            {id: 238, courseId: 'BNA401', prof: 'د. برلنت مطيط', day: 'السبت', start: '12:00', end: '14:00', section: 'C6'},
+            {id: 239, courseId: 'BSP501', prof: 'د. إياد العبود', day: 'السبت', start: '12:00', end: '14:00', section: 'C1'},
+            {id: 240, courseId: 'BDA501', prof: 'د. زهير علي أحمد', day: 'السبت', start: '20:00', end: '22:00', section: 'C1'},
+            {id: 241, courseId: 'GMN401', prof: 'د. رياض بلش', day: 'السبت', start: '22:00', end: '24:00', section: 'C6'},
+            {id: 242, courseId: 'BTS501', prof: 'د. رضوان قسطنطين', day: 'السبت', start: '10:00', end: '12:00', section: 'C1'},
+            {id: 243, courseId: 'BTS501', prof: 'د. رضوان قسطنطين', day: 'السبت', start: '18:00', end: '20:00', section: 'C5'},
+            {id: 244, courseId: 'BTS501', prof: 'د. رضوان قسطنطين', day: 'السبت', start: '20:00', end: '22:00', section: 'C7'},
+            {id: 245, courseId: 'BDBL501', prof: 'د. علاء الدين الحمدة', day: 'السبت', start: '08:00', end: '10:00', section: 'C1'},
+            {id: 246, courseId: 'BPS501', prof: 'د. حيان حسن', day: 'السبت', start: '12:00', end: '14:00', section: 'C2'},
+            {id: 247, courseId: 'BPS501', prof: 'د. حيان حسن', day: 'السبت', start: '14:00', end: '16:00', section: 'C6'},
+            {id: 248, courseId: 'BPS501', prof: 'د. حيان حسن', day: 'السبت', start: '22:00', end: '24:00', section: 'C7'},
+            {id: 249, courseId: 'BPG601', prof: 'د. رياض بلش', day: 'السبت', start: '20:00', end: '22:00', section: 'C7'},
+            {id: 250, courseId: 'BNT501', prof: 'م. مرح مفلح', day: 'السبت', start: '10:00', end: '12:00', section: 'C6'}
+        ];
+
+        // تعبئة البيانات لكل شعبة بنقاط واسم المادة من coursesDB
+        dbClasses.forEach(cls => {
+            const c = coursesDB[cls.courseId];
+            if(c) {
+                cls.courseName = c.name;
+                cls.credits = c.credits;
+            } else {
+                cls.courseName = cls.courseId; 
+                cls.credits = 5; 
+            }
+        });
+
+        let selectedCourseIds = []; 
+        let mySchedule = []; 
+
+        function initDropdown() {
+            const dropdown = document.getElementById('courseDropdown');
+            dropdown.innerHTML = '<option value="">-- اختر مادة لتظهر شعبها المتاحة --</option>';
+            const uniqueCourseIds = [...new Set(dbClasses.map(item => item.courseId))];
+            
+            uniqueCourseIds.forEach(cId => {
+                const cName = coursesDB[cId] ? coursesDB[cId].name : cId;
+                dropdown.innerHTML += `<option value="${cId}">${cName} (${cId})</option>`;
+            });
+        }
+
+        function addCourseToFilter() {
+            const dropdown = document.getElementById('courseDropdown');
+            const courseId = dropdown.value;
+            
+            if(!courseId) return;
+            if(selectedCourseIds.includes(courseId)) {
+                showBulbWarning("عذراً! هذه المادة مضافة بالفعل في قائمة البحث لديك."); return;
+            }
+
+            selectedCourseIds.push(courseId);
+            dropdown.value = ""; 
+            updateUI();
+        }
+
+        function removeCourseFromFilter(courseId) {
+            selectedCourseIds = selectedCourseIds.filter(id => id !== courseId);
+            mySchedule = mySchedule.filter(cls => cls.courseId !== courseId);
+            updateUI();
+        }
+
+        function timeToMinutes(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+
+        function renderAvailable() {
+            const container = document.getElementById('availableClassesList');
+            const tagsContainer = document.getElementById('selectedCoursesTags');
+            container.innerHTML = ''; tagsContainer.innerHTML = '';
+
+            if(selectedCourseIds.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 20px; font-weight:bold; line-height:1.8;"><i class="fas fa-inbox" style="font-size:3rem; opacity:0.2; margin-bottom:15px; display:block;"></i>الرجاء تحديد مادة من الأعلى لعرض الدكاترة والأوقات.</div>`;
+                return;
+            }
+
+            selectedCourseIds.forEach(id => {
+                const cName = coursesDB[id] ? coursesDB[id].name : id;
+                tagsContainer.innerHTML += `
+                    <div class="course-tag">
+                        ${cName} 
+                        <i class="fas fa-times-circle" onclick="removeCourseFromFilter('${id}')" title="إزالة"></i>
+                    </div>`;
+            });
+
+            const filteredClasses = dbClasses.filter(cls => selectedCourseIds.includes(cls.courseId));
+            
+            if(filteredClasses.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:#ff6b6b; padding:20px; font-weight:bold; background:rgba(239, 68, 68, 0.1); border-radius:12px;">عذراً، لا يوجد شعب متاحة لهذه المادة في الجدول الحالي!</div>`;
+                return;
+            }
+
+            const grouped = filteredClasses.reduce((acc, cls) => {
+                if(!acc[cls.courseId]) acc[cls.courseId] = [];
+                acc[cls.courseId].push(cls); return acc;
+            }, {});
+
+            for (const [courseId, classes] of Object.entries(grouped)) {
+                let html = `<div class="class-card"><div class="class-title"><i class="fas fa-book" style="color:var(--text-muted)"></i> ${classes[0].courseName}</div>`;
+                classes.forEach(cls => {
+                    const isEnrolled = mySchedule.some(s => s.id === cls.id);
+                    html += `
+                        <div class="time-slot" style="${isEnrolled ? 'opacity:0.5; pointer-events:none; border-color:var(--success); background:rgba(16, 185, 129, 0.05);' : ''}">
+                            <div>
+                                <div class="class-prof"><i class="fas fa-user-tie"></i> ${cls.prof}</div>
+                                <div class="class-time-info">
+                                    <i class="fas fa-clock" style="color:var(--orange)"></i> ${cls.day} | <span style="direction:ltr; display:inline-block;">${cls.start} - ${cls.end}</span>
+                                    <span class="class-section-badge" style="margin-right:10px;"><i class="fas fa-door-open" style="color:var(--gold)"></i> الصف: ${cls.section}</span>
+                                </div>
+                            </div>
+                            <button class="btn-add" onclick="enrollClass(${cls.id})" ${isEnrolled ? 'disabled style="background:var(--success); color:white; box-shadow:none;"' : ''}>
+                                ${isEnrolled ? 'مضافة ✅' : 'تثبيت بالجدول <i class="fas fa-plus"></i>'}
+                            </button>
+                        </div>`;
+                });
+                html += `</div>`;
+                container.innerHTML += html;
+            }
+        }
+
+        function checkConflict(newClass) {
+            const newStart = timeToMinutes(newClass.start);
+            const newEnd = timeToMinutes(newClass.end);
+            for (const existingClass of mySchedule) {
+                if (existingClass.day === newClass.day) {
+                    const existStart = timeToMinutes(existingClass.start);
+                    const existEnd = timeToMinutes(existingClass.end);
+                    if (newStart < existEnd && newEnd > existStart) return existingClass;
+                }
+            }
+            return null;
+        }
+
+        function enrollClass(classId) {
+            const newClass = dbClasses.find(c => c.id === classId);
+            if(mySchedule.some(c => c.courseId === newClass.courseId)) {
+                showBulbWarning(`مهلاً! لقد قمت بإضافة مادة <span>${newClass.courseName}</span> في شعبة أخرى مسبقاً.`); return;
+            }
+            const conflict = checkConflict(newClass);
+            if (conflict) {
+                showBulbWarning(`انتبه للوقت! ⏰<br> هذه الشعبة تتعارض مع محاضرة <span>${conflict.courseName}</span> يوم ${conflict.day}.`); return;
+            }
+            mySchedule.push(newClass); updateUI();
+        }
+
+        function removeScheduleItem(classId) {
+            mySchedule = mySchedule.filter(c => c.id !== classId); updateUI();
+        }
+
+        function updateUI() {
+            renderAvailable();
+            const scheduleContainer = document.getElementById('myScheduleList');
+            const creditCounter = document.getElementById('creditCounter');
+            
+            if (mySchedule.length === 0) {
+                scheduleContainer.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 20px; font-weight:bold; line-height:1.8;"><i class="fas fa-calendar-times" style="font-size:3rem; opacity:0.2; margin-bottom:15px; display:block;"></i>لم تقم بتثبيت أي شعبة في جدولك بعد.</div>`;
+                creditCounter.innerText = `0 نقطة`; creditCounter.style.background = 'rgba(255,255,255,0.1)'; return;
+            }
+
+            const daysOrder = { 'الأحد':1, 'الإثنين':2, 'الثلاثاء':3, 'الأربعاء':4, 'الخميس':5, 'الجمعة':6, 'السبت':7 };
+            mySchedule.sort((a, b) => daysOrder[a.day] - daysOrder[b.day]);
+
+            let totalCredits = 0; scheduleContainer.innerHTML = '';
+            
+            mySchedule.forEach(cls => {
+                totalCredits += cls.credits;
+                scheduleContainer.innerHTML += `
+                    <div class="schedule-item">
+                        <div class="schedule-info">
+                            <h4>${cls.courseName}</h4>
+                            <p>
+                                ${cls.day} | <span style="direction:ltr; display:inline-block;">${cls.start} - ${cls.end}</span> <br> 
+                                <i class="fas fa-user-tie" style="font-size:0.8rem; margin-top:5px; color:var(--gold);"></i> ${cls.prof} | 
+                                <i class="fas fa-door-open" style="font-size:0.8rem; margin-top:5px; color:var(--orange);"></i> الصف: <strong style="color:white;">${cls.section}</strong>
+                            </p>
+                        </div>
+                        <button class="btn-add btn-remove" onclick="removeScheduleItem(${cls.id})" title="حذف من المسودة"><i class="fas fa-trash"></i></button>
+                    </div>`;
+            });
+            creditCounter.innerText = `${totalCredits} نقطة مسجلة`;
+            creditCounter.style.background = totalCredits >= 16 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 126, 0, 0.2)';
+            creditCounter.style.color = totalCredits >= 16 ? 'var(--success)' : 'var(--orange)';
+        }
+
+        let warningTimeout;
+        function showBulbWarning(messageHtml) {
+            const warningBox = document.getElementById('conflictWarning');
+            const textContainer = document.getElementById('conflictText');
+            textContainer.innerHTML = messageHtml; warningBox.classList.add('show');
+            clearTimeout(warningTimeout);
+            warningTimeout = setTimeout(() => { warningBox.classList.remove('show'); }, 6000);
+        }
+
+        // ---------------- دالة تصوير الشاشة (html2canvas) ----------------
+        async function downloadScheduleImage() {
+            if (mySchedule.length === 0) {
+                showBulbWarning("لا يوجد مواد في الجدول لتحميلها! 📝");
+                return;
+            }
+
+            const container = document.getElementById('captureContainer');
+            const origOverflow = container.style.overflowY;
+            const origHeight = container.style.height;
+
+            // تحضير الـ DOM للتصوير (إظهار العلامة المائية وإخفاء سلة المهملات وإظهار كامل الارتفاع)
+            container.classList.add('export-mode');
+            container.style.overflowY = 'visible'; 
+            container.style.height = 'auto';
+
+            const btn = document.querySelector('.capture-hide');
+            const oldText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
+
+            try {
+                const canvas = await html2canvas(container, {
+                    backgroundColor: '#242f48', // لون الخلفية (navy-light)
+                    scale: 2, // دقة مضاعفة (High Resolution)
+                    useCORS: true // السماح برسم الصور الخارجية (مثل شعار اللمبة)
+                });
+
+                // إنشاء رابط التحميل الوهمي
+                const link = document.createElement('a');
+                link.download = 'جدول_موادي_infoMatrix.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showBulbWarning("تم حفظ صورة الجدول بنجاح! 🎉");
+            } catch (e) {
+                console.error("Error exporting image", e);
+                showBulbWarning("حدث خطأ أثناء تصدير الصورة.");
+            } finally {
+                // إعادة الواجهة لشكلها الطبيعي
+                container.classList.remove('export-mode');
+                container.style.overflowY = origOverflow;
+                container.style.height = origHeight;
+                btn.innerHTML = oldText;
+            }
+        }
+
+        window.onload = () => {
+            initDropdown();
+        };
+    </script>
+</body>
+</html>
