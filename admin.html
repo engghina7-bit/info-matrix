@@ -18,8 +18,9 @@
         
         body { font-family: 'Cairo', sans-serif; background: radial-gradient(circle at top right, rgba(255,126,0,0.05), transparent), var(--navy); margin: 0; color: var(--text-main); min-height: 100vh;}
         
+        /* البار العلوي */
         .top-nav { background: rgba(26, 34, 53, 0.85); backdrop-filter: blur(12px); height: 80px; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; border-bottom: 1px solid rgba(255, 126, 0, 0.15); position: sticky; top:0; z-index: 100;}
-        .brand { display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 1.6rem; text-decoration: none; color:white;}
+        .brand { display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 1.6rem; text-decoration: none; color:white; letter-spacing: -1px;}
         .brand img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--orange); object-fit: cover;}
         .brand span i { color: var(--orange); font-style: normal; }
         .btn-top-back { background: rgba(255,255,255,0.05); color: white; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: bold; transition: 0.3s; border: 1px solid var(--border-glass); display: flex; align-items: center; gap: 8px;}
@@ -27,6 +28,7 @@
 
         .admin-container { max-width: 1050px; margin: 40px auto; padding: 0 20px; }
 
+        /* القائمة الرئيسية */
         .main-menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
         .menu-btn { background: var(--navy-light); border-radius: 20px; padding: 30px 15px; text-align: center; cursor: pointer; border: 1px solid var(--border-glass); box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: 0.4s; display: flex; flex-direction: column; align-items: center; gap: 12px;}
         .menu-btn:hover { transform: translateY(-5px); border-color: rgba(255,126,0,0.3); box-shadow: 0 15px 40px rgba(255,126,0,0.15); }
@@ -41,9 +43,11 @@
         .admin-card { background: var(--navy-light); border-radius: 20px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); border: 1px solid var(--border-glass); border-top: 4px solid var(--orange); margin-bottom: 25px; }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px dashed rgba(255,255,255,0.1); }
         .card-header h3 { margin: 0; color: white; font-weight: 900; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+        .card-header h3 i { color: var(--orange); }
         .btn-view-back { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 8px; font-weight: bold; font-family: 'Cairo'; cursor: pointer; transition: 0.3s; }
         .btn-view-back:hover { background: rgba(255,255,255,0.15); }
 
+        /* الحقول والفورمات */
         .input-group { margin-bottom: 15px; width: 100%;}
         .input-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--text-muted); font-size: 0.9rem; }
         .input-group input, .input-group select { width: 100%; padding: 12px 15px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-family: 'Cairo'; font-size: 1rem; font-weight: bold; color: white; background: var(--input-bg); outline: none; box-sizing: border-box; transition: 0.3s;}
@@ -55,9 +59,10 @@
         .flex-row { display: flex; gap: 15px; flex-wrap: wrap;}
         .flex-row > div { flex: 1; min-width: 200px; }
 
+        /* الفلاتر الذكية */
         .smart-filter-box { background: rgba(16, 185, 129, 0.05); padding: 20px; border-radius: 12px; border: 2px dashed var(--success); margin-bottom: 25px; display: none; }
         .smart-filter-box.active { display: block; }
-        .smart-filter-title { color: var(--success); font-weight: 900; font-size: 1.1rem; margin: 0 0 15px 0;}
+        .smart-filter-title { color: var(--success); font-weight: 900; font-size: 1.1rem; margin: 0 0 15px 0; display: flex; align-items: center; gap: 8px;}
 
         .table-responsive { overflow-x: auto; background: rgba(0,0,0,0.1); border-radius: 12px; padding: 10px;}
         table { width: 100%; border-collapse: collapse; min-width: 800px; }
@@ -85,13 +90,13 @@
                 <i class="fas fa-book-medical"></i><h3>إضافة مادة</h3><p>تعريف مادة جديدة كلياً</p>
             </div>
             <div class="menu-btn" onclick="openSection('courseSection', 'edit')">
-                <i class="fas fa-edit" style="color:var(--gold)"></i><h3>تعديل مادة</h3><p>تعديل الشرح والمعلومات</p>
+                <i class="fas fa-edit" style="color:var(--gold)"></i><h3>تعديل معلومات مادة</h3><p>اختر مادة وعدّل بياناتها</p>
             </div>
             <div class="menu-btn" onclick="openSection('classSection', 'add')">
-                <i class="fas fa-calendar-plus" style="color:var(--success)"></i><h3>إضافة وقت/شعبة</h3><p>محاضرة يدوية جديدة</p>
+                <i class="fas fa-calendar-plus" style="color:var(--success)"></i><h3>إضافة وقت/شعبة</h3><p>إضافة محاضرة جديدة يدوياً</p>
             </div>
             <div class="menu-btn" onclick="openSection('classSection', 'edit')">
-                <i class="fas fa-filter" style="color:var(--success)"></i><h3>فلترة وتعديل الشعب</h3><p>اختر مادة وعدّل أوقاتها</p>
+                <i class="fas fa-tasks" style="color:var(--success)"></i><h3>تعديل الشعب والأوقات</h3><p>فلترة المواد وتعديل صفوفها</p>
             </div>
             <div class="menu-btn" onclick="openSection('manageClassesSection')">
                 <i class="fas fa-table" style="color:var(--navy-light)"></i><h3>جدول الشعب الشامل</h3><p>استعراض وتعديل جميع الشعب</p>
@@ -104,7 +109,7 @@
         <div id="courseSection" class="view-section">
             <div class="admin-card" style="border-top-color: #3b82f6;">
                 <div class="card-header">
-                    <h3 id="courseSectionTitle"><i class="fas fa-book"></i> إضافة مادة جديدة</h3>
+                    <h3 id="courseSectionTitle"><i class="fas fa-book"></i> إضافة/تعديل مادة</h3>
                     <button class="btn-view-back" onclick="showMainMenu()">رجوع</button>
                 </div>
                 
@@ -134,7 +139,7 @@
                     </div>
                     <div class="input-group"><label>دعم الفريق (كورسات/ملخصات)</label><input type="text" id="infoSup" value="قريباً مع Info Matrix!"></div>
                     
-                    <button type="submit" class="btn-submit" id="btnCourse">حفظ المادة في السيرفر ✅</button>
+                    <button type="submit" class="btn-submit" id="btnCourse">حفظ التعديل في السيرفر ✅</button>
                 </form>
             </div>
         </div>
@@ -149,8 +154,8 @@
                 <div class="smart-filter-box" id="editClassSelector">
                     <h4 class="smart-filter-title"><i class="fas fa-filter"></i> اختر المادة أولاً، ثم اختر الشعبة التي تريد تعديلها:</h4>
                     <div class="flex-row">
-                        <div class="input-group" style="flex:1;"><label>1. اختر المادة:</label><select id="filterCourseForClass"></select></div>
-                        <div class="input-group" style="flex:2;"><label>2. اختر الشعبة للتعديل:</label><select id="editClassSelect" disabled><option value="">-- يرجى اختيار مادة أولاً --</option></select></div>
+                        <div class="input-group" style="flex:1;"><label>1. المادة:</label><select id="filterCourseForClass"></select></div>
+                        <div class="input-group" style="flex:2;"><label>2. الشعبة:</label><select id="editClassSelect" disabled></select></div>
                     </div>
                 </div>
 
@@ -165,7 +170,9 @@
                         <div class="input-group" style="flex:1;"><label>النقاط</label><input type="number" id="classCredits" value="5" required></div>
                     </div>
                     <div class="flex-row">
-                        <div class="input-group" style="flex:2;"><label>اليوم</label><select id="classDay"><option value="الأحد">الأحد</option><option value="الإثنين">الإثنين</option><option value="الثلاثاء">الثلاثاء</option><option value="الأربعاء">الأربعاء</option><option value="الخميس">الخميس</option><option value="الجمعة">الجمعة</option><option value="السبت">السبت</option></select></div>
+                        <div class="input-group" style="flex:2;"><label>اليوم</label>
+                            <select id="classDay"><option value="الأحد">الأحد</option><option value="الإثنين">الإثنين</option><option value="الثلاثاء">الثلاثاء</option><option value="الأربعاء">الأربعاء</option><option value="الخميس">الخميس</option><option value="الجمعة">الجمعة</option><option value="السبت">السبت</option></select>
+                        </div>
                         <div class="input-group" style="flex:1;"><label>وقت البدء</label><input type="time" id="startTime" required></div>
                         <div class="input-group" style="flex:1;"><label>وقت الانتهاء</label><input type="time" id="endTime" required></div>
                     </div>
@@ -177,7 +184,7 @@
         <div id="manageClassesSection" class="view-section">
             <div class="admin-card" style="border-top-color: var(--navy-light);">
                 <div class="card-header">
-                    <h3><i class="fas fa-table"></i> إدارة جدول الشعب الشامل</h3>
+                    <h3><i class="fas fa-table"></i> إدارة الشعب المسجلة</h3>
                     <button class="btn-view-back" onclick="showMainMenu()">رجوع</button>
                 </div>
                 <div class="table-responsive">
@@ -194,8 +201,8 @@
                 <div class="card-header"><h3><i class="fas fa-database"></i> المزامنة الشاملة</h3><button class="btn-view-back" onclick="showMainMenu()">رجوع</button></div>
                 <div style="text-align:center; padding:20px;">
                     <i class="fas fa-cloud-upload-alt" style="font-size:4rem; color:#3b82f6; margin-bottom:20px;"></i>
-                    <h3 style="color:white;">رفع قاعدة البيانات كاملة للسيرفر</h3>
-                    <button class="btn-submit" id="btnSyncAll" onclick="syncEverything()" style="background:#3b82f6;">بدء المزامنة الشاملة 🚀</button>
+                    <h3 style="color:white;">تأسيس ورفع قاعدة البيانات</h3>
+                    <button class="btn-submit" id="btnSyncAll" onclick="syncEverything()" style="background:#3b82f6; font-size:1.2rem;">بدء المزامنة 🚀</button>
                     <div id="syncLog" style="background: #0f172a; color: #10b981; padding: 15px; border-radius: 12px; margin-top: 15px; display:none; font-family: monospace;"></div>
                 </div>
             </div>
@@ -204,12 +211,13 @@
     </div>
 
     <script>
-        // ================= الأمان =================
-        window.onload = function() {
+        // ================= الأمان والتهيئة =================
+        window.onload = async function() {
             let userEntry = localStorage.getItem('im_student_email') || sessionStorage.getItem('im_student_email');
             if (userEntry && userEntry.split('@')[0].trim().toLowerCase() === 'admin111') {
                 document.getElementById('adminContent').style.display = 'block';
-                fetchInitialData();
+                await fetchInitialData(); // نضمن جلب المواد
+                await buildClassesData(); // نضمن جلب وبناء كل الشعب قبل التعديل
             } else {
                 document.body.innerHTML = `<div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; text-align:center;"><h1 style="color:#ef4444; font-size:3rem; margin:0;">⛔ منطقة محظورة</h1><button onclick="window.location.href='login.html'" style="margin-top:20px; padding:10px 25px; background:#ff7e00; color:white; border:none; border-radius:10px; font-family:'Cairo';">العودة لتسجيل الدخول</button></div>`;
             }
@@ -225,7 +233,7 @@
         function hideAllSections() { document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active')); }
         function showMainMenu() { hideAllSections(); document.getElementById('mainMenu').classList.add('active'); }
 
-        function openSection(sectionId, mode = null) {
+        async function openSection(sectionId, mode = null) {
             hideAllSections(); document.getElementById(sectionId).classList.add('active');
 
             if (sectionId === 'courseSection') {
@@ -251,99 +259,51 @@
                     document.getElementById('classSectionTitle').innerHTML = '<i class="fas fa-filter"></i> فلترة وتعديل الشعب';
                     document.getElementById('btnClass').innerText = "تحديث بيانات الشعبة بالسيرفر 🔄";
                     selector.classList.add('active'); document.getElementById('selectCourseClass').disabled = true; 
-                    buildClassesData(); // جلب وتجهيز البيانات للفلترة المزدوجة
                 }
             } else if (sectionId === 'manageClassesSection') {
-                fetchClassesTable();
+                await fetchClassesTable();
             }
         }
 
-        // ================= 1. تأسيس البيانات الأساسية (المواد) =================
+        // ================= 1. جلب بيانات المواد =================
         const localCoursesDB = {
-        
-            "GCS301": { id: "GCS301", name: "مهارات حاسوب", credits: 4, level: 1, prereqs: [], diff: 1, info: { over: "مادة سهلة جداً تتحدث عن أساسيات الكمبيوتر.", doc: "د. محمد الحبال.", prac: "تطبيق عملي على Excel و Word.", exam: "سهل جداً، مادة مضمونة لرفع المعدل غالبا 50 سؤال.", sup: "ملخصات + بنك دورات كورس" } },
-            "GTW301": { id: "GTW301", name: "مهارات التواصل", credits: 5, level: 1, prereqs: ["GCS301"], diff: 1, info: { over: "معلومات عامة ومنطقية. مادة سهلة.", doc: "الجميع جيد.", prac: "سيرة ذاتية وعرض تقديمي.", exam: "بسيط ودورات.", sup: "قوالب جاهزة + نصائح للإلقاء" } },
-            "GOE301": { id: "GOE301", name: "التعليم الالكتروني", credits: 4, level: 1, prereqs: [], diff: 1, info: { over: "مادة نظرية تعتمد على الفهم وليس البصم.", doc: "جميع الدكاترة جيدين.", prac: "ملف وورد (حلقة بحث) + عرض بوربوينت.", exam: "سهل ويمكن الحصول على علامة عالية.", sup: "نماذج حلقات بحث سابقة + دورات" } },
-            "BPH401": { id: "BPH401", name: "الفيزياء", credits: 5, level: 1, prereqs: [], diff: 2, info: { over: "مادة تشبه فيزياء البكالوريا مع بعض الإضافات.", doc: "د. باسم السهو، د. محمد سعيد معروف.", prac: "سهلة ومضمونة مسائل.", exam: "أسئلة مألوفة، تحتاج دراسة وفهم للقوانين.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BMA401": { id: "BMA401", name: "التحليل 1", credits: 5, level: 1, prereqs: [], diff: 2, info: { over: "مادة سهلة وبسيطة تشبه البكالوريا، لكن قسم المتسلسلات جديد.", doc: "د. عمار مردم بك، د. شكري.", prac: "متوسطة الصعوبة.", exam: "يحتاج متابعة، 20 سؤال.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BAS401": { id: "BAS401", name: "بنى جبرية", credits: 5, level: 1, prereqs: [], diff: 3, info: { over: "مادة دسمة وصعبة نوعاً ما، تحتاج متابعة دقيقة.", doc: "د. حيان، د. نضال، د. سلافة.", prac: "صعبة، مجموعات كبيرة.", exam: "يحتاج دراسة معمقة.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BPG401": { id: "BPG401", name: "برمجة 1", credits: 5, level: 1, prereqs: [], diff: 2, info: { over: "أساسيات لغة C.", doc: "د. حسام فوال.", prac: "تتشابه كل فصل، كانت فردية وأصبحت مشتركة.", exam: "يعتمد على الفهم والتطبيق العملي.", sup: "أكواد جاهزة للتدريب + شرح عملي" } },
-            "BEC401": { id: "BEC401", name: "دارات إلكترونية", credits: 5, level: 2, prereqs: ["BPH401"], diff: 2, info: { over: "تتمة للفيزياء. تعتمد كثيراً على الدورات.", doc: "د. أميمة.", prac: "سهلة مسائل العلامة 100% مضمونة.", exam: "19 سؤال نظري + 1 مقالي.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BLA401": { id: "BLA401", name: "جبر خطي 1", credits: 5, level: 2, prereqs: ["BMA401"], diff: 1, info: { over: "تتمحور حول المصفوفات والعمليات عليها.", doc: "د. عمران.", prac: "اختر إجابة صحيحة بملف إكسل.", exam: "سهلة مو دايما دورات بس مألوفة.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BMA402": { id: "BMA402", name: "التحليل 2", credits: 5, level: 2, prereqs: ["BMA401"], diff: 2, info: { over: "سهلة بدها تركيز. (لابلاس، فورييه).", doc: "د. برلنت مطيط، د. إياد زعرور.", prac: "سهلة جداً، اختيار إجابة صحيحة.", exam: "أسئلة دورات مكررة.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BLC401": { id: "BLC401", name: "دارات منطقية", credits: 5, level: 2, prereqs: ["BAS401"], diff: 1, info: { over: "جداول حقيقة وبوابات منطقية.", doc: "د. لؤي.", prac: "عادة وسهلين.", exam: "دورات اغلب الاحيان.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BPG402": { id: "BPG402", name: "برمجة 2", credits: 5, level: 2, prereqs: ["BPG401"], diff: 2, info: { over: "الواجهات التخاطبية (GUI).", doc: "د. حسام فوال، د. جميل.", prac: "مشاريع واجهات.", exam: "سهل ويأتي نسبة جيدة من الدورات.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BDM501": { id: "BDM501", name: "الرياضيات المتقطعة", credits: 5, level: 2, prereqs: ["BLC401"], diff: 2, info: { over: "جبر بولياني واشجار.", doc: "د. محسن.", prac: "حلقة بحث وعرض بوربوينت.", exam: "اسئلة دورات.", sup: "كورس مدلل وشرح للوظيفة" } },
-            "BCA501": { id: "BCA501", name: "بنيان حواسيب 1", credits: 6, level: 2, prereqs: ["BLC401"], diff: 2, info: { over: "عتاد صلب وذواكر.", doc: "د. هبة.", prac: "اسئلة بتتكرر.", exam: "نظري وتعريفات.", sup: "كورس وامتحانية وشرح للوظيفة" } },
-            "BDA501": { id: "BDA501", name: "الخوارزميات", credits: 6, level: 2, prereqs: ["BPG402"], diff: 3, info: { over: "صعبة جدا بدا شغل وتدريب عالي.", doc: "د. زهير او د. سهير.", prac: "بتتكرر من فصول سابقة.", exam: "صعب.", sup: "ملخصات للقوانين + بنك دورات" } },
-            "BWP401": { id: "BWP401", name: "برمجة ويب 1", credits: 5, level: 2, prereqs: ["BPG402"], diff: 1, info: { over: "تطوير واجهات Front.", doc: "د. باسل.", prac: "تطوير واجهة موقع.", exam: "دوورات بحتة.", sup: "بنك دورات + وشرح وظيفة" } },
-            "BNA401": { id: "BNA401", name: "تحليل عددي", credits: 5, level: 3, prereqs: ["BLA401", "BMA402"], diff: 2, info: { over: "حفظ قانون وتطبيق.", doc: "د. يوسف.", prac: "قانون وطبق.", exam: "دورات.", sup: "ملخصات + دورات" } },
-            "BSP501": { id: "BSP501", name: "معالجة إشارة", credits: 5, level: 3, prereqs: ["BMA402"], diff: 2, info: { over: "الاشارات وانواعها.", doc: "د. اياد.", prac: "سهلة.", exam: "دورات متكررة.", sup: "ملخصات + دورات" } },
-            "BPS501": { id: "BPS501", name: "احتمالات وإحصاء", credits: 6, level: 3, prereqs: ["BMA402", "BDM501"], diff: 3, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "BOS501": { id: "BOS501", name: "نظم تشغيل", credits: 4, level: 3, prereqs: ["BCA501", "BDA501"], diff: 3, info: { over: "كلها انكليزي واساسيات النظام.", doc: "د. غيث.", prac: "حلقة بحث علمي.", exam: "مقالي وأسئلة.", sup: "بنك دورات و كورس" } },
-            "BOSL501": { id: "BOSL501", name: "مخبر نظم تشغيل", credits: 4, level: 3, prereqs: ["BCA501", "BDA501"], diff: 2, info: { over: "اوامر لينكس.", doc: "د. ماجدة.", prac: "اكواد C++.", exam: "مقالي وأوامر.", sup: "كورس وشرح ومساعدة" } },
-            "BDB501": { id: "BDB501", name: "قواعد بيانات 1", credits: 4, level: 3, prereqs: ["BDA501"], diff: 3, info: { over: "بدها شغل منيح.", doc: "د. علاء عيسى.", prac: "تنزيل برامج.", exam: "اغلب نظري.", sup: "بنك دورات كورس وامتحانية" } },
-            "BAU501": { id: "BAU501", name: "أوتومات ولغات", credits: 5, level: 3, prereqs: ["BDA501", "BDM501"], diff: 3, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "BPG601": { id: "BPG601", name: "برمجة 3", credits: 5, level: 3, prereqs: ["BPG402"], diff: 1, info: { over: "لغة بايثون Python.", doc: "د. أحمد العص.", prac: "سهلة.", exam: "دورات بتترفع معدل.", sup: "بنك دورات كورس وامتحانية" } },
-            "BDBL501": { id: "BDBL501", name: "مخبر قواعد بيانات", credits: 4, level: 3, prereqs: ["BDA501"], diff: 2, info: { over: "رسم مخطط ERD والتنفيذ.", doc: "د. محمد حجوز.", prac: "مسألة قواعد بيانات.", exam: "أسئلة دروس ومقالي SQL.", sup: "بنك دورات كورس وامتحانية" } },
-            "BAI501": { id: "BAI501", name: "الذكاء الصنعي", credits: 5, level: 3, prereqs: ["BDA501"], diff: 3, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "GMN401": { id: "GMN401", name: "أساسيات إدارة", credits: 4, level: 4, prereqs: ["BNA401"], diff: 1, info: { over: "نظرية عن الادارة والمدير.", doc: "د. علي نوفل.", prac: "سئيلة وبدا شغل.", exam: "نظري حفظ.", sup: "بنك دورات كورس وامتحانية" } },
-            "BTS501": { id: "BTS501", name: "نظم اتصالات", credits: 5, level: 4, prereqs: ["BMA402", "BLC401"], diff: 2, info: { over: "مختصة بالاتصالات.", doc: "د. رضوان.", prac: "مسائل.", exam: "قوانين واتمتة.", sup: "بنك دورات كورس وامتحانية" } },
-            "BNT501": { id: "BNT501", name: "الشبكات الحاسوبية", credits: 6, level: 4, prereqs: ["BTS501"], diff: 3, info: { over: "مادة معدل.", doc: "د. مرح.", prac: "برنامج Packet Tracer.", exam: "نظري وعملي.", sup: "بنك دورات كورس وامتحانية" } },
-            "BWP501": { id: "BWP501", name: "برمجة ويب 2", credits: 5, level: 4, prereqs: ["BWP401"], diff: 2, info: { over: "الجزء الثاني (PHP).", doc: "د. باسل.", prac: "موقع php.", exam: "دورات.", sup: "بنك دورات وشرح وظيفة" } },
-            "GPM601": { id: "GPM601", name: "إدارة مشاريع", credits: 6, level: 4, prereqs: ["BSE601"], diff: 1, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "BSE601": { id: "BSE601", name: "هندسة برمجيات", credits: 6, level: 4, prereqs: ["BPG601"], diff: 3, info: { over: "دورة حياة البرمجيات.", doc: "د. محمد.", prac: "من المحاضرات.", exam: "اسئلة شابترات.", sup: "بنك دورات كورس وامتحانية" } },
-            "BPR601": { id: "BPR601", name: "مشروع 1", credits: 6, level: 4, prereqs: ["BIS501"], diff: 2, info: { over: "مشروع تخرج مصغر.", doc: "حسب المشرف.", prac: "تطوير وبحث.", exam: "مناقشة.", sup: "توجيهات ونصائح الفريق" } },
-            "BMP601": { id: "BMP601", name: "برمجة تطبيقات النقال", credits: 5, level: 4, prereqs: ["BWP501"], diff: 2, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "BID501": { id: "BID501", name: "تحليل وتصميم النظم", credits: 6, level: 4, prereqs: ["BDB501"], diff: 2, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "BCM601": { id: "BCM601", name: "المترجمات", credits: 6, level: 4, prereqs: ["BAU501"], diff: 3, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "BIA601": { id: "BIA601", name: "خوارزميات ذكية", credits: 5, level: 4, prereqs: ["BAI501"], diff: 3, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "BIS501": { id: "BIS501", name: "أمن المعلومات", credits: 6, level: 4, prereqs: ["GET501", "BDB501", "BOS501", "BNT501"], diff: 3, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "GET501": { id: "GET501", name: "أخلاقيات المهنة", credits: 6, level: 5, prereqs: ["GPM601"], diff: 1, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "GAC501": { id: "GAC501", name: "المحاسبة", credits: 5, level: 5, prereqs: ["GMN401"], diff: 2, info: { over: "أساسيات المحاسبة للمهندسين.", doc: "اسأل الدفعة الحالية.", prac: "وظائف حسابية.", exam: "مسائل ونظري.", sup: "بنك دورات وملخصات" } },
-            "BPR602": { id: "BPR602", name: "مشروع 2", credits: 10, level: 5, prereqs: ["BPR601"], diff: 3, info: { over: "مشروع التخرج النهائي.", doc: "المشرف المناسب.", prac: "أطروحة.", exam: "مناقشة علنية.", sup: "نصائح للمناقشة" } },
-            "BMM601": { id: "BMM601", name: "نظم الوسائط المتعددة", credits: 6, level: 5, prereqs: ["BNT501", "BDG601"], diff: 2, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "BDG601": { id: "BDG601", name: "البيانات", credits: 6, level: 5, prereqs: ["BSP501", "BDA501"], diff: 3, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "GEP601": { id: "GEP601", name: "نظرية المعرفة", credits: 4, level: 5, prereqs: ["GET501"], diff: 1, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "BSM601": { id: "BSM601", name: "النمذجة والمحاكاة", credits: 5, level: 5, prereqs: ["BPR601", "BPS501", "BPG601"], diff: 3, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "GEN301": { id: "GEN301", name: "اللغة الإنجليزية 1", credits: 1, level: "ENG", prereqs: [], diff: 1, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "GEN401": { id: "GEN401", name: "اللغة الإنجليزية 2", credits: 1, level: "ENG", prereqs: ["GEN301"], diff: 1, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "GEN501": { id: "GEN501", name: "اللغة الإنجليزية 3", credits: 1, level: "ENG", prereqs: ["GEN401"], diff: 1, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "GEN502": { id: "GEN502", name: "اللغة الإنجليزية 4", credits: 1, level: "ENG", prereqs: ["GEN501"], diff: 1, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } },
-            "GEN601": { id: "GEN601", name: "اللغة الإنجليزية 5", credits: 1, level: "ENG", prereqs: ["GEN502"], diff: 1, info: { over: "غير متوفر حاليا.", doc: "غير متوفر حاليا.", prac: "غير متوفر حاليا.", exam: "غير متوفر حاليا.", sup: "قريباً!" } }
-           };
+            "GCS301": { id: "GCS301", name: "مهارات حاسوب", credits: 4, level: 1, diff: 1, info: { over: "مادة سهلة تعتمد على أساسيات الكمبيوتر.", doc: "د. محمد الحبال.", prac: "تطبيق عملي على Word و Excel.", exam: "سهل، أتمتة.", sup: "ملخصات متوفرة" } }, 
+            "GTW301": { id: "GTW301", name: "مهارات التواصل", credits: 5, level: 1, diff: 1, info: { over: "مادة نظرية تتحدث عن التواصل الفعال.", doc: "الجميع جيد.", prac: "سيرة ذاتية وعرض تقديمي.", exam: "بسيط، يعتمد على المنطق.", sup: "قوالب جاهزة" } },
+            "BPH401": { id: "BPH401", name: "الفيزياء", credits: 5, level: 1, diff: 2, info: { over: "تشبه فيزياء البكالوريا مع تعمق.", doc: "د. باسم السهو، د. معروف.", prac: "مسائل سهلة.", exam: "قوانين وحل مباشر.", sup: "بنك دورات" } }, 
+            "BMA401": { id: "BMA401", name: "التحليل 1", credits: 5, level: 1, diff: 2, info: { over: "تفاضل وتكامل ومتسلسلات.", doc: "د. عمار مردم بك.", prac: "متوسط.", exam: "يعتمد على الفهم والتدريب.", sup: "كورس متوفر" } },
+            "BAS401": { id: "BAS401", name: "بنى جبرية", credits: 5, level: 1, diff: 3, info: { over: "منطق رياضي ومجموعات. تحتاج متابعة.", doc: "د. نضال، د. حيان.", prac: "صعبة قليلاً.", exam: "دقيق.", sup: "ملخصات شاملة" } }, 
+            "BPG401": { id: "BPG401", name: "برمجة 1", credits: 5, level: 1, diff: 2, info: { over: "أساسيات لغة C++ أو C.", doc: "د. حسام فوال.", prac: "تطبيق أكواد.", exam: "يعتمد على كتابة وقراءة الكود.", sup: "أكواد للتدريب" } },
+            "BEC401": { id: "BEC401", name: "دارات إلكترونية", credits: 5, level: 2, diff: 2 }, "BLA401": { id: "BLA401", name: "جبر خطي 1", credits: 5, level: 2, diff: 1 },
+            "BMA402": { id: "BMA402", name: "التحليل 2", credits: 5, level: 2, diff: 2 }, "BLC401": { id: "BLC401", name: "دارات منطقية", credits: 5, level: 2, diff: 1 },
+            "BPG402": { id: "BPG402", name: "برمجة 2", credits: 5, level: 2, diff: 2 }, "BDA501": { id: "BDA501", name: "الخوارزميات", credits: 6, level: 2, diff: 3 },
+            "BWP401": { id: "BWP401", name: "برمجة ويب 1", credits: 5, level: 2, diff: 1 }, "BSE601": { id: "BSE601", name: "هندسة برمجيات", credits: 6, level: 4, diff: 3 },
+            "BNT501": { id: "BNT501", name: "الشبكات الحاسوبية", credits: 6, level: 4, diff: 3 }, "BSP501": { id: "BSP501", name: "معالجة إشارة", credits: 5, level: 3, diff: 2 },
+            "BOSL501":{ id: "BOSL501", name: "مخبر نظم تشغيل", credits: 4, level: 3, diff: 2 }, "GMN401": { id: "GMN401", name: "أساسيات إدارة", credits: 4, level: 4, diff: 1 },
+            "BDM501": { id: "BDM501", name: "الرياضيات المتقطعة", credits: 5, level: 2, diff: 2 }, "BAU501": { id: "BAU501", name: "أوتومات ولغات", credits: 5, level: 3, diff: 3 },
+            "GAC501": { id: "GAC501", name: "المحاسبة", credits: 5, level: 5, diff: 2 }, "BOS501": { id: "BOS501", name: "نظم تشغيل", credits: 4, level: 3, diff: 3 },
+            "BDBL501":{ id: "BDBL501", name: "مخبر قواعد بيانات", credits: 4, level: 3, diff: 2 }, "BNA401": { id: "BNA401", name: "تحليل عددي", credits: 5, level: 3, diff: 2 },
+            "BPG601": { id: "BPG601", name: "برمجة 3", credits: 5, level: 3, diff: 1 }, "BTS501": { id: "BTS501", name: "نظم اتصالات", credits: 5, level: 4, diff: 2 },
+            "BPS501": { id: "BPS501", name: "احتمالات وإحصاء", credits: 6, level: 3, diff: 3 }, "BDB501": { id: "BDB501", name: "قواعد بيانات 1", credits: 4, level: 3, diff: 3 },
+            "BWP501": { id: "BWP501", name: "برمجة ويب 2", credits: 5, level: 4, diff: 2 }
+        };
 
-       // ================= 1. تأسيس ودمج البيانات الأساسية (المواد) =================
         async function fetchInitialData() {
-            // تفريغ البيانات المحلية في الكائن المدمج
+            // تفريغ البيانات المحلية كقاعدة أساسية
             for(let id in localCoursesDB) {
                 let c = localCoursesDB[id];
-                mergedCoursesData[id] = { 
-                    id: id, name: c.name, academic_year: c.level, credits: c.credits, difficulty: c.diff, 
-                    info_overview: c.info ? c.info.over : 'لم يتوفر شرح', 
-                    info_doctor: c.info ? c.info.doc : 'غير متوفر', 
-                    info_practical: c.info ? c.info.prac : 'غير متوفر', 
-                    info_exam: c.info ? c.info.exam : 'غير متوفر', 
-                    info_support: c.info ? c.info.sup : 'قريباً!' 
-                };
+                mergedCoursesData[id] = { id: id, name: c.name, academic_year: c.level, credits: c.credits, difficulty: c.diff, info_overview: c.info ? c.info.over : '', info_doctor: c.info ? c.info.doc : '', info_practical: c.info ? c.info.prac : '', info_exam: c.info ? c.info.exam : '', info_support: c.info ? c.info.sup : '' };
             }
             
-            // جلب بيانات السيرفر والدمج الذكي (لا نمسح المحلي إلا إذا كان السيرفر مليئاً)
+            // جلب البيانات من السيرفر للتحديث
             let { data: courses } = await supabaseClient.from('courses').select('*');
             if(courses) { 
                 courses.forEach(c => { 
                     mergedCoursesData[c.id] = {
-                        id: c.id,
-                        name: c.name || mergedCoursesData[c.id].name,
-                        academic_year: c.academic_year || mergedCoursesData[c.id].academic_year,
-                        credits: c.credits || mergedCoursesData[c.id].credits,
-                        difficulty: c.difficulty || mergedCoursesData[c.id].difficulty,
-                        prereqs: c.prereqs || mergedCoursesData[c.id].prereqs,
-                        info_overview: c.info_overview || mergedCoursesData[c.id].info_overview,
-                        info_doctor: c.info_doctor || mergedCoursesData[c.id].info_doctor,
-                        info_practical: c.info_practical || mergedCoursesData[c.id].info_practical,
-                        info_exam: c.info_exam || mergedCoursesData[c.id].info_exam,
-                        info_support: c.info_support || mergedCoursesData[c.id].info_support
+                        id: c.id, name: c.name || mergedCoursesData[c.id].name, academic_year: c.academic_year || mergedCoursesData[c.id].academic_year,
+                        credits: c.credits || mergedCoursesData[c.id].credits, difficulty: c.difficulty || mergedCoursesData[c.id].difficulty,
+                        prereqs: c.prereqs || mergedCoursesData[c.id].prereqs, info_overview: c.info_overview || mergedCoursesData[c.id].info_overview,
+                        info_doctor: c.info_doctor || mergedCoursesData[c.id].info_doctor, info_practical: c.info_practical || mergedCoursesData[c.id].info_practical,
+                        info_exam: c.info_exam || mergedCoursesData[c.id].info_exam, info_support: c.info_support || mergedCoursesData[c.id].info_support
                     };
                 }); 
             }
@@ -353,7 +313,7 @@
             const filterCourseForClass = document.getElementById('filterCourseForClass');
 
             selectEditCourse.innerHTML = '<option value="">-- اختر المادة لتعديل معلوماتها --</option>';
-            selectCourseClass.innerHTML = '<option value="">-- اختر المادة --</option>';
+            selectCourseClass.innerHTML = '<option value="">-- اختر المادة للربط --</option>';
             filterCourseForClass.innerHTML = '<option value="">-- 1. اختر المادة أولاً لتظهر شعبها --</option>';
             
             Object.values(mergedCoursesData).forEach(c => {
@@ -362,30 +322,7 @@
             });
         }
 
-        // ================= تعبئة معلومات المادة عند اختيارها للتعديل =================
-        document.getElementById('editCourseSelect').addEventListener('change', function() {
-            const courseId = this.value;
-            if(!courseId) { document.getElementById('courseForm').reset(); return; }
-            
-            const course = mergedCoursesData[courseId];
-            if(course) {
-                document.getElementById('courseId').value = course.id;
-                document.getElementById('courseName').value = course.name || "";
-                document.getElementById('courseYear').value = course.academic_year || "1";
-                document.getElementById('courseCredits').value = course.credits || 5;
-                document.getElementById('courseDiff').value = course.difficulty || 2;
-                
-                try { document.getElementById('coursePrereqs').value = JSON.parse(course.prereqs || "[]").join(', '); } catch(e){}
-                
-                document.getElementById('infoOver').value = course.info_overview || "";
-                document.getElementById('infoDoc').value = course.info_doctor || "";
-                document.getElementById('infoPrac').value = course.info_practical || "";
-                document.getElementById('infoExam').value = course.info_exam || "";
-                document.getElementById('infoSup').value = course.info_support || "قريباً!";
-            }
-        });
-
-        // ================= 2. تأسيس البيانات الأساسية (الـ 250 شعبة) =================
+        // ================= 2. جلب وبناء الـ 250 شعبة =================
         const localClassesDB = [
             // الأحد
             {id: 1, course_id: 'BPH401', prof: 'د. محمد معروف', day: 'الأحد', start_time: '16:00:00', end_time: '18:00:00', section: 'C4', credits:5},
@@ -401,22 +338,22 @@
             {id: 11, course_id: 'BMA402', prof: 'د. برلنت مطيط', day: 'الأحد', start_time: '22:00:00', end_time: '24:00:00', section: 'C2', credits:5},
             {id: 12, course_id: 'BEC401', prof: 'د. أميمة دكاك', day: 'الأحد', start_time: '18:00:00', end_time: '20:00:00', section: 'C1', credits:5},
             {id: 13, course_id: 'BPG402', prof: 'غير محدد', day: 'الأحد', start_time: '18:00:00', end_time: '20:00:00', section: 'C5', credits:5},
-            {id: 14, course_id: 'BPG402', prof: 'غير محدد', day: 'الأحد', start_time: '20:00:00', end_time: '22:00:00', section: 'C6', credits:5},
-            {id: 15, course_id: 'BPG402', prof: 'غير محدد', day: 'الأحد', start_time: '22:00:00', end_time: '24:00:00', section: 'C8', credits:5},
+            {id: 14, course_id: 'BPG402', prof: 'غير محدد', day: 'الأحد', start_time: '20:00:00', end: '22:00:00', section: 'C6', credits:5},
+            {id: 15, course_id: 'BPG402', prof: 'غير محدد', day: 'الأحد', start_time: '22:00:00', end: '24:00:00', section: 'C8', credits:5},
             {id: 16, course_id: 'BWP401', prof: 'د. باسل الخطيب', day: 'الأحد', start_time: '16:00:00', end_time: '18:00:00', section: 'C2', credits:5},
-            {id: 17, course_id: 'BWP401', prof: 'د. باسل الخطيب', day: 'الأحد', start_time: '18:00:00', end_time: '20:00:00', section: 'C7', credits:5},
+            {id: 17, course_id: 'BWP401', prof: 'د. باسل الخطيب', day: 'الأحد', start_time: '18:00:00', end: '20:00:00', section: 'C7', credits:5},
             {id: 18, course_id: 'BSP501', prof: 'د. إياد العبود', day: 'الأحد', start_time: '08:00:00', end_time: '10:00:00', section: 'C4', credits:5},
             {id: 19, course_id: 'BDA501', prof: 'د. زهير علي أحمد', day: 'الأحد', start_time: '20:00:00', end_time: '22:00:00', section: 'C2', credits:6},
             {id: 20, course_id: 'BDA501', prof: 'د. سهير إبراهيم', day: 'الأحد', start_time: '20:00:00', end_time: '22:00:00', section: 'C3', credits:6},
             {id: 21, course_id: 'BDA501', prof: 'د. سهير إبراهيم', day: 'الأحد', start_time: '22:00:00', end_time: '24:00:00', section: 'C4', credits:6},
-            {id: 22, course_id: 'BDB501', prof: 'د. محمد حجوز', day: 'الأحد', start_time: '08:00:00', end_time: '10:00:00', section: 'C1', credits:4},
-            {id: 23, course_id: 'BDB501', prof: 'د. محمد حجوز', day: 'الأحد', start_time: '10:00:00', end_time: '12:00:00', section: 'C2', credits:4},
-            {id: 24, course_id: 'BDB501', prof: 'د. محمد حجوز', day: 'الأحد', start_time: '12:00:00', end_time: '14:00:00', section: 'C3', credits:4},
-            {id: 25, course_id: 'BDBL501', prof: 'د. آلاء الناطور', day: 'الأحد', start_time: '08:00:00', end_time: '10:00:00', section: 'C3', credits:4},
-            {id: 26, course_id: 'BPS501', prof: 'د. سلافة علي', day: 'الأحد', start_time: '10:00:00', end_time: '12:00:00', section: 'C1', credits:6},
-            {id: 27, course_id: 'BPS501', prof: 'د. علاء الدين سرحان', day: 'الأحد', start_time: '22:00:00', end_time: '24:00:00', section: 'C3', credits:6},
+            {id: 22, course_id: 'BDB501', prof: 'د. محمد حجوز', day: 'الأحد', start_time: '08:00:00', end: '10:00:00', section: 'C1', credits:4},
+            {id: 23, course_id: 'BDB501', prof: 'د. محمد حجوز', day: 'الأحد', start_time: '10:00:00', end: '12:00:00', section: 'C2', credits:4},
+            {id: 24, course_id: 'BDB501', prof: 'د. محمد حجوز', day: 'الأحد', start_time: '12:00:00', end: '14:00:00', section: 'C3', credits:4},
+            {id: 25, course_id: 'BDBL501', prof: 'د. آلاء الناطور', day: 'الأحد', start_time: '08:00:00', end: '10:00:00', section: 'C3', credits:4},
+            {id: 26, course_id: 'BPS501', prof: 'د. سلافة علي', day: 'الأحد', start_time: '10:00:00', end: '12:00:00', section: 'C1', credits:6},
+            {id: 27, course_id: 'BPS501', prof: 'د. علاء الدين سرحان', day: 'الأحد', start_time: '22:00:00', end: '24:00:00', section: 'C3', credits:6},
             {id: 28, course_id: 'BOSL501', prof: 'د. ماجدة أسعد', day: 'الأحد', start_time: '20:00:00', end_time: '22:00:00', section: 'C1', credits:4},
-            {id: 29, course_id: 'BOSL501', prof: 'د. ماجدة أسعد', day: 'الأحد', start_time: '22:00:00', end_time: '24:00:00', section: 'C2', credits:4},
+            {id: 29, course_id: 'BOSL501', prof: 'د. ماجدة أسعد', day: 'الأحد', start_time: '22:00:00', end: '24:00:00', section: 'C2', credits:4},
             
             // الإثنين
             {id: 30, course_id: 'BPH401', prof: 'د. محمد معروف', day: 'الإثنين', start_time: '16:00:00', end_time: '18:00:00', section: 'C18', credits:5},
@@ -435,18 +372,18 @@
             {id: 43, course_id: 'BLC401', prof: 'د. لؤي صالح', day: 'الإثنين', start_time: '18:00:00', end_time: '20:00:00', section: 'C5', credits:5},
             {id: 44, course_id: 'BLC401', prof: 'د. لؤي صالح', day: 'الإثنين', start_time: '20:00:00', end_time: '22:00:00', section: 'C8', credits:5},
             {id: 45, course_id: 'BPG402', prof: 'غير محدد', day: 'الإثنين', start_time: '18:00:00', end_time: '20:00:00', section: 'C14', credits:5},
-            {id: 46, course_id: 'BPG402', prof: 'غير محدد', day: 'الإثنين', start_time: '20:00:00', end_time: '22:00:00', section: 'C9', credits:5},
-            {id: 47, course_id: 'BPG402', prof: 'غير محدد', day: 'الإثنين', start_time: '22:00:00', end_time: '24:00:00', section: 'C10', credits:5},
+            {id: 46, course_id: 'BPG402', prof: 'غير محدد', day: 'الإثنين', start_time: '20:00:00', end: '22:00:00', section: 'C9', credits:5},
+            {id: 47, course_id: 'BPG402', prof: 'غير محدد', day: 'الإثنين', start_time: '22:00:00', end: '24:00:00', section: 'C10', credits:5},
             {id: 48, course_id: 'BSP501', prof: 'د. إياد العبود', day: 'الإثنين', start_time: '08:00:00', end_time: '10:00:00', section: 'C5', credits:5},
             {id: 49, course_id: 'BDA501', prof: 'د. زهير علي أحمد', day: 'الإثنين', start_time: '20:00:00', end_time: '22:00:00', section: 'C5', credits:6},
             {id: 50, course_id: 'BDA501', prof: 'د. سهير إبراهيم', day: 'الإثنين', start_time: '20:00:00', end_time: '22:00:00', section: 'C6', credits:6},
-            {id: 51, course_id: 'BDA501', prof: 'د. سهير إبراهيم', day: 'الإثنين', start_time: '22:00:00', end_time: '24:00:00', section: 'C7', credits:6},
+            {id: 51, course_id: 'BDA501', prof: 'د. سهير إبراهيم', day: 'الإثنين', start_time: '22:00:00', end: '24:00:00', section: 'C7', credits:6},
             {id: 52, course_id: 'GMN401', prof: 'د. نسرين عبد الرحمن', day: 'الإثنين', start_time: '16:00:00', end_time: '18:00:00', section: 'C10', credits:4},
             {id: 53, course_id: 'BTS501', prof: 'د. نادر خضرو', day: 'الإثنين', start_time: '18:00:00', end_time: '20:00:00', section: 'C2', credits:5},
             {id: 54, course_id: 'BTS501', prof: 'د. نادر خضرو', day: 'الإثنين', start_time: '20:00:00', end_time: '22:00:00', section: 'C3', credits:5},
-            {id: 55, course_id: 'BDBL501', prof: 'د. علاء الدين الحمدة', day: 'الإثنين', start_time: '22:00:00', end_time: '24:00:00', section: 'C7', credits:4},
+            {id: 55, course_id: 'BDBL501', prof: 'د. علاء الدين الحمدة', day: 'الإثنين', start_time: '22:00:00', end: '24:00:00', section: 'C7', credits:4},
             {id: 56, course_id: 'BWP501', prof: 'د. باسل الخطيب', day: 'الإثنين', start_time: '16:00:00', end_time: '18:00:00', section: 'C1', credits:5},
-            {id: 57, course_id: 'BWP501', prof: 'د. باسل الخطيب', day: 'الإثنين', start_time: '18:00:00', end_time: '20:00:00', section: 'C3', credits:5},
+            {id: 57, course_id: 'BWP501', prof: 'د. باسل الخطيب', day: 'الإثنين', start_time: '18:00:00', end: '20:00:00', section: 'C3', credits:5},
             {id: 58, course_id: 'BPS501', prof: 'د. علاء الدين سرحان', day: 'الإثنين', start_time: '20:00:00', end_time: '22:00:00', section: 'C4', credits:6},
             {id: 59, course_id: 'BPS501', prof: 'د. علاء الدين سرحان', day: 'الإثنين', start_time: '22:00:00', end_time: '24:00:00', section: 'C5', credits:6},
             {id: 60, course_id: 'BPG601', prof: 'د. أحمد العوص', day: 'الإثنين', start_time: '10:00:00', end_time: '12:00:00', section: 'C1', credits:5},
@@ -462,19 +399,19 @@
             {id: 68, course_id: 'BPG401', prof: 'غير محدد', day: 'الثلاثاء', start_time: '20:00:00', end_time: '22:00:00', section: 'C26', credits:5},
             {id: 69, course_id: 'BPG401', prof: 'غير محدد', day: 'الثلاثاء', start_time: '22:00:00', end_time: '24:00:00', section: 'C11', credits:5},
             {id: 70, course_id: 'BPG401', prof: 'د. ضياء خلوف', day: 'الثلاثاء', start_time: '18:00:00', end_time: '20:00:00', section: 'C23', credits:5},
-            {id: 71, course_id: 'BPG401', prof: 'غير محدد', day: 'الثلاثاء', start_time: '18:00:00', end_time: '20:00:00', section: 'C5', credits:5},
+            {id: 71, course_id: 'BPG401', prof: 'غير محدد', day: 'الثلاثاء', start_time: '18:00:00', end: '20:00:00', section: 'C5', credits:5},
             {id: 72, course_id: 'BAS401', prof: 'د. محمد ديب', day: 'الثلاثاء', start_time: '20:00:00', end_time: '22:00:00', section: 'C2', credits:5},
             {id: 73, course_id: 'BAS401', prof: 'د. محمد ديب', day: 'الثلاثاء', start_time: '22:00:00', end_time: '24:00:00', section: 'C13', credits:5},
-            {id: 74, course_id: 'BNT501', prof: 'م. مرح مفلح', day: 'الثلاثاء', start_time: '20:00:00', end_time: '22:00:00', section: 'C1', credits:6},
-            {id: 75, course_id: 'BPS501', prof: 'د. سلافة علي', day: 'الثلاثاء', start_time: '18:00:00', end_time: '20:00:00', section: 'C9', credits:6},
-            {id: 76, course_id: 'BPS501', prof: 'د. سلافة علي', day: 'الثلاثاء', start_time: '20:00:00', end_time: '22:00:00', section: 'C8', credits:6},
-            {id: 77, course_id: 'BSE601', prof: 'د. محمد علي', day: 'الثلاثاء', start_time: '22:00:00', end_time: '24:00:00', section: 'C2', credits:6},
+            {id: 74, course_id: 'BNT501', prof: 'م. مرح مفلح', day: 'الثلاثاء', start_time: '20:00:00', end: '22:00:00', section: 'C1', credits:6},
+            {id: 75, course_id: 'BPS501', prof: 'د. سلافة علي', day: 'الثلاثاء', start_time: '18:00:00', end: '20:00:00', section: 'C9', credits:6},
+            {id: 76, course_id: 'BPS501', prof: 'د. سلافة علي', day: 'الثلاثاء', start_time: '20:00:00', end: '22:00:00', section: 'C8', credits:6},
+            {id: 77, course_id: 'BSE601', prof: 'د. محمد علي', day: 'الثلاثاء', start_time: '22:00:00', end: '24:00:00', section: 'C2', credits:6},
             {id: 78, course_id: 'BMA402', prof: 'د. عمران دلول', day: 'الثلاثاء', start_time: '20:00:00', end_time: '22:00:00', section: 'C12', credits:5},
             {id: 79, course_id: 'BMA402', prof: 'د. عمران دلول', day: 'الثلاثاء', start_time: '22:00:00', end_time: '24:00:00', section: 'C11', credits:5},
-            {id: 80, course_id: 'BMA402', prof: 'د. برلنت مطيط', day: 'الثلاثاء', start_time: '22:00:00', end_time: '24:00:00', section: 'C6', credits:5},
-            {id: 81, course_id: 'BPG402', prof: 'غير محدد', day: 'الثلاثاء', start_time: '18:00:00', end_time: '20:00:00', section: 'C12', credits:5},
-            {id: 82, course_id: 'BEC401', prof: 'د. أميمة دكاك', day: 'الثلاثاء', start_time: '18:00:00', end_time: '20:00:00', section: 'C5', credits:5},
-            {id: 83, course_id: 'BEC401', prof: 'د. أميمة دكاك', day: 'الثلاثاء', start_time: '20:00:00', end_time: '22:00:00', section: 'C6', credits:5},
+            {id: 80, course_id: 'BMA402', prof: 'د. برلنت مطيط', day: 'الثلاثاء', start_time: '22:00:00', end: '24:00:00', section: 'C6', credits:5},
+            {id: 81, course_id: 'BPG402', prof: 'غير محدد', day: 'الثلاثاء', start_time: '18:00:00', end: '20:00:00', section: 'C12', credits:5},
+            {id: 82, course_id: 'BEC401', prof: 'د. أميمة دكاك', day: 'الثلاثاء', start_time: '18:00:00', end: '20:00:00', section: 'C5', credits:5},
+            {id: 83, courseId: 'BEC401', prof: 'د. أميمة دكاك', day: 'الثلاثاء', start_time: '20:00:00', end_time: '22:00:00', section: 'C6', credits:5},
             {id: 84, course_id: 'BEC401', prof: 'د. أميمة دكاك', day: 'الثلاثاء', start_time: '22:00:00', end_time: '24:00:00', section: 'C7', credits:5},
             {id: 85, course_id: 'BLC401', prof: 'د. محمد كلاش', day: 'الثلاثاء', start_time: '12:00:00', end_time: '14:00:00', section: 'C11', credits:5},
             {id: 86, course_id: 'BLC401', prof: 'د. وسام خلف', day: 'الثلاثاء', start_time: '20:00:00', end_time: '22:00:00', section: 'C7', credits:5},
@@ -598,12 +535,12 @@
             {id: 198, course_id: 'BOS501', prof: 'د. غيث مصطفى', day: 'الجمعة', start_time: '08:00:00', end_time: '10:00:00', section: 'C2', credits:4},
             {id: 199, course_id: 'BOS501', prof: 'د. غيث مصطفى', day: 'الجمعة', start_time: '10:00:00', end_time: '12:00:00', section: 'C3', credits:4},
             {id: 200, course_id: 'BOS501', prof: 'د. غيث مصطفى', day: 'الجمعة', start_time: '20:00:00', end_time: '22:00:00', section: 'C4', credits:4},
-            {id: 201, course_id: 'BOS501', prof: 'د. غيث مصطفى', day: 'الجمعة', start_time: '22:00:00', end_time: '24:00:00', section: 'C5', credits:4},
+            {id: 201, course_id: 'BOS501', prof: 'د. غيث مصطفى', day: 'الجمعة', start: '22:00:00', end_time: '24:00:00', section: 'C5', credits:4},
             {id: 202, course_id: 'BDBL501', prof: 'د. آلاء الناطور', day: 'الجمعة', start_time: '08:00:00', end_time: '10:00:00', section: 'C5', credits:4},
             {id: 203, course_id: 'BDBL501', prof: 'د. آلاء عيسى', day: 'الجمعة', start_time: '16:00:00', end_time: '18:00:00', section: 'C4', credits:4},
             {id: 204, course_id: 'BDBL501', prof: 'د. آلاء عيسى', day: 'الجمعة', start_time: '18:00:00', end_time: '20:00:00', section: 'C2', credits:4},
             {id: 205, course_id: 'GMN401', prof: 'د. علي نوفل', day: 'الجمعة', start_time: '16:00:00', end_time: '18:00:00', section: 'C4', credits:4},
-            {id: 206, course_id: 'GMN401', prof: 'د. علي نوفل', day: 'الجمعة', start_time: '18:00:00', end_time: '20:00:00', section: 'C8', credits:4},
+            {id: 206, course_id: 'GMN401', prof: 'د. علي نوفل', day: 'الجمعة', start_time: '18:00:00', end: '20:00:00', section: 'C8', credits:4},
             {id: 207, course_id: 'GMN401', prof: 'د. نسرين عبد الرحمن', day: 'الجمعة', start_time: '16:00:00', end_time: '18:00:00', section: 'C2', credits:4},
             {id: 208, course_id: 'BPG402', prof: 'د. أحمد عقول', day: 'الجمعة', start_time: '10:00:00', end_time: '12:00:00', section: 'C1', credits:5},
             {id: 209, course_id: 'BPG402', prof: 'د. أحمد عقول', day: 'الجمعة', start_time: '12:00:00', end_time: '14:00:00', section: 'C2', credits:5},
@@ -652,44 +589,49 @@
             {id: 250, course_id: 'BNT501', prof: 'م. مرح مفلح', day: 'السبت', start_time: '10:00:00', end_time: '12:00:00', section: 'C6', credits:6}
         ];
 
-        // بناء وتجميع الشعب (الدالة التي كانت مفقودة!)
+        let mergedClassesData = [];
+
+        // بناء ودمج الشعب بشكل سليم
         async function buildClassesData() {
             let { data: serverClasses } = await supabaseClient.from('classes').select('*');
             
             let finalClassesMap = {};
-            localClassesDB.forEach(c => finalClassesMap[c.id] = c); // نضع الشعب المحلية كقاعدة
-            if(serverClasses) { serverClasses.forEach(c => finalClassesMap[c.id] = c); } // السيرفر يغطي أي تعديل
+            localClassesDB.forEach(c => finalClassesMap[c.id] = c); 
+            if(serverClasses) { serverClasses.forEach(c => finalClassesMap[c.id] = c); } 
             
             mergedClassesData = Object.values(finalClassesMap);
             return mergedClassesData;
         }
 
-        // ================= 3. تعديل معلومات المواد =================
-        document.getElementById('editCourseSelect').addEventListener('change', function() {
-            const courseId = this.value;
-            if(!courseId) { document.getElementById('courseForm').reset(); return; }
+        // ================= التعديل والعرض في الجدول =================
+        async function fetchClassesTable() {
+            const tbody = document.getElementById('classesTableBody');
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;"><i class="fas fa-spinner fa-spin"></i> جاري دمج وتحديث البيانات...</td></tr>`;
             
-            const course = mergedCoursesData[courseId];
-            if(course) {
-                document.getElementById('courseId').value = course.id;
-                document.getElementById('courseName').value = course.name || "";
-                document.getElementById('courseYear').value = course.academic_year || "1";
-                document.getElementById('courseCredits').value = course.credits || 5;
-                document.getElementById('courseDiff').value = course.difficulty || 2;
-                
-                try { document.getElementById('coursePrereqs').value = JSON.parse(course.prereqs || "[]").join(', '); } catch(e){}
-                
-                document.getElementById('infoOver').value = course.info_overview || "";
-                document.getElementById('infoDoc').value = course.info_doctor || "";
-                document.getElementById('infoPrac').value = course.info_practical || "";
-                document.getElementById('infoExam').value = course.info_exam || "";
-                document.getElementById('infoSup').value = course.info_support || "قريباً مع Info Matrix!";
-            }
-        });
+            await buildClassesData();
+            tbody.innerHTML = '';
 
-        // ================= 4. الفلترة الذكية المزدوجة للشعب =================
-        document.getElementById('filterCourseForClass').addEventListener('change', async function() {
-            const courseId = this.value;
+            mergedClassesData.forEach(cls => {
+                const start = cls.start_time ? cls.start_time.substring(0, 5) : "00:00"; 
+                const end = cls.end_time ? cls.end_time.substring(0, 5) : "00:00";
+                let courseName = mergedCoursesData[cls.course_id] ? mergedCoursesData[cls.course_id].name : "غير معروف";
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td><span class="badge">${cls.course_id}</span> <br> ${courseName}</td>
+                        <td>${cls.prof}</td>
+                        <td><strong style="color:var(--orange);">${cls.section || '-'}</strong></td>
+                        <td>${cls.day} | <span style="direction:ltr; display:inline-block;">${start} - ${end}</span></td>
+                        <td>
+                            <button class="action-btn btn-edit" onclick="triggerClassEdit(${cls.id})" title="تعديل"><i class="fas fa-pencil-alt"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // القائمة المنسدلة في التعديل
+        async function populateEditClassDropdown(courseId) {
             const classSelectDropdown = document.getElementById('editClassSelect');
             classSelectDropdown.disabled = !courseId;
             classSelectDropdown.innerHTML = '<option value="">-- يرجى اختيار مادة أولاً --</option>';
@@ -698,21 +640,23 @@
 
             classSelectDropdown.innerHTML = '<option value="">-- ✨ اختر الشعبة لتعديلها ✨ --</option>';
             
-            await buildClassesData(); // التأكد من تحميل البيانات ودمجها قبل الفلترة
+            await buildClassesData();
             const filteredClasses = mergedClassesData.filter(c => c.course_id === courseId);
 
             if(filteredClasses.length === 0) {
-                classSelectDropdown.innerHTML = '<option value="">لا توجد شعب لهذه المادة!</option>';
-                return;
+                classSelectDropdown.innerHTML = '<option value="">لا توجد شعب لهذه المادة!</option>'; return;
             }
 
             filteredClasses.forEach(cls => {
                 const start = cls.start_time ? cls.start_time.substring(0, 5) : "00:00";
                 classSelectDropdown.innerHTML += `<option value="${cls.id}">شعبة ${cls.section || '-'} | ${cls.day} (${start}) | د. ${cls.prof}</option>`;
             });
+        }
+
+        document.getElementById('filterCourseForClass').addEventListener('change', async function() {
+            await populateEditClassDropdown(this.value);
         });
 
-        // تعبئة الفورم عند اختيار الشعبة
         document.getElementById('editClassSelect').addEventListener('change', function() {
             const clsId = this.value;
             if(!clsId) { document.getElementById('classForm').reset(); return; }
@@ -730,50 +674,18 @@
             }
         });
 
-        // ================= 5. عرض جدول الشعب =================
-        async function fetchClassesTable() {
-            const tbody = document.getElementById('classesTableBody');
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align: center;"><i class="fas fa-spinner fa-spin"></i> جاري دمج البيانات...</td></tr>`;
-            
-            await buildClassesData(); // ندمج المحلي والسيرفر
-            tbody.innerHTML = '';
-
-            mergedClassesData.forEach(cls => {
-                const start = cls.start_time ? cls.start_time.substring(0, 5) : "00:00";
-                const end = cls.end_time ? cls.end_time.substring(0, 5) : "00:00";
-                let courseName = mergedCoursesData[cls.course_id] ? mergedCoursesData[cls.course_id].name : "غير معروف";
-                
-                tbody.innerHTML += `
-                    <tr>
-                        <td><span class="badge">${cls.course_id}</span> <br> ${courseName}</td>
-                        <td>${cls.prof}</td>
-                        <td><strong style="color:var(--orange);">${cls.section || '-'}</strong></td>
-                        <td>${cls.day} | <span style="direction:ltr; display:inline-block;">${start} - ${end}</span></td>
-                        <td>
-                            <button class="action-btn btn-delete" onclick="deleteClass(${cls.id})" title="حذف من السيرفر"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
-            });
+        async function triggerClassEdit(id) {
+            const cls = mergedClassesData.find(c => c.id == id);
+            if(cls) {
+                openSection('classSection', 'edit');
+                document.getElementById('filterCourseForClass').value = cls.course_id;
+                await populateEditClassDropdown(cls.course_id);
+                document.getElementById('editClassSelect').value = id;
+                document.getElementById('editClassSelect').dispatchEvent(new Event('change'));
+            }
         }
 
-        // ================= 6. الحفظ في السيرفر =================
-        document.getElementById('courseForm').addEventListener('submit', async (e) => {
-            e.preventDefault(); const btn = document.getElementById('btnCourse'); btn.disabled = true; btn.innerText = 'جاري الحفظ بالسيرفر...';
-            let prereqsStr = document.getElementById('coursePrereqs').value;
-            const courseData = {
-                id: document.getElementById('courseId').value.toUpperCase(), name: document.getElementById('courseName').value,
-                credits: parseInt(document.getElementById('courseCredits').value), academic_year: document.getElementById('courseYear').value,
-                difficulty: parseInt(document.getElementById('courseDiff').value), prereqs: JSON.stringify(prereqsStr ? prereqsStr.split(',').map(s=>s.trim()) : []),
-                is_english: document.getElementById('courseYear').value === 'ENG', info_overview: document.getElementById('infoOver').value,
-                info_doctor: document.getElementById('infoDoc').value, info_practical: document.getElementById('infoPrac').value,
-                info_exam: document.getElementById('infoExam').value, info_support: document.getElementById('infoSup').value
-            };
-            const { error } = await supabaseClient.from('courses').upsert([courseData]);
-            if (error) alert('خطأ: ' + error.message); else { alert('تم الحفظ بنجاح! السيرفر اعتمده. ✅'); fetchInitialData(); showMainMenu(); }
-            btn.disabled = false; btn.innerText = 'حفظ المادة في السيرفر ✅';
-        });
-
+        // ================= الحفظ والتعديل الآني (بدون ريفرش) =================
         document.getElementById('classForm').addEventListener('submit', async (e) => {
             e.preventDefault(); const btn = document.getElementById('btnClass'); btn.disabled = true; btn.innerText = 'جاري الحفظ بالسيرفر...';
             
@@ -788,41 +700,32 @@
             };
 
             if (classId) classData.id = parseInt(classId); 
+            
             const { error } = await supabaseClient.from('classes').upsert([classData]);
 
-            if (error) alert('خطأ: ' + error.message); 
-            else { alert('تم الحفظ بنجاح! التعديل أصبح رسمياً في السيرفر. ✅'); showMainMenu(); }
+            if (error) alert('خطأ في الحفظ: ' + error.message); 
+            else { 
+                alert('تم الحفظ والتعديل بنجاح! السيرفر الآن يعتمد هذا التعديل. ✅'); 
+                await fetchClassesTable(); // ننتظر تحديث الجدول فوراً!
+                showMainMenu(); 
+            }
             btn.disabled = false; btn.innerText = classId ? 'تحديث بيانات الشعبة بالسيرفر 🔄' : 'إضافة الشعبة للسيرفر ✅';
         });
 
-        async function deleteClass(id) {
-            if(confirm("سيتم حذف التعديل من السيرفر. هل أنت متأكد؟")) {
-                await supabaseClient.from('classes').delete().eq('id', id); fetchClassesTable();
-            }
-        }
+        document.getElementById('courseForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); const btn = document.getElementById('btnCourse'); btn.disabled = true; btn.innerText = 'جاري الحفظ بالسيرفر...';
+            const courseData = {
+                id: document.getElementById('courseId').value.toUpperCase(), name: document.getElementById('courseName').value,
+                credits: parseInt(document.getElementById('courseCredits').value), academic_year: document.getElementById('courseYear').value,
+                difficulty: parseInt(document.getElementById('courseDiff').value), info_overview: document.getElementById('infoOver').value,
+                info_doctor: document.getElementById('infoDoc').value, info_practical: document.getElementById('infoPrac').value,
+                info_exam: document.getElementById('infoExam').value, info_support: document.getElementById('infoSup').value
+            };
+            const { error } = await supabaseClient.from('courses').upsert([courseData]);
+            if (error) alert('خطأ: ' + error.message); else { alert('تم الحفظ بنجاح! السيرفر اعتمده. ✅'); await fetchInitialData(); showMainMenu(); }
+            btn.disabled = false; btn.innerText = 'حفظ المادة في السيرفر ✅';
+        });
 
-        // ================= المزامنة الشاملة 🚀 =================
-        async function syncEverything() {
-            const btn = document.getElementById('btnSyncAll'); const log = document.getElementById('syncLog');
-            btn.disabled = true; log.style.display = 'block'; log.innerHTML = "⏳ جاري تحضير البيانات...";
-
-            log.innerHTML += `<div>🚀 جاري تأسيس ورفع ${Object.keys(localCoursesDB).length} مادة...</div>`;
-            const coursesToUpload = Object.values(localCoursesDB).map(c => ({
-                id: c.id, name: c.name, academic_year: c.level === 'ENG' ? 'ENG' : c.level.toString(), credits: c.credits, difficulty: c.diff,
-                info_overview: c.info ? c.info.over : '', info_doctor: c.info ? c.info.doc : '', info_practical: c.info ? c.info.prac : '', info_exam: c.info ? c.info.exam : '', info_support: c.info ? c.info.sup : ''
-            }));
-            await supabaseClient.from('courses').upsert(coursesToUpload);
-
-            log.innerHTML += `<div>🚀 جاري رفع وربط ${localClassesDB.length} شعبة بالمقرات...</div>`;
-            const { error } = await supabaseClient.from('classes').upsert(localClassesDB);
-            
-            if(error) log.innerHTML += `<div style="color:var(--danger)">❌ فشل رفع الشعب: ${error.message}</div>`;
-            else { 
-                log.innerHTML += `<div>✅ مبروك! تم رفع وتأسيس قاعدة البيانات بالكامل.</div>`; 
-                alert("تمت المزامنة بنجاح!"); showMainMenu(); 
-            }
-            btn.disabled = false; btn.innerText = 'بدء المزامنة الشاملة 🚀';
-        }
     </script>
 </body>
 </html>
