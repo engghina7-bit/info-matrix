@@ -3,205 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الصفوف - info</title>
+    <title>محاكي تسجيل الصفوف - infoMatrix</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
         :root {
-            /* الهوية الليلية الفخمة */
             --navy: #1a2235; --navy-light: #242f48; --input-bg: #121826;
             --orange: #ff7e00; --gold: #ffc107; --success: #10b981; --danger: #ef4444;
             --text-main: #f8fafc; --text-muted: #94a3b8; --border-glass: rgba(255, 255, 255, 0.08);
         }
-
-        body { 
-            font-family: 'Cairo', sans-serif; 
-            background: radial-gradient(circle at top right, rgba(255,126,0,0.05), transparent), var(--navy);
-            color: var(--text-main); margin: 0; padding: 100px 20px 20px 20px; 
-            display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; min-height: 100vh;
-        }
-
-        /* ---------------- البار العلوي ---------------- */
-        .top-bar {
-            position: fixed; top: 0; left: 0; right: 0; height: 80px; 
-            background: rgba(26, 34, 53, 0.85); backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 126, 0, 0.15); display: flex; align-items: center; justify-content: space-between;
-            padding: 0 5%; z-index: 1001; box-shadow: 0 4px 30px rgba(0,0,0,0.2);
-        }
-        .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .brand img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--orange); object-fit: cover; box-shadow: 0 0 15px rgba(255,126,0,0.3);}
-        .brand span { font-size: 1.8rem; font-weight: 900; color: white; letter-spacing: -1px; }
-        .brand span i { color: var(--orange); font-style: normal; }
-        .top-actions a { color: var(--text-muted); text-decoration: none; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
-        .top-actions a:hover { color: white; transform: translateX(-5px); }
-
-        /* ---------------- شريط اختيار المواد ---------------- */
-        .course-selector-container { 
-            width: 100%; background: var(--navy-light); padding: 25px; border-radius: 20px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3); border: 1px solid var(--border-glass); 
-            border-top: 4px solid var(--gold); display: flex; flex-direction: column; gap: 15px; 
-        }
-
-        .input-group { display: flex; gap: 15px; align-items: center; flex-wrap: wrap;}
-        select { 
-            flex: 1; min-width: 250px; padding: 14px; border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 12px; font-family: 'Cairo'; font-size: 1rem; font-weight: bold; 
-            color: white; background-color: var(--input-bg); outline: none; transition: 0.3s;
-        }
-        select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px rgba(255,126,0,0.1); }
-
-        .selected-courses-tags { display: flex; flex-wrap: wrap; gap: 10px; }
-        .course-tag { 
-            background: rgba(255, 126, 0, 0.1); color: white; padding: 8px 15px; border-radius: 50px; 
-            font-weight: bold; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; 
-            border: 1px solid rgba(255,126,0,0.3); box-shadow: 0 5px 15px rgba(255,126,0,0.1);
-        }
-        .course-tag i { cursor: pointer; color: #ff6b6b; transition: 0.2s;}
-        .course-tag i:hover { transform: scale(1.2); color: #ef4444; }
-
-        /* ---------------- حاويات الأقسام ---------------- */
-        .section-container { 
-            background: var(--navy-light); border-radius: 20px; padding: 25px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3); flex: 1; min-width: 320px; 
-            border: 1px solid var(--border-glass); border-top: 4px solid #3b82f6; 
-            height: calc(100vh - 260px); overflow-y: auto; position: relative;
-        }
         
-        .section-container::-webkit-scrollbar { width: 8px; }
-        .section-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px;}
-        .section-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px;}
-        .section-container::-webkit-scrollbar-thumb:hover { background: var(--orange); }
+        body { font-family: 'Cairo', sans-serif; background: var(--navy); margin: 0; color: var(--text-main); min-height: 100vh; overflow-x: hidden;}
+        
+        /* البار العلوي */
+        .top-nav { background: rgba(26, 34, 53, 0.95); backdrop-filter: blur(12px); height: 75px; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; border-bottom: 1px solid rgba(255, 126, 0, 0.15); position: sticky; top:0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.2);}
+        .brand { display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 1.5rem; text-decoration: none; color:white; letter-spacing: -1px;}
+        .brand img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--orange); object-fit: cover;}
+        .btn-top-back { background: rgba(255,255,255,0.05); color: white; padding: 8px 18px; border-radius: 10px; text-decoration: none; font-weight: bold; transition: 0.3s; border: 1px solid var(--border-glass);}
+        .btn-top-back:hover { background: rgba(255,126,0,0.1); border-color: var(--orange); color: var(--orange);}
 
-        .section-header { 
-            font-size: 1.2rem; font-weight: 900; color: white; margin-bottom: 20px; 
-            padding-bottom: 15px; border-bottom: 1px dashed rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;
-        }
+        /* الهيكل الأساسي */
+        .main-layout { display: grid; grid-template-columns: 350px 1fr; gap: 20px; padding: 25px 5%; height: calc(100vh - 75px); box-sizing: border-box;}
+        
+        /* القسم الأيمن (التحكم) */
+        .control-panel { background: var(--navy-light); border-radius: 20px; padding: 25px; border: 1px solid var(--border-glass); display: flex; flex-direction: column; gap: 20px; overflow-y: auto;}
+        
+        /* القائمة المنسدلة الاحترافية */
+        .select-wrapper { position: relative; }
+        .select-wrapper::after { content: '\f107'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--orange); pointer-events: none; }
+        .course-select { width: 100%; padding: 14px 40px 14px 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: var(--input-bg); color: white; font-family: 'Cairo'; font-size: 1rem; font-weight: bold; outline: none; transition: 0.3s; box-sizing: border-box; cursor: pointer; appearance: none;}
+        .course-select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px rgba(255,126,0,0.1); }
+        .course-select option { background: var(--navy-light); color: white; }
 
-        /* كروت الشعب المتاحة */
-        .class-card { border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 15px; margin-bottom: 20px; background: rgba(0,0,0,0.15); }
-        .class-title { font-weight: 900; font-size: 1.1rem; color: var(--orange); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;}
-        .time-slot { 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: var(--input-bg); padding: 12px 15px; border-radius: 12px; margin-top: 10px; 
-            border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; flex-wrap: wrap; gap: 10px;
-        }
-        .time-slot:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2);}
-        .class-prof { font-size: 0.95rem; color: white; font-weight: bold; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;}
-        .class-prof i { color: var(--gold); }
-        .class-time-info { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;}
-        .class-section-badge { background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 6px; color: white; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px; border: 1px solid rgba(255,255,255,0.05);}
+        /* تفاصيل المادة واختيار الشعبة */
+        .class-details-panel { background: rgba(0,0,0,0.2); border-radius: 15px; padding: 20px; display: none; border: 1px solid rgba(255,255,255,0.05); animation: fadeIn 0.3s ease;}
+        .class-details-panel h3 { margin: 0 0 15px 0; color: var(--orange); font-size: 1.2rem; }
+        .section-card { background: var(--navy); border: 1px solid var(--border-glass); padding: 15px; border-radius: 10px; margin-bottom: 10px; transition: 0.2s; display: flex; flex-direction: column; gap: 8px;}
+        .section-card:hover { border-color: var(--success); box-shadow: 0 5px 15px rgba(16, 185, 129, 0.1);}
+        .btn-add-class { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16,185,129,0.3); padding: 8px; border-radius: 8px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; width: 100%; transition: 0.3s;}
+        .btn-add-class:hover:not(:disabled) { background: var(--success); color: white;}
+        .btn-add-class:disabled { background: rgba(255,255,255,0.05); color: var(--text-muted); border-color: rgba(255,255,255,0.1); cursor: not-allowed; }
 
-        /* الأزرار */
-        .btn-add { 
-            background: linear-gradient(135deg, var(--orange), #e65c00); color: white; border: none; 
-            padding: 10px 20px; border-radius: 10px; cursor: pointer; font-family: 'Cairo'; 
-            font-weight: bold; transition: 0.3s; box-shadow: 0 5px 15px rgba(255,126,0,0.2);
-        }
-        .btn-add:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255,126,0,0.4); }
-        .btn-remove { background: rgba(239, 68, 68, 0.15); color: #ff6b6b; border: 1px solid rgba(239, 68, 68, 0.3); box-shadow: none; padding: 10px 15px;}
-        .btn-remove:hover { background: #ef4444; color: white; }
+        /* القسم الأيسر (الجدول الأسبوعي) */
+        .schedule-panel { background: var(--navy-light); border-radius: 20px; border: 1px solid var(--border-glass); display: flex; flex-direction: column; overflow: hidden; position: relative;}
+        
+        .schedule-header { padding: 20px 25px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.1);}
+        .schedule-header h2 { margin: 0; font-size: 1.4rem; display: flex; align-items: center; gap: 10px;}
+        .btn-export { background: linear-gradient(135deg, var(--orange), #e65c00); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-family: 'Cairo'; font-weight: 900; font-size: 0.9rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; box-shadow: 0 5px 15px rgba(255,126,0,0.3);}
+        .btn-export:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255,126,0,0.4);}
 
-        /* الجدول المحدد */
-        .schedule-item { 
-            display: flex; align-items: center; justify-content: space-between; 
-            background: rgba(16, 185, 129, 0.08); border-right: 4px solid var(--success); 
-            padding: 15px; border-radius: 12px; margin-bottom: 12px; 
-            border: 1px solid rgba(16, 185, 129, 0.15); transition: 0.3s;
-            position: relative; z-index: 2; /* ليكون فوق العلامة المائية */
-        }
-        .schedule-item:hover { transform: translateX(-5px); box-shadow: 0 5px 15px rgba(16,185,129,0.1);}
-        .schedule-info h4 { margin: 0 0 5px 0; color: white; font-weight: 800;}
-        .schedule-info p { margin: 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; line-height: 1.6;}
+        /* منطقة التصدير */
+        .export-wrapper { flex: 1; overflow-y: auto; padding: 20px; background: var(--navy-light);}
+        
+        /* ترويسة خاصة تظهر فقط في الصورة */
+        .export-watermark { display: none; text-align: center; margin-bottom: 20px; border-bottom: 2px dashed var(--orange); padding-bottom: 15px;}
+        .export-watermark img { width: 60px; height: 60px; border-radius: 50%; border: 3px solid var(--orange); object-fit: cover;}
+        .export-watermark h2 { margin: 10px 0 5px; color: white; font-size: 1.8rem; font-weight: 900;}
+        .export-watermark p { margin: 0; color: var(--gold); font-weight: bold; font-size: 1.1rem;}
 
-        /* اللمبة للتحذير */
-        .conflict-warning { 
-            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(200px); 
-            background: var(--navy-light); border: 2px solid rgba(239, 68, 68, 0.5); padding: 15px 25px; 
-            border-radius: 20px; display: flex; align-items: center; gap: 15px; 
-            box-shadow: 0 15px 40px rgba(239, 68, 68, 0.2), 0 0 20px rgba(0,0,0,0.5); 
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2000; 
-        }
+        /* جدول الأوقات الحديث */
+        .timetable { width: 100%; border-collapse: separate; border-spacing: 5px; min-width: 700px;}
+        .timetable th { background: rgba(0,0,0,0.3); color: var(--text-muted); padding: 15px; border-radius: 12px; font-weight: 900; text-align: center;}
+        .timetable td { background: rgba(255,255,255,0.02); padding: 5px; border-radius: 12px; vertical-align: top; border: 1px solid transparent; min-height: 85px; transition: 0.3s; width: 12.5%;}
+        .timetable td:hover { background: rgba(255,255,255,0.05); }
+
+        .time-col { font-family: monospace; font-size: 1rem; color: var(--gold); font-weight: bold; text-align: center; vertical-align: middle !important; width: 80px !important; background: rgba(0,0,0,0.1) !important;}
+
+        /* بطاقة المحاضرة داخل الجدول */
+        .booked-class { background: rgba(255, 126, 0, 0.1); border: 1px solid rgba(255, 126, 0, 0.3); border-right: 4px solid var(--orange); padding: 10px; border-radius: 10px; margin-bottom: 5px; position: relative; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);}
+        .booked-class h4 { margin: 0 0 5px 0; color: white; font-size: 0.85rem; font-weight: 900; line-height: 1.4;}
+        .booked-class p { margin: 0; color: var(--text-muted); font-size: 0.75rem; font-weight: bold; display: flex; align-items: center; gap: 5px;}
+        .btn-remove-class { position: absolute; top: 5px; left: 5px; color: var(--danger); background: transparent; border: none; cursor: pointer; font-size: 1rem; opacity: 0.5; transition: 0.2s;}
+        .booked-class:hover .btn-remove-class { opacity: 1; transform: scale(1.1);}
+
+        /* ملخص الساعات */
+        .stats-bar { display: flex; gap: 20px; padding: 15px 25px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05); align-items: center;}
+        .stat-item { display: flex; align-items: center; gap: 8px; font-weight: bold; color: var(--text-muted);}
+        .stat-item span { color: var(--gold); font-size: 1.2rem; font-weight: 900;}
+
+        /* اللمبة للتحذير (التعارض) */
+        .conflict-warning { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(200px); background: var(--navy-light); border: 2px solid rgba(239, 68, 68, 0.5); padding: 15px 25px; border-radius: 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 15px 40px rgba(239, 68, 68, 0.2), 0 0 20px rgba(0,0,0,0.5); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 2000; }
         .conflict-warning.show { transform: translateX(-50%) translateY(0); }
         .conflict-warning img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--danger); animation: pulseRed 2s infinite; object-fit: cover;}
         .conflict-text { color: white; font-weight: 800; font-size: 1rem; line-height: 1.5;}
         .conflict-text span { color: #ff6b6b; }
         
         @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);}}
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* ---------------- العلامة المائية (تظهر فقط عند التصوير) ---------------- */
-        .watermark {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            display: none; 
-            flex-direction: column;
-            align-items: center;
-            opacity: 0.06; 
-            pointer-events: none;
-            z-index: 1;
+        @media (max-width: 992px) { .main-layout { grid-template-columns: 1fr; height: auto; } }
+        
+        /* 📸 كلاسات التصدير (سر الاحترافية للصورة الكاملة) */
+        .capture-mode { 
+            overflow: visible !important; 
+            height: auto !important; 
+            max-height: none !important;
+            background: #1a2235 !important;
         }
-        .watermark img { width: 160px; height: 160px; border-radius: 50%; border: 5px solid var(--orange); margin-bottom: 10px; object-fit: cover;}
-        .watermark h1 { color: white; font-size: 3.5rem; margin: 0; font-weight: 900; letter-spacing: 2px; }
-
-        .export-mode { background: var(--navy-light) !important; padding: 30px !important; }
-        .export-mode .watermark { display: flex; }
-        .export-mode .btn-remove { display: none !important; }
-        .export-mode .capture-hide { display: none !important; }
-
-        @media (max-width: 768px) { body { padding-top: 100px; } .section-container { height: 400px; } }
+        .capture-mode .export-wrapper {
+            overflow: visible !important; 
+            height: auto !important; 
+            max-height: none !important;
+        }
+        .capture-mode .timetable {
+            min-width: 1000px !important; /* لمنع تقلص الجدول في الصورة */
+        }
+        .capture-mode .export-watermark { display: block !important; }
+        .capture-mode .btn-remove-class { display: none !important; } 
+        .capture-mode .timetable td { border: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body>
 
-    <nav class="top-bar">
-        <a href="dashboard.html" class="brand"><img src="img/photo_2_2026-03-18_22-23-47.jpg" alt="info logo"><span>info<i>.</i></span></a>
-        <div class="top-actions"><a href="dashboard.html"><i class="fas fa-arrow-right"></i> العودة للداشبورد</a></div>
+    <nav class="top-nav">
+        <a href="dashboard.html" class="brand">
+            <img src="img/photo_2_2026-03-18_22-23-47.jpg" alt="info"> 
+            <span>infoMatrix<i>.</i> Schedule</span>
+        </a>
+        <a href="dashboard.html" class="btn-top-back"><i class="fas fa-arrow-right"></i> الداشبورد</a>
     </nav>
 
-    <div class="course-selector-container">
-        <h3 style="margin:0; color:white; font-size:1.1rem;"><i class="fas fa-search" style="color:var(--orange)"></i> 1. حدد المواد التي ترغب بتسجيلها:</h3>
-        <div class="input-group">
-            <select id="courseDropdown"><option value="">-- اختر مادة لتظهر شعبها المتاحة --</option></select>
-            <button class="btn-add" onclick="addCourseToFilter()" style="padding: 14px 25px;"><i class="fas fa-plus"></i> إضافة للبحث</button>
-        </div>
-        <div class="selected-courses-tags" id="selectedCoursesTags"></div>
-    </div>
-
-    <div class="section-container">
-        <div class="section-header"><span>2. الشعب والأوقات المتاحة 📝</span></div>
-        <div id="availableClassesList">
-            <div style="text-align:center; color:var(--text-muted); padding:40px 20px; font-weight:bold; line-height:1.8;">
-                <i class="fas fa-inbox" style="font-size:3rem; opacity:0.2; margin-bottom:15px; display:block;"></i>الرجاء تحديد مادة من الأعلى.
-            </div>
-        </div>
-    </div>
-
-    <div class="section-container" id="captureContainer" style="border-top-color: var(--success);">
+    <div class="main-layout">
         
-        <div class="watermark" id="watermarkElement">
-            <img src="img/photo_2_2026-03-18_22-23-47.jpg" alt="infoMatrix">
-            <h1>infoMatrix</h1>
+        <div class="control-panel">
+            <div>
+                <h3 style="margin: 0 0 15px; color: white;"><i class="fas fa-list" style="color:var(--orange)"></i> اختر المادة لتسجيلها</h3>
+                <div class="select-wrapper">
+                    <select id="courseSelectorDropdown" class="course-select" onchange="handleCourseSelection()">
+                        <option value="">-- جاري الاتصال بقاعدة البيانات... --</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="class-details-panel" id="classDetailsPanel">
+                <h3 id="selectedCourseTitle">اسم المادة</h3>
+                <div id="sectionsList" style="display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; padding-right: 5px;"></div>
+            </div>
         </div>
 
-        <div class="section-header">
-            <span>3. مسودتك النهائية 📅</span>
-            <div style="display:flex; gap:10px; align-items:center;">
-                <button class="btn-add capture-hide" onclick="downloadScheduleImage()" style="padding: 6px 15px; font-size: 0.85rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); box-shadow: none;">
-                    <i class="fas fa-camera"></i> حفظ صورة
+        <div class="schedule-panel" id="schedulePanelForCapture">
+            <div class="schedule-header" id="scheduleHeaderBtns">
+                <h2><i class="fas fa-calendar-alt" style="color:var(--orange)"></i> جدولي الأسبوعي</h2>
+                <button class="btn-export" onclick="exportProfessionalImage()" id="btnCapture">
+                    <i class="fas fa-camera-retro"></i> تصدير كصورة
                 </button>
-                <span id="creditCounter" style="font-size: 0.85rem; background: rgba(255,255,255,0.1); color:white; padding: 4px 12px; border-radius: 10px;">0 نقطة</span>
+            </div>
+
+            <div class="export-wrapper" id="exportArea">
+                <div class="export-watermark">
+                    <img src="img/photo_2_2026-03-18_22-23-47.jpg" alt="infoMatrix Logo">
+                    <h2>الجدول الدراسي - infoMatrix</h2>
+                    <p>الطالب: <span id="studentNameWatermark">مهندس المستقبل</span></p>
+                </div>
+
+                <table class="timetable" id="scheduleTable">
+                    <thead>
+                        <tr>
+                            <th class="time-col">الوقت</th>
+                            <th>الأحد</th>
+                            <th>الإثنين</th>
+                            <th>الثلاثاء</th>
+                            <th>الأربعاء</th>
+                            <th>الخميس</th>
+                            <th>الجمعة</th>
+                            <th>السبت</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="stats-bar" id="statsBarDisplay">
+                <div class="stat-item"><i class="fas fa-layer-group"></i> المواد: <span id="totalCourses">0</span></div>
+                <div class="stat-item"><i class="fas fa-star" style="color:var(--gold)"></i> النقاط: <span id="totalCredits">0</span></div>
             </div>
         </div>
-        <div id="myScheduleList">
-            <div style="text-align:center; color:var(--text-muted); padding:40px 20px; font-weight:bold; line-height:1.8;">
-                <i class="fas fa-calendar-times" style="font-size:3rem; opacity:0.2; margin-bottom:15px; display:block;"></i>لم تقم بتثبيت أي شعبة بعد.
-            </div>
-        </div>
+
     </div>
 
     <div class="conflict-warning" id="conflictWarning">
@@ -210,34 +192,29 @@
     </div>
 
     <script>
+        const supabaseUrl = 'https://tykiptvqnotedkubnuts.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5a2lwdHZxbm90ZWRrdWJudXRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3ODc2OTUsImV4cCI6MjA4OTM2MzY5NX0.-41FydKVds7-Iq3AfIsbJ85mPAhH6qe_ZH8grlAeoAg';
+        const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
         const coursesDB = {
-            "GCS301": { name: "مهارات حاسوب", credits: 4 }, "GTW301": { name: "مهارات التواصل", credits: 5 },
-            "GOE301": { name: "التعليم الالكتروني", credits: 4 }, "BPH401": { name: "الفيزياء", credits: 5 },
-            "BMA401": { name: "التحليل 1", credits: 5 }, "BAS401": { name: "بنى جبرية", credits: 5 },
-            "BPG401": { name: "برمجة 1", credits: 5 }, "BEC401": { name: "دارات إلكترونية", credits: 5 },
-            "BLA401": { name: "جبر خطي 1", credits: 5 }, "BMA402": { name: "التحليل 2", credits: 5 },
-            "BLC401": { name: "دارات منطقية", credits: 5 }, "BPG402": { name: "برمجة 2", credits: 5 },
-            "BDM501": { name: "الرياضيات المتقطعة", credits: 5 }, "BCA501": { name: "بنيان حواسيب 1", credits: 6 },
-            "BDA501": { name: "الخوارزميات", credits: 6 }, "BWP401": { name: "برمجة ويب 1", credits: 5 },
-            "BNA401": { name: "تحليل عددي", credits: 5 }, "BSP501": { name: "معالجة إشارة", credits: 5 },
-            "BPS501": { name: "احتمالات وإحصاء", credits: 6 }, "BOS501": { name: "نظم تشغيل", credits: 4 },
-            "BOSL501": { name: "مخبر نظم تشغيل", credits: 4 }, "BDB501": { name: "قواعد بيانات 1", credits: 4 },
-            "BAU501": { name: "أوتومات ولغات", credits: 5 }, "BPG601": { name: "برمجة 3", credits: 5 },
-            "BDBL501": { name: "مخبر قواعد بيانات", credits: 4 }, "BAI501": { name: "الذكاء الصنعي", credits: 5 },
-            "GMN401": { name: "أساسيات إدارة", credits: 4 }, "BTS501": { name: "نظم اتصالات", credits: 5 },
-            "BNT501": { name: "الشبكات الحاسوبية", credits: 6 }, "BWP501": { name: "برمجة ويب 2", credits: 5 },
-            "GPM601": { name: "إدارة مشاريع", credits: 6 }, "BSE601": { name: "هندسة برمجيات", credits: 6 },
-            "BPR601": { name: "مشروع 1", credits: 6 }, "BMP601": { name: "برمجة تطبيقات النقال", credits: 5 },
-            "BID501": { name: "تحليل وتصميم النظم", credits: 6 }, "BCM601": { name: "المترجمات", credits: 6 },
-            "BIA601": { name: "خوارزميات ذكية", credits: 5 }, "BIS501": { name: "أمن المعلومات", credits: 6 },
-            "GET501": { name: "أخلاقيات المهنة", credits: 6 }, "GAC501": { name: "المحاسبة", credits: 5 },
-            "BPR602": { name: "مشروع 2", credits: 10 }, "BMM601": { name: "نظم الوسائط المتعددة", credits: 6 },
-            "BDG601": { name: "البيانات", credits: 6 }, "GEP601": { name: "نظرية المعرفة", credits: 4 },
-            "BSM601": { name: "النمذجة والمحاكاة", credits: 5 }
+            "GCS301": { name: "مهارات حاسوب", credits: 4 }, "GTW301": { name: "مهارات التواصل", credits: 5 }, "GOE301": { name: "التعليم الالكتروني", credits: 4 },
+            "BPH401": { name: "الفيزياء", credits: 5 }, "BMA401": { name: "التحليل 1", credits: 5 }, "BAS401": { name: "بنى جبرية", credits: 5 },
+            "BPG401": { name: "برمجة 1", credits: 5 }, "BEC401": { name: "دارات إلكترونية", credits: 5 }, "BLA401": { name: "جبر خطي 1", credits: 5 },
+            "BMA402": { name: "التحليل 2", credits: 5 }, "BLC401": { name: "دارات منطقية", credits: 5 }, "BPG402": { name: "برمجة 2", credits: 5 },
+            "BDM501": { name: "الرياضيات المتقطعة", credits: 5 }, "BCA501": { name: "بنيان حواسيب 1", credits: 6 }, "BDA501": { name: "الخوارزميات", credits: 6 },
+            "BWP401": { name: "برمجة ويب 1", credits: 5 }, "BNA401": { name: "تحليل عددي", credits: 5 }, "BSP501": { name: "معالجة إشارة", credits: 5 },
+            "BPS501": { name: "احتمالات وإحصاء", credits: 6 }, "BOS501": { name: "نظم تشغيل", credits: 4 }, "BOSL501": { name: "مخبر نظم تشغيل", credits: 4 },
+            "BDB501": { name: "قواعد بيانات 1", credits: 4 }, "BAU501": { name: "أوتومات ولغات", credits: 5 }, "BPG601": { name: "برمجة 3", credits: 5 },
+            "BDBL501": { name: "مخبر قواعد بيانات", credits: 4 }, "BAI501": { name: "الذكاء الصنعي", credits: 5 }, "GMN401": { name: "أساسيات إدارة", credits: 4 },
+            "BTS501": { name: "نظم اتصالات", credits: 5 }, "BNT501": { name: "الشبكات الحاسوبية", credits: 6 }, "BWP501": { name: "برمجة ويب 2", credits: 5 },
+            "GPM601": { name: "إدارة مشاريع", credits: 6 }, "BSE601": { name: "هندسة برمجيات", credits: 6 }, "BPR601": { name: "مشروع 1", credits: 6 },
+            "BMP601": { name: "برمجة تطبيقات النقال", credits: 5 }, "BID501": { name: "تحليل وتصميم النظم", credits: 6 }, "BCM601": { name: "المترجمات", credits: 6 },
+            "BIA601": { name: "خوارزميات ذكية", credits: 5 }, "BIS501": { name: "أمن المعلومات", credits: 6 }, "GET501": { name: "أخلاقيات المهنة", credits: 6 },
+            "GAC501": { name: "المحاسبة", credits: 5 }, "BPR602": { name: "مشروع 2", credits: 10 }, "BMM601": { name: "نظم الوسائط المتعددة", credits: 6 },
+            "BDG601": { name: "البيانات", credits: 6 }, "GEP601": { name: "نظرية المعرفة", credits: 4 }, "BSM601": { name: "النمذجة والمحاكاة", credits: 5 }
         };
 
         const dbClasses = [
-            // الأحد
             {id: 1, courseId: 'BPH401', prof: 'د. محمد معروف', day: 'الأحد', start: '16:00', end: '18:00', section: 'C4'},
             {id: 2, courseId: 'BPH401', prof: 'د. محمد معروف', day: 'الأحد', start: '18:00', end: '20:00', section: 'C12'},
             {id: 3, courseId: 'BPH401', prof: 'د. محمد معروف', day: 'الأحد', start: '20:00', end: '22:00', section: 'C14'},
@@ -502,173 +479,253 @@
             {id: 250, courseId: 'BNT501', prof: 'م. مرح مفلح', day: 'السبت', start: '10:00', end: '12:00', section: 'C6'}
         ];
 
-        // تعبئة البيانات لكل شعبة بنقاط واسم المادة من coursesDB
         dbClasses.forEach(cls => {
             const c = coursesDB[cls.courseId];
-            if(c) {
-                cls.courseName = c.name;
-                cls.credits = c.credits;
-            } else {
-                cls.courseName = cls.courseId; 
-                cls.credits = 5; 
-            }
+            cls.courseName = c ? c.name : cls.courseId;
+            cls.credits = c ? c.credits : 5;
         });
 
-        let selectedCourseIds = []; 
+        let allAvailableClasses = []; 
+        let uniqueCourses = []; 
         let mySchedule = []; 
+        const daysMap = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+        const timeSlots = ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'];
 
-        function initDropdown() {
-            const dropdown = document.getElementById('courseDropdown');
-            dropdown.innerHTML = '<option value="">-- اختر مادة لتظهر شعبها المتاحة --</option>';
-            const uniqueCourseIds = [...new Set(dbClasses.map(item => item.courseId))];
-            
-            uniqueCourseIds.forEach(cId => {
-                const cName = coursesDB[cId] ? coursesDB[cId].name : cId;
-                dropdown.innerHTML += `<option value="${cId}">${cName} (${cId})</option>`;
+        window.onload = async function() {
+            let userEntry = localStorage.getItem('im_student_email') || sessionStorage.getItem('im_student_email') || "مهندس المستقبل";
+            document.getElementById('studentNameWatermark').innerText = userEntry.split('@')[0].trim();
+            buildEmptyTimetable();
+            await fetchAllData();
+        };
+
+        function buildEmptyTimetable() {
+            const tbody = document.querySelector('#scheduleTable tbody');
+            tbody.innerHTML = '';
+            timeSlots.forEach(time => {
+                let row = document.createElement('tr');
+                row.innerHTML = `<td class="time-col">${time}</td>`;
+                daysMap.forEach(day => { row.innerHTML += `<td id="cell-${day}-${time}"></td>`; });
+                tbody.appendChild(row);
             });
         }
 
-        function addCourseToFilter() {
-            const dropdown = document.getElementById('courseDropdown');
-            const courseId = dropdown.value;
+        async function fetchAllData() {
+            const dropdown = document.getElementById('courseSelectorDropdown');
+            dropdown.innerHTML = '<option value="">-- جاري الاتصال بقاعدة البيانات... --</option>';
             
-            if(!courseId) return;
-            if(selectedCourseIds.includes(courseId)) {
-                showBulbWarning("عذراً! هذه المادة مضافة بالفعل في قائمة البحث لديك."); return;
-            }
-
-            selectedCourseIds.push(courseId);
-            dropdown.value = ""; 
-            updateUI();
-        }
-
-        function removeCourseFromFilter(courseId) {
-            selectedCourseIds = selectedCourseIds.filter(id => id !== courseId);
-            mySchedule = mySchedule.filter(cls => cls.courseId !== courseId);
-            updateUI();
-        }
-
-        function timeToMinutes(timeStr) {
-            const [hours, minutes] = timeStr.split(':').map(Number);
-            return hours * 60 + minutes;
-        }
-
-        function renderAvailable() {
-            const container = document.getElementById('availableClassesList');
-            const tagsContainer = document.getElementById('selectedCoursesTags');
-            container.innerHTML = ''; tagsContainer.innerHTML = '';
-
-            if(selectedCourseIds.length === 0) {
-                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 20px; font-weight:bold; line-height:1.8;"><i class="fas fa-inbox" style="font-size:3rem; opacity:0.2; margin-bottom:15px; display:block;"></i>الرجاء تحديد مادة من الأعلى لعرض الدكاترة والأوقات.</div>`;
-                return;
-            }
-
-            selectedCourseIds.forEach(id => {
-                const cName = coursesDB[id] ? coursesDB[id].name : id;
-                tagsContainer.innerHTML += `
-                    <div class="course-tag">
-                        ${cName} 
-                        <i class="fas fa-times-circle" onclick="removeCourseFromFilter('${id}')" title="إزالة"></i>
-                    </div>`;
-            });
-
-            const filteredClasses = dbClasses.filter(cls => selectedCourseIds.includes(cls.courseId));
-            
-            if(filteredClasses.length === 0) {
-                container.innerHTML = `<div style="text-align:center; color:#ff6b6b; padding:20px; font-weight:bold; background:rgba(239, 68, 68, 0.1); border-radius:12px;">عذراً، لا يوجد شعب متاحة لهذه المادة في الجدول الحالي!</div>`;
-                return;
-            }
-
-            const grouped = filteredClasses.reduce((acc, cls) => {
-                if(!acc[cls.courseId]) acc[cls.courseId] = [];
-                acc[cls.courseId].push(cls); return acc;
-            }, {});
-
-            for (const [courseId, classes] of Object.entries(grouped)) {
-                let html = `<div class="class-card"><div class="class-title"><i class="fas fa-book" style="color:var(--text-muted)"></i> ${classes[0].courseName}</div>`;
-                classes.forEach(cls => {
-                    const isEnrolled = mySchedule.some(s => s.id === cls.id);
-                    html += `
-                        <div class="time-slot" style="${isEnrolled ? 'opacity:0.5; pointer-events:none; border-color:var(--success); background:rgba(16, 185, 129, 0.05);' : ''}">
-                            <div>
-                                <div class="class-prof"><i class="fas fa-user-tie"></i> ${cls.prof}</div>
-                                <div class="class-time-info">
-                                    <i class="fas fa-clock" style="color:var(--orange)"></i> ${cls.day} | <span style="direction:ltr; display:inline-block;">${cls.start} - ${cls.end}</span>
-                                    <span class="class-section-badge" style="margin-right:10px;"><i class="fas fa-door-open" style="color:var(--gold)"></i> الصف: ${cls.section}</span>
-                                </div>
-                            </div>
-                            <button class="btn-add" onclick="enrollClass(${cls.id})" ${isEnrolled ? 'disabled style="background:var(--success); color:white; box-shadow:none;"' : ''}>
-                                ${isEnrolled ? 'مضافة ✅' : 'تثبيت بالجدول <i class="fas fa-plus"></i>'}
-                            </button>
-                        </div>`;
+            try {
+                let { data: serverClasses, error } = await supabaseClient.from('classes').select('*');
+                if (error) alert("⚠️ تنبيه من السيرفر: " + error.message);
+                
+                let finalClassesMap = {};
+                dbClasses.forEach(c => finalClassesMap[c.id] = c); 
+                
+                if(serverClasses && !error) {
+                    serverClasses.forEach(sc => {
+                        let sTime = sc.start_time ? String(sc.start_time).substring(0, 5) : "00:00";
+                        let eTime = sc.end_time ? String(sc.end_time).substring(0, 5) : "00:00";
+                        let cId = sc.course_id || "غير معروف";
+                        let cName = coursesDB[cId] ? coursesDB[cId].name : cId;
+                        finalClassesMap[sc.id] = { id: sc.id, courseId: String(cId), prof: sc.prof || "غير محدد", day: sc.day || "غير محدد", start: sTime, end: eTime, section: sc.section || "-", credits: sc.credits || 5, courseName: String(cName) };
+                    });
+                }
+                
+                allAvailableClasses = Object.values(finalClassesMap);
+                
+                let courseMap = new Map();
+                allAvailableClasses.forEach(c => {
+                    if(c.courseId && !courseMap.has(c.courseId)) {
+                        courseMap.set(c.courseId, { id: c.courseId, name: c.courseName, credits: c.credits });
+                    }
                 });
-                html += `</div>`;
-                container.innerHTML += html;
+                uniqueCourses = Array.from(courseMap.values());
+                uniqueCourses.sort((a, b) => String(a.name).localeCompare(String(b.name), 'ar'));
+                
+                dropdown.innerHTML = '<option value="">-- اختر المادة من القائمة لتسجيلها --</option>';
+                uniqueCourses.forEach(course => {
+                    dropdown.innerHTML += `<option value="${course.id}">${course.name} (${course.id})</option>`;
+                });
+                
+            } catch (err) {
+                console.error(err); dropdown.innerHTML = '<option value="">-- حدث خطأ في جلب البيانات! --</option>';
             }
         }
 
+        function handleCourseSelection() {
+            const courseId = document.getElementById('courseSelectorDropdown').value;
+            const detailsPanel = document.getElementById('classDetailsPanel');
+            if (!courseId) { detailsPanel.style.display = 'none'; return; }
+            const selectedCourse = uniqueCourses.find(c => c.id === courseId);
+            if (selectedCourse) showCourseSections(selectedCourse);
+        }
+
+        function showCourseSections(course) {
+            const detailsPanel = document.getElementById('classDetailsPanel');
+            const sectionsList = document.getElementById('sectionsList');
+            document.getElementById('selectedCourseTitle').innerHTML = `${course.name} <span style="font-size:0.9rem; color:var(--text-muted)">(${course.id})</span>`;
+            
+            const courseClasses = allAvailableClasses.filter(c => c.courseId === course.id);
+            sectionsList.innerHTML = '';
+            if(courseClasses.length === 0) {
+                sectionsList.innerHTML = '<p style="color:var(--danger)">لا توجد شعب مبرمجة لهذه المادة حالياً.</p>';
+            } else {
+                courseClasses.forEach(cls => {
+                    const isEnrolled = mySchedule.some(s => s.id === cls.id);
+                    const card = document.createElement('div');
+                    card.className = 'section-card';
+                    card.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <strong style="color:white;"><i class="fas fa-chalkboard-teacher" style="color:var(--orange)"></i> ${cls.prof}</strong>
+                            <span style="font-family:monospace; color:var(--gold)">شعبة: ${cls.section || '-'}</span>
+                        </div>
+                        <p><i class="fas fa-clock"></i> ${cls.day} | ${cls.start} - ${cls.end}</p>
+                        <button class="btn-add-class" onclick='addSectionToSchedule(${JSON.stringify(cls)}, ${JSON.stringify(course)})' ${isEnrolled ? 'disabled' : ''}>
+                            ${isEnrolled ? 'مضافة مسبقاً ✅' : '<i class="fas fa-plus"></i> إضافة للجدول'}
+                        </button>
+                    `;
+                    sectionsList.appendChild(card);
+                });
+            }
+            detailsPanel.style.display = 'block';
+        }
+
+        // ================= نظام التعارض القوي =================
         function checkConflict(newClass) {
-            const newStart = timeToMinutes(newClass.start);
-            const newEnd = timeToMinutes(newClass.end);
+            if (!newClass.start || !newClass.end) return null;
+            
+            const newStart = parseInt(newClass.start.split(':')[0]) * 60 + parseInt(newClass.start.split(':')[1]);
+            const newEnd = parseInt(newClass.end.split(':')[0]) * 60 + parseInt(newClass.end.split(':')[1]);
+
             for (const existingClass of mySchedule) {
                 if (existingClass.day === newClass.day) {
-                    const existStart = timeToMinutes(existingClass.start);
-                    const existEnd = timeToMinutes(existingClass.end);
-                    if (newStart < existEnd && newEnd > existStart) return existingClass;
+                    const existStart = parseInt(existingClass.start.split(':')[0]) * 60 + parseInt(existingClass.start.split(':')[1]);
+                    const existEnd = parseInt(existingClass.end.split(':')[0]) * 60 + parseInt(existingClass.end.split(':')[1]);
+
+                    if (newStart < existEnd && newEnd > existStart) {
+                        return existingClass; 
+                    }
                 }
             }
             return null;
         }
 
-        function enrollClass(classId) {
-            const newClass = dbClasses.find(c => c.id === classId);
-            if(mySchedule.some(c => c.courseId === newClass.courseId)) {
-                showBulbWarning(`مهلاً! لقد قمت بإضافة مادة <span>${newClass.courseName}</span> في شعبة أخرى مسبقاً.`); return;
+        function addSectionToSchedule(cls, courseData) {
+            const existingCourse = mySchedule.find(item => item.courseId === cls.courseId);
+            if(existingCourse) {
+                showBulbWarning(`مهلاً! لقد قمت بإضافة مادة <span>${courseData.name}</span> مسبقاً. احذفها أولاً لتغيير الشعبة.`);
+                return;
             }
-            const conflict = checkConflict(newClass);
+
+            const conflict = checkConflict(cls);
             if (conflict) {
-                showBulbWarning(`انتبه للوقت! ⏰<br> هذه الشعبة تتعارض مع محاضرة <span>${conflict.courseName}</span> يوم ${conflict.day}.`); return;
-            }
-            mySchedule.push(newClass); updateUI();
-        }
-
-        function removeScheduleItem(classId) {
-            mySchedule = mySchedule.filter(c => c.id !== classId); updateUI();
-        }
-
-        function updateUI() {
-            renderAvailable();
-            const scheduleContainer = document.getElementById('myScheduleList');
-            const creditCounter = document.getElementById('creditCounter');
-            
-            if (mySchedule.length === 0) {
-                scheduleContainer.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px 20px; font-weight:bold; line-height:1.8;"><i class="fas fa-calendar-times" style="font-size:3rem; opacity:0.2; margin-bottom:15px; display:block;"></i>لم تقم بتثبيت أي شعبة في جدولك بعد.</div>`;
-                creditCounter.innerText = `0 نقطة`; creditCounter.style.background = 'rgba(255,255,255,0.1)'; return;
+                showBulbWarning(`انتبه للوقت! ⏰<br> هذه الشعبة تتعارض مع <span>${conflict.courseName}</span> يوم ${conflict.day}.`);
+                return;
             }
 
-            const daysOrder = { 'الأحد':1, 'الإثنين':2, 'الثلاثاء':3, 'الأربعاء':4, 'الخميس':5, 'الجمعة':6, 'السبت':7 };
-            mySchedule.sort((a, b) => daysOrder[a.day] - daysOrder[b.day]);
+            mySchedule.push({ ...cls, courseName: courseData.name, credits: courseData.credits });
+            renderSchedule();
 
-            let totalCredits = 0; scheduleContainer.innerHTML = '';
-            
-            mySchedule.forEach(cls => {
-                totalCredits += cls.credits;
-                scheduleContainer.innerHTML += `
-                    <div class="schedule-item">
-                        <div class="schedule-info">
-                            <h4>${cls.courseName}</h4>
-                            <p>
-                                ${cls.day} | <span style="direction:ltr; display:inline-block;">${cls.start} - ${cls.end}</span> <br> 
-                                <i class="fas fa-user-tie" style="font-size:0.8rem; margin-top:5px; color:var(--gold);"></i> ${cls.prof} | 
-                                <i class="fas fa-door-open" style="font-size:0.8rem; margin-top:5px; color:var(--orange);"></i> الصف: <strong style="color:white;">${cls.section}</strong>
-                            </p>
-                        </div>
-                        <button class="btn-add btn-remove" onclick="removeScheduleItem(${cls.id})" title="حذف من المسودة"><i class="fas fa-trash"></i></button>
-                    </div>`;
+            document.getElementById('courseSelectorDropdown').value = '';
+            document.getElementById('classDetailsPanel').style.display = 'none';
+        }
+
+        function removeClass(courseId) {
+            mySchedule = mySchedule.filter(c => c.courseId !== courseId);
+            renderSchedule();
+        }
+
+        function renderSchedule() {
+            document.querySelectorAll('#scheduleTable tbody td:not(.time-col)').forEach(td => {
+                td.innerHTML = ''; td.className = '';
             });
-            creditCounter.innerText = `${totalCredits} نقطة مسجلة`;
-            creditCounter.style.background = totalCredits >= 16 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 126, 0, 0.2)';
-            creditCounter.style.color = totalCredits >= 16 ? 'var(--success)' : 'var(--orange)';
+
+            let totalCredits = 0; let totalCourses = mySchedule.length;
+            let cellsMap = {};
+
+            mySchedule.forEach(cls => {
+                totalCredits += parseInt(cls.credits || 0);
+                const startHour = cls.start ? cls.start.substring(0, 5) : null;
+                if(!startHour) return;
+
+                const cellId = `cell-${cls.day}-${startHour}`;
+                const td = document.getElementById(cellId);
+                
+                if(td) {
+                    if(!cellsMap[cellId]) cellsMap[cellId] = [];
+                    cellsMap[cellId].push(cls);
+                }
+            });
+
+            for (let cellId in cellsMap) {
+                const td = document.getElementById(cellId);
+                const classesInCell = cellsMap[cellId];
+
+                classesInCell.forEach(cls => {
+                    const card = document.createElement('div');
+                    card.className = `booked-class`;
+                    card.innerHTML = `
+                        <button class="btn-remove-class" onclick="removeClass('${cls.courseId}')"><i class="fas fa-times"></i></button>
+                        <h4>${cls.courseName}</h4>
+                        <p style="font-family:monospace; color:var(--gold); margin-bottom:3px;">شعبة ${cls.section || '-'}</p>
+                        <p><i class="fas fa-user"></i> ${cls.prof}</p>
+                    `;
+                    td.appendChild(card);
+                });
+            }
+
+            document.getElementById('totalCourses').innerText = totalCourses;
+            document.getElementById('totalCredits').innerText = totalCredits;
+        }
+
+        // ================= نظام التصوير الاحترافي =================
+        function exportProfessionalImage() {
+            if (mySchedule.length === 0) {
+                showBulbWarning("لا يوجد مواد في الجدول لتصويرها! 📸"); return;
+            }
+
+            const schedulePanel = document.querySelector('.schedule-panel');
+            const exportArea = document.getElementById('exportArea');
+            const btnCapture = document.getElementById('btnCapture');
+            
+            const originalBtnText = btnCapture.innerHTML;
+            btnCapture.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التقاط الصورة...';
+            btnCapture.disabled = true;
+
+            schedulePanel.classList.add('capture-mode');
+            exportArea.classList.add('capture-mode');
+            document.getElementById('scheduleHeaderBtns').style.display = 'none';
+            document.getElementById('statsBarDisplay').style.display = 'none';
+
+            setTimeout(() => {
+                html2canvas(exportArea, {
+                    scale: 2, 
+                    backgroundColor: '#1a2235', 
+                    useCORS: true,
+                    scrollY: -window.scrollY,
+                    windowWidth: exportArea.scrollWidth,
+                    windowHeight: exportArea.scrollHeight
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'جدولي_الجامعي_infoMatrix.png';
+                    link.href = canvas.toDataURL("image/png");
+                    link.click();
+
+                    schedulePanel.classList.remove('capture-mode');
+                    exportArea.classList.remove('capture-mode');
+                    document.getElementById('scheduleHeaderBtns').style.display = 'flex';
+                    document.getElementById('statsBarDisplay').style.display = 'flex';
+                    btnCapture.innerHTML = originalBtnText;
+                    btnCapture.disabled = false;
+                }).catch(err => {
+                    alert("حدث خطأ أثناء حفظ الصورة!");
+                    schedulePanel.classList.remove('capture-mode');
+                    exportArea.classList.remove('capture-mode');
+                    document.getElementById('scheduleHeaderBtns').style.display = 'flex';
+                    document.getElementById('statsBarDisplay').style.display = 'flex';
+                    btnCapture.innerHTML = originalBtnText;
+                    btnCapture.disabled = false;
+                });
+            }, 500);
         }
 
         let warningTimeout;
@@ -679,55 +736,6 @@
             clearTimeout(warningTimeout);
             warningTimeout = setTimeout(() => { warningBox.classList.remove('show'); }, 6000);
         }
-
-        // ---------------- دالة تصوير الشاشة (html2canvas) ----------------
-        async function downloadScheduleImage() {
-            if (mySchedule.length === 0) {
-                showBulbWarning("لا يوجد مواد في الجدول لتحميلها! 📝");
-                return;
-            }
-
-            const container = document.getElementById('captureContainer');
-            const origOverflow = container.style.overflowY;
-            const origHeight = container.style.height;
-
-            // تحضير الـ DOM للتصوير (إظهار العلامة المائية وإخفاء سلة المهملات وإظهار كامل الارتفاع)
-            container.classList.add('export-mode');
-            container.style.overflowY = 'visible'; 
-            container.style.height = 'auto';
-
-            const btn = document.querySelector('.capture-hide');
-            const oldText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
-
-            try {
-                const canvas = await html2canvas(container, {
-                    backgroundColor: '#242f48', // لون الخلفية (navy-light)
-                    scale: 2, // دقة مضاعفة (High Resolution)
-                    useCORS: true // السماح برسم الصور الخارجية (مثل شعار اللمبة)
-                });
-
-                // إنشاء رابط التحميل الوهمي
-                const link = document.createElement('a');
-                link.download = 'جدول_موادي_infoMatrix.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                showBulbWarning("تم حفظ صورة الجدول بنجاح! 🎉");
-            } catch (e) {
-                console.error("Error exporting image", e);
-                showBulbWarning("حدث خطأ أثناء تصدير الصورة.");
-            } finally {
-                // إعادة الواجهة لشكلها الطبيعي
-                container.classList.remove('export-mode');
-                container.style.overflowY = origOverflow;
-                container.style.height = origHeight;
-                btn.innerHTML = oldText;
-            }
-        }
-
-        window.onload = () => {
-            initDropdown();
-        };
     </script>
 </body>
 </html>
